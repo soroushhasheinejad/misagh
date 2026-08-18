@@ -1,5 +1,36 @@
 @import "tailwindcss";
 
+/* ===========================================================================
+   منشور — تیتر و اعداد فارسی. وزن‌های ۵۰۰ تا ۹۰۰.
+   وزیرمتن — متن و جدول.
+   JetBrains Mono — شماره فنی، SKU، VIN.
+   =========================================================================== */
+
+@font-face {
+  font-family: "Manshoor";
+  src: url("/fonts/Manshoor-VF.woff2") format("woff2-variations");
+  font-weight: 500 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manshoor Static";
+  src: url("/fonts/Manshoor-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manshoor Static";
+  src: url("/fonts/Manshoor-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manshoor Static";
+  src: url("/fonts/Manshoor-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Vazirmatn";
   src: url("/fonts/Vazirmatn-Regular.woff2") format("woff2");
@@ -19,52 +50,340 @@
   font-display: swap;
 }
 
-@theme {
-  --font-sans: "Vazirmatn", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/jetbrains-mono-latin-700-normal.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
 
-  --color-ground: #eef1f4;
+@theme {
+  --font-display: "Manshoor", "Manshoor Static", system-ui, sans-serif;
+  --font-sans: "Vazirmatn", system-ui, -apple-system, Tahoma, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+  /* بدنه تیره — کاپوت بسته */
+  --color-carbon: #0e141b;
+  --color-carbon-2: #182430;
+  --color-carbon-3: #24333f;
+
+  /* فولاد — زمینه روشن */
+  --color-steel: #e7eaee;
+  --color-steel-2: #f2f4f6;
   --color-surface: #ffffff;
-  --color-surface-2: #f5f7f9;
-  --color-ink: #14202b;
-  --color-muted: #5a6b78;
-  --color-faint: #8a99a5;
-  --color-line: #d7dee4;
-  --color-accent: #0e6d78;
-  --color-accent-dark: #0a545d;
-  --color-accent-soft: #ddeff0;
-  --color-signal: #a8451a;
-  --color-signal-soft: #f6e6de;
-  --color-ok: #1c6b45;
-  --color-ok-soft: #dcefe4;
-  --color-navy: #10222f;
+
+  /* برنج — تنها لهجه */
+  --color-brass: #b4832b;
+  --color-brass-dark: #8d6420;
+  --color-brass-lite: #e9d9b4;
+  --color-brass-soft: #f6efdf;
+
+  --color-ink: #101820;
+  --color-muted: #5c6874;
+  --color-faint: #8b96a1;
+  --color-line: #d3d8de;
+  --color-line-2: #e3e7eb;
+
+  --color-ok: #2c6e4a;
+  --color-ok-soft: #e0efe6;
+  --color-alert: #b3401f;
+  --color-alert-soft: #f7e7e0;
 }
 
 html {
-  background: var(--color-ground);
+  background: var(--color-steel);
 }
 
 body {
-  background: var(--color-ground);
+  background: var(--color-steel);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.8;
   -webkit-font-smoothing: antialiased;
 }
 
-/* اعداد در جدول قیمت و موجودی هم‌عرض بمانند */
-.tnum {
-  font-variant-numeric: tabular-nums;
+h1,
+h2,
+h3,
+h4,
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.45;
+  text-wrap: balance;
 }
 
-/* شماره فنی همیشه چپ‌چین و تک‌عرض */
-.pn {
-  font-family: var(--font-mono);
-  direction: ltr;
-  unicode-bidi: isolate;
-  letter-spacing: 0.02em;
+@layer components {
+  /* ---- امضای طراحی: پلاک حکاکی‌شده شماره فنی ---- */
+  .plate {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    direction: ltr;
+    unicode-bidi: isolate;
+    letter-spacing: 0.06em;
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #f7f8f9 0%, #e6e9ed 100%);
+    border: 1px solid var(--color-line);
+    border-top-color: color-mix(in srgb, var(--color-brass) 45%, var(--color-line));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(16, 24, 32, 0.05);
+    color: var(--color-ink);
+  }
+
+  .plate-lg {
+    font-size: 1.15rem;
+    padding: 0.55rem 1.1rem;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+  }
+
+  .plate-dark {
+    background: linear-gradient(180deg, var(--color-carbon-3) 0%, var(--color-carbon-2) 100%);
+    border-color: rgba(180, 131, 43, 0.45);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 1px 0 rgba(0, 0, 0, 0.35);
+    color: var(--color-brass-lite);
+  }
+
+  /* عدد لاتین در متن فارسی */
+  .mono {
+    font-family: var(--font-mono);
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- خط راهنمای نقشه فنی: هایرلاین با برچسب ---- */
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .rule::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--color-line);
+  }
+  .rule-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+  }
+
+  /* ---- سطوح ---- */
+  .panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+  }
+  .panel-brass {
+    border-top: 2px solid var(--color-brass);
+  }
+
+  /* ---- کنترل‌ها ---- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 4px;
+    transition:
+      background-color 0.16s ease,
+      color 0.16s ease,
+      border-color 0.16s ease;
+  }
+  .btn-primary {
+    background: var(--color-carbon);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--color-carbon-2);
+  }
+  .btn-brass {
+    background: var(--color-brass);
+    color: #fff;
+  }
+  .btn-brass:hover {
+    background: var(--color-brass-dark);
+  }
+  .btn-ghost {
+    border: 1px solid var(--color-line);
+    color: var(--color-muted);
+    background: var(--color-surface);
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-brass);
+    color: var(--color-brass-dark);
+  }
+
+  .field {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 4px;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.9rem;
+    font-family: var(--font-sans);
+    transition: border-color 0.15s ease;
+  }
+  .field:hover:not(:disabled) {
+    border-color: var(--color-faint);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-brass);
+    box-shadow: 0 0 0 3px rgba(180, 131, 43, 0.14);
+  }
+  .field:disabled {
+    background: var(--color-steel-2);
+    color: var(--color-faint);
+  }
+  .field-label {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    color: var(--color-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  /* ---- چیپ درجه کیفیت: لحن فلزی متناسب با تراز قطعه ---- */
+  .tier {
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 0.1rem 0.45rem;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .tier-genuine {
+    background: var(--color-brass-soft);
+    color: var(--color-brass-dark);
+    border-color: color-mix(in srgb, var(--color-brass) 35%, transparent);
+  }
+  .tier-oem {
+    background: var(--color-steel-2);
+    color: var(--color-muted);
+    border-color: var(--color-line);
+  }
+  .tier-copy {
+    background: transparent;
+    color: var(--color-faint);
+    border-color: var(--color-line);
+  }
+
+  /* ---- جدول مشخصات ---- */
+  .spec {
+    width: 100%;
+    font-size: 0.875rem;
+  }
+  .spec thead th {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+    font-weight: 500;
+    text-align: right;
+    padding: 0.6rem 0.9rem;
+    background: var(--color-steel-2);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .spec tbody td {
+    padding: 0.85rem 0.9rem;
+    border-bottom: 1px solid var(--color-line-2);
+    vertical-align: middle;
+  }
+  .spec tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  /* ردیف پیشنهادشده: ریل برنجی — نشانه، نه تزیین */
+  .row-recommended td:first-child {
+    box-shadow: inset -3px 0 0 var(--color-brass);
+  }
+
+  .link-brass {
+    background-image: linear-gradient(var(--color-brass), var(--color-brass));
+    background-size: 0% 1px;
+    background-position: 100% 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.22s ease;
+  }
+  .link-brass:hover {
+    background-size: 100% 1px;
+    color: var(--color-brass-dark);
+  }
+}
+
+/* ---- ورود صحنه: یک حرکت هماهنگ، نه افکت پراکنده ---- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.5s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+}
+.rise-1 {
+  animation-delay: 0.05s;
+}
+.rise-2 {
+  animation-delay: 0.14s;
+}
+.rise-3 {
+  animation-delay: 0.24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-brass);
   outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--color-brass-lite);
+  color: var(--color-ink);
 }

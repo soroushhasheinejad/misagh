@@ -81,6 +81,13 @@ export async function saveOfferPricing(formData: FormData) {
     return value === "" || value === "INHERIT" ? null : value;
   };
 
+  /** سه‌حالته: خالی یعنی از سطح بالاتر ارث ببرد */
+  const boolOrNull = (name: string) => {
+    const raw = formData.get(name);
+    if (raw === null || raw === "INHERIT" || String(raw).trim() === "") return null;
+    return String(raw) === "true";
+  };
+
   const previous = await prisma.offer.findUnique({ where: { id } });
 
   await prisma.offer.update({
@@ -94,15 +101,15 @@ export async function saveOfferPricing(formData: FormData) {
       marginPercent: numberOrNull("marginPercent"),
       discountPercent: numberOrNull("discountPercent"),
       roundingRule: stringOrNull("roundingRule") as never,
-      priceLocked: formData.get("priceLocked") === "on",
+      priceLocked: boolOrNull("priceLocked"),
       lockedPriceIrr: numberOrNull("lockedPriceIrr"),
       dealerPriceIrr: numberOrNull("dealerPriceIrr"),
-      showPrice: formData.get("showPrice") === "on",
-      allowInquiry: formData.get("allowInquiry") === "on",
+      showPrice: boolOrNull("showPrice"),
+      allowInquiry: boolOrNull("allowInquiry"),
       stockQty: Number(formData.get("stockQty") ?? 0),
       leadTimeDays: Number(formData.get("leadTimeDays") ?? 0),
       status: String(formData.get("status") ?? "ACTIVE") as never,
-      isDefault: formData.get("isDefault") === "on",
+      isDefault: formData.get("isDefault") === "true",
     },
   });
 
@@ -136,6 +143,13 @@ export async function savePartPricing(formData: FormData) {
     return value === "" || value === "INHERIT" ? null : value;
   };
 
+  /** سه‌حالته: خالی یعنی از سطح بالاتر ارث ببرد */
+  const boolOrNull = (name: string) => {
+    const raw = formData.get(name);
+    if (raw === null || raw === "INHERIT" || String(raw).trim() === "") return null;
+    return String(raw) === "true";
+  };
+
   await prisma.part.update({
     where: { id },
     data: {
@@ -146,12 +160,12 @@ export async function savePartPricing(formData: FormData) {
       marginPercent: numberOrNull("marginPercent"),
       discountPercent: numberOrNull("discountPercent"),
       roundingRule: stringOrNull("roundingRule") as never,
-      priceLocked: formData.get("priceLocked") === "on",
+      priceLocked: boolOrNull("priceLocked"),
       lockedPriceIrr: numberOrNull("lockedPriceIrr"),
       dealerMargin: numberOrNull("dealerMargin"),
-      showPrice: formData.get("showPrice") === "on",
-      allowInquiry: formData.get("allowInquiry") === "on",
-      allowMultiOffer: formData.get("allowMultiOffer") === "on",
+      showPrice: boolOrNull("showPrice"),
+      allowInquiry: boolOrNull("allowInquiry"),
+      allowMultiOffer: boolOrNull("allowMultiOffer"),
       minOrderQty: Number(formData.get("minOrderQty") ?? 1),
     },
   });

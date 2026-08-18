@@ -12,6 +12,7 @@
     "db:migrate": "prisma migrate dev"
   },
   "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.3.0",
     "@prisma/client": "6.16.2",
     "next": "16.3.1",
     "prisma": "6.16.2",

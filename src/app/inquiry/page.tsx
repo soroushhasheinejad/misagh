@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
@@ -31,56 +32,110 @@ export default async function InquiryPage({
 
   if (sent) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-16 text-center">
-        <h1 className="text-lg font-bold text-ok">درخواست شما ثبت شد</h1>
-        <p className="pt-2 text-sm text-muted">
-          کارشناسان ما قیمت و موجودی را بررسی می‌کنند و به‌زودی تماس می‌گیرند.
+      <div className="mx-auto max-w-lg px-5 py-24 text-center">
+        <div className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-ok">received</div>
+        <h1 className="pt-4 font-display text-xl font-black">درخواست شما ثبت شد</h1>
+        <p className="pt-3 text-sm text-muted">
+          قیمت و موجودی را بررسی می‌کنیم و با همان شماره تماس می‌گیریم.
         </p>
+        <Link href="/" className="btn btn-primary mt-6">
+          بازگشت به فروشگاه
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-10">
-      <h1 className="text-lg font-bold">استعلام قیمت / درخواست قطعه</h1>
-      <p className="pt-1 text-sm text-muted">
-        مشخصات خودرو و قطعه را بنویسید؛ قیمت و موجودی را برایتان استعلام می‌کنیم.
-      </p>
-
-      <form action={submitInquiry} className="mt-6 flex flex-col gap-4 rounded-lg border border-line bg-surface p-5">
-        <label className="block text-sm">
-          <span className="mb-1 block text-xs text-muted">شماره تماس *</span>
-          <input name="phone" required placeholder="۰۹۱۲۳۴۵۶۷۸۹" className="w-full rounded border border-line px-3 py-2 text-sm" />
-        </label>
-        <label className="block text-sm">
-          <span className="mb-1 block text-xs text-muted">نام و نام خانوادگی</span>
-          <input name="fullName" className="w-full rounded border border-line px-3 py-2 text-sm" />
-        </label>
-        <label className="block text-sm">
-          <span className="mb-1 block text-xs text-muted">خودرو (برند، مدل، سال)</span>
-          <input name="vehicleText" placeholder="مثال: کیا اسپورتیج ۲۰۱۸" className="w-full rounded border border-line px-3 py-2 text-sm" />
-        </label>
-        <label className="block text-sm">
-          <span className="mb-1 block text-xs text-muted">قطعه مورد نیاز</span>
-          <input name="partText" defaultValue={part ?? ""} className="w-full rounded border border-line px-3 py-2 text-sm" />
-        </label>
-        <label className="block text-sm">
-          <span className="mb-1 block text-xs text-muted">شماره فنی (اگر دارید)</span>
-          <input name="partNumber" defaultValue={pn ?? ""} className="pn w-full rounded border border-line px-3 py-2 text-sm" />
-        </label>
-
-        <button type="submit" className="rounded bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent-dark">
-          ثبت درخواست
-        </button>
-
-        {settings["inquiry.whatsappNumber"] || settings["inquiry.telegramUsername"] ? (
-          <p className="text-xs text-faint">
-            یا مستقیم پیام بدهید:{" "}
-            {settings["inquiry.whatsappNumber"] ? `واتساپ ${settings["inquiry.whatsappNumber"]}` : ""}{" "}
-            {settings["inquiry.telegramUsername"] ? `تلگرام @${settings["inquiry.telegramUsername"]}` : ""}
+    <div className="mx-auto max-w-[1120px] px-5 py-12">
+      <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
+        <div>
+          <div className="rule pb-5">
+            <h1 className="font-display text-xl font-black">استعلام قیمت</h1>
+            <span className="rule-label">inquiry</span>
+          </div>
+          <p className="max-w-lg text-muted">
+            قطعه‌ای که دنبالش هستید در سایت نیست یا قیمتش اعلام نشده؟ مشخصات را بنویسید؛ کارشناس ما
+            قیمت و موجودی را استعلام می‌کند.
           </p>
-        ) : null}
-      </form>
+
+          <form action={submitInquiry} className="panel panel-brass mt-6 flex flex-col gap-5 p-6">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <label className="block">
+                <span className="field-label">شماره تماس *</span>
+                <input name="phone" required placeholder="۰۹۱۲۳۴۵۶۷۸۹" className="field" />
+              </label>
+              <label className="block">
+                <span className="field-label">نام و نام خانوادگی</span>
+                <input name="fullName" className="field" />
+              </label>
+            </div>
+
+            <label className="block">
+              <span className="field-label">خودرو — برند، مدل و سال</span>
+              <input name="vehicleText" placeholder="کیا اسپورتیج ۲۰۱۸ تیپ ۲.۴" className="field" />
+            </label>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <label className="block">
+                <span className="field-label">قطعه مورد نیاز</span>
+                <input name="partText" defaultValue={part ?? ""} className="field" />
+              </label>
+              <label className="block">
+                <span className="field-label">شماره فنی، اگر دارید</span>
+                <input
+                  name="partNumber"
+                  defaultValue={pn ?? ""}
+                  placeholder="58101-D3A00"
+                  className="field mono tracking-[0.1em]"
+                />
+              </label>
+            </div>
+
+            <button type="submit" className="btn btn-brass self-start">
+              ثبت درخواست
+            </button>
+          </form>
+        </div>
+
+        <aside className="lg:pt-16">
+          <div className="panel bg-carbon p-6 text-white">
+            <div className="font-mono text-[0.66rem] uppercase tracking-[0.18em] text-brass">
+              direct
+            </div>
+            <h2 className="pt-3 font-display text-base font-bold">ترجیح می‌دهید پیام بدهید؟</h2>
+            <p className="pt-2 text-sm leading-7 text-white/60">
+              عکس قطعه یا شماره فنی را بفرستید؛ همان‌جا قیمت می‌دهیم.
+            </p>
+            <div className="flex flex-wrap gap-2 pt-4">
+              {settings["inquiry.whatsappNumber"] ? (
+                <a
+                  href={`https://wa.me/${settings["inquiry.whatsappNumber"]}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-brass px-4 py-2 text-xs"
+                >
+                  واتساپ
+                </a>
+              ) : null}
+              {settings["inquiry.telegramUsername"] ? (
+                <a
+                  href={`https://t.me/${settings["inquiry.telegramUsername"]}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn px-4 py-2 text-xs text-white ring-1 ring-white/25 hover:bg-white/10"
+                >
+                  تلگرام
+                </a>
+              ) : null}
+              {!settings["inquiry.whatsappNumber"] && !settings["inquiry.telegramUsername"] ? (
+                <p className="text-xs text-white/40">
+                  شماره واتساپ و تلگرام هنوز در پنل مدیریت ثبت نشده است.
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }

@@ -16,7 +16,7 @@ export default async function RatesPage() {
 
   return (
     <div>
-      <h1 className="text-lg font-bold">نرخ ارز</h1>
+      <div className="rule pb-4"><h1 className="font-display text-xl font-black">نرخ ارز</h1><span className="rule-label">rates</span></div>
       <p className="pt-1 text-sm text-muted">
         نرخ‌ها به ریال ثبت می‌شوند. با تغییر نرخ، قیمت همه قطعاتی که «وابسته به ارز» هستند و قفل
         نشده‌اند بلافاصله به‌روز می‌شود.
@@ -27,21 +27,21 @@ export default async function RatesPage() {
           <form
             key={c.code}
             action={updateRate}
-            className="flex flex-wrap items-end gap-3 rounded-lg border border-line bg-surface p-4"
+            className="panel flex flex-wrap items-end gap-4 p-5"
           >
             <input type="hidden" name="code" value={c.code} />
             <div className="min-w-28">
               <div className="text-sm font-bold">{c.nameFa}</div>
-              <div className="pn text-xs text-faint">{c.code}</div>
+              <div className="mono text-xs text-faint">{c.code}</div>
             </div>
             <label className="block">
-              <span className="mb-1 block text-xs text-muted">نرخ (ریال)</span>
+              <span className="field-label">نرخ (ریال)</span>
               <input
                 name="rateIrr"
                 type="number"
                 step="1000"
                 defaultValue={Number(c.rateIrr)}
-                className="tnum w-44 rounded border border-line px-3 py-2 text-sm"
+                className="field tnum w-44"
               />
             </label>
             <div className="text-xs text-faint">
@@ -49,7 +49,7 @@ export default async function RatesPage() {
             </div>
             <button
               type="submit"
-              className="mr-auto rounded bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark"
+              className="btn btn-brass mr-auto px-4 py-2 text-xs"
             >
               ثبت نرخ
             </button>
@@ -59,11 +59,11 @@ export default async function RatesPage() {
 
       {history.length > 0 ? (
         <section className="mt-8">
-          <h2 className="pb-2 text-sm font-bold">تاریخچه تغییر نرخ</h2>
-          <div className="overflow-x-auto rounded border border-line bg-surface">
+          <div className="rule pb-4"><h2 className="font-display text-base font-bold">تاریخچه تغییر نرخ</h2><span className="rule-label">history</span></div>
+          <div className="panel overflow-x-auto">
             <table className="w-full min-w-[420px] text-sm">
               <thead>
-                <tr className="bg-surface-2 text-xs text-faint">
+                <tr className="bg-steel-2 text-xs text-faint">
                   <th className="px-3 py-2 text-right font-medium">ارز</th>
                   <th className="px-3 py-2 text-right font-medium">از</th>
                   <th className="px-3 py-2 text-right font-medium">به</th>
@@ -73,7 +73,7 @@ export default async function RatesPage() {
               <tbody>
                 {history.map((h) => (
                   <tr key={h.id} className="border-t border-line">
-                    <td className="pn px-3 py-2">{h.currencyCode}</td>
+                    <td className="mono px-3 py-2">{h.currencyCode}</td>
                     <td className="tnum px-3 py-2 text-muted">{Number(h.oldRateIrr).toLocaleString("fa-IR")}</td>
                     <td className="tnum px-3 py-2">{Number(h.newRateIrr).toLocaleString("fa-IR")}</td>
                     <td className="px-3 py-2 text-faint">

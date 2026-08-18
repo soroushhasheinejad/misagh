@@ -183,10 +183,10 @@ model Part {
   discountPercent  Decimal?      @db.Decimal(6, 2)
   discountUntil    DateTime?
   roundingRule     RoundingRule?
-  priceLocked      Boolean       @default(false) // با تغییر نرخ ارز بازمحاسبه نشود
+  priceLocked      Boolean? // خالی = ارث از تنظیمات؛ true = با تغییر نرخ ارز بازمحاسبه نشود
   lockedPriceIrr   Decimal?      @db.Decimal(18, 2)
   priceValidUntil  DateTime?
-  showPrice        Boolean       @default(true) // خاموش کردن نمایش قیمت
+  showPrice        Boolean? // خالی = ارث؛ false = قیمت نمایش داده نشود
   allowInquiry     Boolean? // دکمه استعلام قیمت
   allowMultiOffer  Boolean? // نمایش چند پیشنهاد برای همین قطعه
   dealerMargin     Decimal?      @db.Decimal(6, 2) // حاشیه سود قیمت همکار
@@ -359,10 +359,10 @@ model Offer {
   discountPercent  Decimal?      @db.Decimal(6, 2)
   discountUntil    DateTime?
   roundingRule     RoundingRule?
-  priceLocked      Boolean       @default(false)
+  priceLocked      Boolean? // خالی = ارث از قطعه
   lockedPriceIrr   Decimal?      @db.Decimal(18, 2)
   priceValidUntil  DateTime?
-  showPrice        Boolean       @default(true)
+  showPrice        Boolean? // خالی = ارث از قطعه
   allowInquiry     Boolean?
   dealerPriceIrr   Decimal?      @db.Decimal(18, 2)
   minOrderQty      Int?

@@ -4,7 +4,7 @@ import { getPartBySlug } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
 import { OfferTable } from "@/components/OfferTable";
 
-const POSITION_LABEL: Record<string, string> = {
+const POSITION: Record<string, string> = {
   UNIVERSAL: "—",
   FRONT: "جلو",
   REAR: "عقب",
@@ -18,6 +18,13 @@ const POSITION_LABEL: Record<string, string> = {
   LOWER: "پایین",
 };
 
+const NUMBER_TYPE: Record<string, string> = {
+  OEM: "اصلی سازنده",
+  SUPERSEDED: "کد قدیمی",
+  AFTERMARKET: "بازار",
+  INTERNAL: "داخلی",
+};
+
 export default async function PartPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const data = await getPartBySlug(slug);
@@ -25,110 +32,146 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
 
   const { part, offers } = data;
   const settings = await getSettings();
-  const primaryNumber = part.numbers.find((n) => n.isPrimary) ?? part.numbers[0];
+  const primary = part.numbers.find((n) => n.isPrimary) ?? part.numbers[0];
+  const specs = (part.specs ?? null) as Record<string, string | number> | null;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <nav className="pb-3 text-xs text-faint">
-        <Link href="/" className="hover:text-accent">
-          خانه
-        </Link>
-        {" / "}
-        {part.category.parent ? (
-          <>
-            <Link href={`/catalog?categoryId=${part.category.parent.id}`} className="hover:text-accent">
-              {part.category.parent.nameFa}
+    <div>
+      {/* سربرگ قطعه */}
+      <div className="bg-carbon text-white">
+        <div className="mx-auto max-w-[1120px] px-5 py-9">
+          <nav className="font-mono text-[0.66rem] uppercase tracking-[0.14em] text-white/40">
+            <Link href="/" className="hover:text-brass">
+              home
             </Link>
-            {" / "}
-          </>
-        ) : null}
-        <Link href={`/catalog?categoryId=${part.category.id}`} className="hover:text-accent">
-          {part.category.nameFa}
-        </Link>
-      </nav>
+            <span className="px-2">/</span>
+            <Link href={`/catalog?categoryId=${part.category.id}`} className="hover:text-brass">
+              {part.category.nameFa}
+            </Link>
+          </nav>
 
-      <h1 className="text-xl font-bold">{part.nameFa}</h1>
-      {primaryNumber ? (
-        <div className="pt-2 text-sm text-muted">
-          شماره فنی: <span className="pn font-medium text-ink">{primaryNumber.number}</span>
+          <div className="flex flex-wrap items-end justify-between gap-6 pt-4">
+            <div>
+              <h1 className="max-w-2xl font-display text-2xl font-black leading-[1.6]">
+                {part.nameFa}
+              </h1>
+              {part.brand ? (
+                <div className="pt-2 text-sm text-white/60">برند: {part.brand.nameFa}</div>
+              ) : null}
+            </div>
+            {primary ? <span className="plate plate-dark plate-lg">{primary.number}</span> : null}
+          </div>
         </div>
-      ) : null}
-      {part.description ? <p className="pt-3 max-w-2xl text-sm text-muted">{part.description}</p> : null}
+      </div>
 
-      <section className="pt-6">
-        <h2 className="pb-2 text-sm font-bold">پیشنهادهای موجود</h2>
-        <OfferTable
-          offers={offers}
-          settings={settings}
-          partName={part.nameFa}
-          partNumber={primaryNumber?.number}
-        />
-      </section>
-
-      <div className="grid gap-6 pt-8 lg:grid-cols-2">
-        <section>
-          <h2 className="pb-2 text-sm font-bold">خودروهای سازگار</h2>
-          <div className="overflow-x-auto rounded border border-line bg-surface">
-            <table className="w-full min-w-[420px] text-sm">
-              <thead>
-                <tr className="bg-surface-2 text-xs text-faint">
-                  <th className="px-3 py-2 text-right font-medium">خودرو</th>
-                  <th className="px-3 py-2 text-right font-medium">سال</th>
-                  <th className="px-3 py-2 text-right font-medium">محل نصب</th>
-                </tr>
-              </thead>
-              <tbody>
-                {part.fitments.map((f) => (
-                  <tr key={f.id} className="border-t border-line">
-                    <td className="px-3 py-2">
-                      {[f.make?.nameFa, f.model?.nameFa, f.generation?.nameFa, f.trim?.nameFa]
-                        .filter(Boolean)
-                        .join(" ")}
-                      {f.note ? <span className="text-xs text-faint"> — {f.note}</span> : null}
-                    </td>
-                    <td className="tnum px-3 py-2 text-muted">
-                      {f.yearFrom ?? f.generation?.yearStart ?? "—"}
-                      {(f.yearTo ?? f.generation?.yearEnd) ? ` تا ${f.yearTo ?? f.generation?.yearEnd}` : ""}
-                    </td>
-                    <td className="px-3 py-2 text-muted">{POSITION_LABEL[f.position] ?? f.position}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+      <div className="mx-auto max-w-[1120px] px-5 py-10">
+        {part.description ? (
+          <p className="max-w-2xl pb-8 text-muted">{part.description}</p>
+        ) : null}
 
         <section>
-          <h2 className="pb-2 text-sm font-bold">شماره‌های فنی و معادل‌ها</h2>
-          <div className="overflow-x-auto rounded border border-line bg-surface">
-            <table className="w-full min-w-[380px] text-sm">
-              <thead>
-                <tr className="bg-surface-2 text-xs text-faint">
-                  <th className="px-3 py-2 text-right font-medium">شماره</th>
-                  <th className="px-3 py-2 text-right font-medium">نوع</th>
-                  <th className="px-3 py-2 text-right font-medium">برند</th>
-                </tr>
-              </thead>
-              <tbody>
-                {part.numbers.map((n) => (
-                  <tr key={n.id} className="border-t border-line">
-                    <td className="pn px-3 py-2 font-medium">{n.number}</td>
-                    <td className="px-3 py-2 text-muted">
-                      {n.type === "OEM"
-                        ? "اصلی سازنده"
-                        : n.type === "SUPERSEDED"
-                          ? "کد قدیمی"
-                          : n.type === "AFTERMARKET"
-                            ? "بازار"
-                            : "داخلی"}
-                    </td>
-                    <td className="px-3 py-2 text-muted">{n.brand?.nameFa ?? "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="rule pb-4">
+            <h2 className="font-display text-base font-bold">پیشنهادهای فروش</h2>
+            <span className="rule-label">offers</span>
           </div>
+          <OfferTable
+            offers={offers}
+            settings={settings}
+            partName={part.nameFa}
+            partNumber={primary?.number}
+          />
         </section>
+
+        <div className="grid gap-10 pt-12 lg:grid-cols-2">
+          <section>
+            <div className="rule pb-4">
+              <h2 className="font-display text-base font-bold">خودروهای سازگار</h2>
+              <span className="rule-label">fitment</span>
+            </div>
+            <div className="panel overflow-x-auto">
+              <table className="spec min-w-[420px]">
+                <thead>
+                  <tr>
+                    <th>خودرو</th>
+                    <th>سال</th>
+                    <th>محل نصب</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {part.fitments.map((f) => (
+                    <tr key={f.id}>
+                      <td>
+                        <span className="font-medium">
+                          {[f.make?.nameFa, f.model?.nameFa, f.generation?.nameFa, f.trim?.nameFa]
+                            .filter(Boolean)
+                            .join(" ")}
+                        </span>
+                        {f.note ? <div className="text-xs text-faint">{f.note}</div> : null}
+                      </td>
+                      <td className="tnum text-muted">
+                        {f.yearFrom ?? f.generation?.yearStart ?? "—"}
+                        {(f.yearTo ?? f.generation?.yearEnd)
+                          ? ` – ${f.yearTo ?? f.generation?.yearEnd}`
+                          : ""}
+                      </td>
+                      <td className="text-muted">{POSITION[f.position] ?? f.position}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section>
+            <div className="rule pb-4">
+              <h2 className="font-display text-base font-bold">شماره‌های فنی</h2>
+              <span className="rule-label">part numbers</span>
+            </div>
+            <div className="panel overflow-x-auto">
+              <table className="spec min-w-[380px]">
+                <thead>
+                  <tr>
+                    <th>شماره</th>
+                    <th>نوع</th>
+                    <th>برند</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {part.numbers.map((n) => (
+                    <tr key={n.id}>
+                      <td>
+                        <span className="plate text-xs">{n.number}</span>
+                      </td>
+                      <td className="text-muted">{NUMBER_TYPE[n.type] ?? n.type}</td>
+                      <td className="text-muted">{n.brand?.nameFa ?? "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {specs && Object.keys(specs).length > 0 ? (
+              <div className="pt-8">
+                <div className="rule pb-4">
+                  <h2 className="font-display text-base font-bold">مشخصات</h2>
+                  <span className="rule-label">specs</span>
+                </div>
+                <div className="panel overflow-hidden">
+                  <table className="spec">
+                    <tbody>
+                      {Object.entries(specs).map(([key, value]) => (
+                        <tr key={key}>
+                          <td className="w-1/2 text-muted">{key}</td>
+                          <td className="font-medium">{String(value)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : null}
+          </section>
+        </div>
       </div>
     </div>
   );

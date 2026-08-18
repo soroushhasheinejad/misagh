@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE "public"."Offer" ALTER COLUMN "priceLocked" DROP NOT NULL,
+ALTER COLUMN "priceLocked" DROP DEFAULT,
+ALTER COLUMN "showPrice" DROP NOT NULL,
+ALTER COLUMN "showPrice" DROP DEFAULT;
+
+-- AlterTable
+ALTER TABLE "public"."Part" ALTER COLUMN "priceLocked" DROP NOT NULL,
+ALTER COLUMN "priceLocked" DROP DEFAULT,
+ALTER COLUMN "showPrice" DROP NOT NULL,
+ALTER COLUMN "showPrice" DROP DEFAULT;

@@ -1,16 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Option = { id: string; nameFa: string; yearStart?: number; yearEnd?: number | null };
 type Tab = "vehicle" | "oem" | "vin";
 
-const TABS: Array<{ key: Tab; label: string }> = [
-  { key: "vehicle", label: "جستجو بر اساس خودرو" },
-  { key: "oem", label: "شماره فنی" },
-  { key: "vin", label: "شماره شاسی (VIN)" },
+const TABS: Array<{ key: Tab; label: string; hint: string }> = [
+  { key: "vehicle", label: "خودرو", hint: "vehicle" },
+  { key: "oem", label: "شماره فنی", hint: "oem" },
+  { key: "vin", label: "شماره شاسی", hint: "vin" },
 ];
+
+async function fetchLevel(query: string): Promise<Option[]> {
+  const response = await fetch(`/api/vehicles?level=${query}`);
+  if (!response.ok) return [];
+  return response.json();
+}
 
 function Select({
   label,
@@ -27,12 +33,12 @@ function Select({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs text-muted">{label}</span>
+      <span className="field-label">{label}</span>
       <select
         value={value}
         disabled={disabled || options.length === 0}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded border border-line bg-surface px-3 py-2 text-sm disabled:bg-surface-2 disabled:text-faint"
+        className="field"
       >
         <option value="">{disabled ? "—" : "انتخاب کنید"}</option>
         {options.map((o) => (
@@ -62,32 +68,30 @@ export function SearchPanel({ makes }: { makes: Option[] }) {
   const [oem, setOem] = useState("");
   const [vin, setVin] = useState("");
 
-  useEffect(() => {
+  /** هر سطح که عوض شود، سطح‌های پایین‌تر پاک و دوباره خوانده می‌شوند. */
+  async function pickMake(value: string) {
+    setMakeId(value);
     setModelId("");
+    setGenerationId("");
+    setTrimId("");
     setGenerations([]);
     setTrims([]);
-    if (!makeId) return setModels([]);
-    fetch(`/api/vehicles?level=models&makeId=${makeId}`)
-      .then((r) => r.json())
-      .then(setModels);
-  }, [makeId]);
+    setModels(value ? await fetchLevel(`models&makeId=${value}`) : []);
+  }
 
-  useEffect(() => {
+  async function pickModel(value: string) {
+    setModelId(value);
     setGenerationId("");
-    setTrims([]);
-    if (!modelId) return setGenerations([]);
-    fetch(`/api/vehicles?level=generations&modelId=${modelId}`)
-      .then((r) => r.json())
-      .then(setGenerations);
-  }, [modelId]);
-
-  useEffect(() => {
     setTrimId("");
-    if (!generationId) return setTrims([]);
-    fetch(`/api/vehicles?level=trims&generationId=${generationId}`)
-      .then((r) => r.json())
-      .then(setTrims);
-  }, [generationId]);
+    setTrims([]);
+    setGenerations(value ? await fetchLevel(`generations&modelId=${value}`) : []);
+  }
+
+  async function pickGeneration(value: string) {
+    setGenerationId(value);
+    setTrimId("");
+    setTrims(value ? await fetchLevel(`trims&generationId=${value}`) : []);
+  }
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -102,9 +106,15 @@ export function SearchPanel({ makes }: { makes: Option[] }) {
     }
   }
 
+  const canSubmit =
+    (tab === "vehicle" && !!generationId) ||
+    (tab === "oem" && oem.trim().length > 2) ||
+    (tab === "vin" && vin.trim().length > 5);
+
   return (
-    <div className="rounded-lg border border-line bg-surface shadow-sm">
-      <div className="flex flex-wrap gap-1 border-b border-line p-1.5">
+    <div className="panel panel-brass shadow-[0_18px_40px_-28px_rgba(14,20,27,0.55)]">
+      {/* انتخاب مسیر جستجو */}
+      <div className="flex border-b border-line-2">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -112,8 +122,8 @@ export function SearchPanel({ makes }: { makes: Option[] }) {
             onClick={() => setTab(t.key)}
             className={
               tab === t.key
-                ? "rounded bg-accent px-3 py-2 text-sm font-medium text-white"
-                : "rounded px-3 py-2 text-sm text-muted hover:bg-surface-2"
+                ? "relative flex-1 px-4 py-3 font-display text-sm font-bold text-ink after:absolute after:inset-x-0 after:bottom-[-1px] after:h-[2px] after:bg-brass"
+                : "flex-1 px-4 py-3 font-display text-sm font-medium text-faint transition-colors hover:text-muted"
             }
           >
             {t.label}
@@ -121,48 +131,62 @@ export function SearchPanel({ makes }: { makes: Option[] }) {
         ))}
       </div>
 
-      <form onSubmit={submit} className="p-4">
+      <form onSubmit={submit} className="p-5">
         {tab === "vehicle" ? (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Select label="برند" value={makeId} options={makes} onChange={setMakeId} />
-            <Select label="مدل" value={modelId} options={models} onChange={setModelId} disabled={!makeId} />
-            <Select label="نسل / سال" value={generationId} options={generations} onChange={setGenerationId} disabled={!modelId} />
-            <Select label="تیپ موتور" value={trimId} options={trims} onChange={setTrimId} disabled={!generationId} />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+            <div className="lg:pl-5">
+              <Select label="برند" value={makeId} options={makes} onChange={pickMake} />
+            </div>
+            <div className="lg:border-r lg:border-line-2 lg:px-5">
+              <Select label="مدل" value={modelId} options={models} onChange={pickModel} disabled={!makeId} />
+            </div>
+            <div className="lg:border-r lg:border-line-2 lg:px-5">
+              <Select label="نسل و سال" value={generationId} options={generations} onChange={pickGeneration} disabled={!modelId} />
+            </div>
+            <div className="lg:border-r lg:border-line-2 lg:pr-5">
+              <Select label="تیپ موتور" value={trimId} options={trims} onChange={setTrimId} disabled={!generationId} />
+            </div>
           </div>
         ) : tab === "oem" ? (
           <div>
-            <label className="mb-1 block text-xs text-muted">شماره فنی قطعه</label>
+            <span className="field-label">شماره فنی روی جعبه یا خود قطعه</span>
             <input
               value={oem}
               onChange={(e) => setOem(e.target.value)}
-              placeholder="مثال: 58101-D3A00"
-              className="pn w-full rounded border border-line bg-surface px-3 py-2 text-sm"
+              placeholder="58101-D3A00"
+              className="field mono text-center text-lg tracking-[0.14em]"
             />
             <p className="pt-2 text-xs text-faint">
-              خط تیره و فاصله مهم نیست؛ کدهای معادل و جایگزین هم نمایش داده می‌شوند.
+              خط تیره و فاصله مهم نیست. کدهای معادل و کدهای جایگزین‌شده هم می‌آیند.
             </p>
           </div>
         ) : (
           <div>
-            <label className="mb-1 block text-xs text-muted">شماره شاسی ۱۷ رقمی</label>
+            <span className="field-label">شماره شاسی ۱۷ رقمی</span>
             <input
               value={vin}
               onChange={(e) => setVin(e.target.value)}
               placeholder="KNAPB81ABJ5000000"
-              className="pn w-full rounded border border-line bg-surface px-3 py-2 text-sm"
+              className="field mono text-center tracking-[0.18em]"
             />
             <p className="pt-2 text-xs text-faint">
-              از روی VIN، برند و سال ساخت خودرو تشخیص داده می‌شود.
+              برند و سال ساخت از روی شماره شاسی خوانده می‌شود.
             </p>
           </div>
         )}
 
-        <button
-          type="submit"
-          className="mt-4 w-full rounded bg-navy px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-dark sm:w-auto sm:px-8"
-        >
-          جستجو
-        </button>
+        <div className="flex items-center justify-between gap-4 pt-5">
+          <p className="hidden text-xs text-faint sm:block">
+            {tab === "vehicle"
+              ? "بعد از انتخاب، فقط قطعات سازگار با همین خودرو را می‌بینید."
+              : tab === "oem"
+                ? "یک کد وارد کنید، همه معادل‌هایش را نشان می‌دهیم."
+                : "تا سطح مدل و سال تشخیص داده می‌شود."}
+          </p>
+          <button type="submit" disabled={!canSubmit} className="btn btn-brass disabled:opacity-40">
+            جستجو
+          </button>
+        </div>
       </form>
     </div>
   );

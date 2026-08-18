@@ -85,7 +85,7 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <h1 className="text-lg font-bold">تنظیمات فروشگاه</h1>
+      <div className="rule pb-3"><h1 className="font-display text-xl font-black">تنظیمات فروشگاه</h1><span className="rule-label">settings</span></div>
       <p className="pt-1 text-sm text-muted">
         هر گزینه اینجا روی کل سایت اثر می‌گذارد؛ در سطح هر قطعه و هر پیشنهاد هم می‌شود جداگانه override کرد.
       </p>
@@ -93,8 +93,8 @@ export default async function SettingsPage() {
       <form action={saveSettings} className="pt-6">
         <div className="flex flex-col gap-5">
           {groups.map((group) => (
-            <section key={group} className="rounded-lg border border-line bg-surface p-4">
-              <h2 className="pb-3 text-sm font-bold">{GROUP_TITLES[group] ?? group}</h2>
+            <section key={group} className="panel p-5">
+              <div className="rule pb-4"><h2 className="font-display text-base font-bold">{GROUP_TITLES[group] ?? group}</h2><span className="rule-label">{group}</span></div>
               <div className="grid gap-4 sm:grid-cols-2">
                 {keys
                   .filter((k) => k.startsWith(`${group}.`))
@@ -109,7 +109,7 @@ export default async function SettingsPage() {
                             type="checkbox"
                             name={key}
                             defaultChecked={value}
-                            className="size-4 accent-[var(--color-accent)]"
+                            className="size-4 accent-[var(--color-brass)]"
                           />
                           <span>{LABELS[key]}</span>
                         </label>
@@ -118,12 +118,12 @@ export default async function SettingsPage() {
 
                     return (
                       <label key={key} className="block text-sm">
-                        <span className="mb-1 block text-xs text-muted">{LABELS[key]}</span>
+                        <span className="field-label">{LABELS[key]}</span>
                         {choices ? (
                           <select
                             name={key}
                             defaultValue={String(value)}
-                            className="w-full rounded border border-line bg-surface px-3 py-2 text-sm"
+                            className="field"
                           >
                             {choices.map(([v, label]) => (
                               <option key={v} value={v}>
@@ -137,7 +137,7 @@ export default async function SettingsPage() {
                             type={typeof value === "number" ? "number" : "text"}
                             step="any"
                             defaultValue={String(value)}
-                            className="w-full rounded border border-line bg-surface px-3 py-2 text-sm"
+                            className="field"
                           />
                         )}
                       </label>
@@ -150,7 +150,7 @@ export default async function SettingsPage() {
 
         <button
           type="submit"
-          className="mt-5 rounded bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent-dark"
+          className="btn btn-brass mt-5"
         >
           ذخیره تنظیمات
         </button>

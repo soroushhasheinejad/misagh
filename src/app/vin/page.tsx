@@ -8,9 +8,19 @@ export default async function VinPage({
   searchParams: Promise<{ vin?: string }>;
 }) {
   const { vin } = await searchParams;
+
   if (!vin) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-10 text-muted">شماره شاسی را وارد کنید.</div>
+      <div className="mx-auto max-w-[1120px] px-5 py-16">
+        <h1 className="font-display text-xl font-black">تشخیص خودرو از شماره شاسی</h1>
+        <p className="max-w-lg pt-3 text-muted">
+          شماره شاسی ۱۷ رقمی روی کارت خودرو یا زیر شیشه جلو درج شده است. آن را در صفحه اصلی وارد
+          کنید تا برند و سال ساخت خوانده شود.
+        </p>
+        <Link href="/" className="btn btn-primary mt-5">
+          بازگشت به جستجو
+        </Link>
+      </div>
     );
   }
 
@@ -36,60 +46,77 @@ export default async function VinPage({
       : [];
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-lg font-bold">تشخیص خودرو از شماره شاسی</h1>
-      <div className="pn pt-2 text-sm text-muted">{info.vin}</div>
-
-      {!info.valid || info.error ? (
-        <div className="mt-4 rounded border-r-4 border-signal bg-signal-soft p-4 text-sm">
-          {info.error}
-        </div>
-      ) : null}
-
-      {info.valid ? (
-        <div className="mt-5 rounded-lg border border-line bg-surface p-4 text-sm">
-          <div className="grid gap-2 sm:grid-cols-3">
-            <div>
-              <div className="text-xs text-muted">کد سازنده</div>
-              <div className="pn font-medium">{info.wmi}</div>
-            </div>
-            <div>
-              <div className="text-xs text-muted">برند</div>
-              <div className="font-medium">{make?.nameFa ?? "نامشخص"}</div>
-            </div>
-            <div>
-              <div className="text-xs text-muted">سال ساخت</div>
-              <div className="tnum font-medium">{info.modelYear ?? "نامشخص"}</div>
-            </div>
+    <div>
+      <div className="bg-carbon py-10 text-white">
+        <div className="mx-auto max-w-[1120px] px-5">
+          <div className="font-mono text-[0.66rem] uppercase tracking-[0.22em] text-brass">vin</div>
+          <div className="pt-4">
+            <span className="plate plate-dark plate-lg">{info.vin}</span>
           </div>
         </div>
-      ) : null}
+      </div>
 
-      {candidates.length > 0 ? (
-        <section className="mt-6">
-          <h2 className="pb-2 text-sm font-bold">خودروهای محتمل — یکی را انتخاب کنید</h2>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {candidates.map(({ model, generation }) => (
-              <Link
-                key={generation.id}
-                href={`/catalog?generationId=${generation.id}`}
-                className="rounded-lg border border-line bg-surface p-3 text-sm hover:border-accent"
-              >
-                <div className="font-medium">
-                  {make?.nameFa} {model.nameFa} {generation.nameFa}
+      <div className="mx-auto max-w-[1120px] px-5 py-10">
+        {info.error ? (
+          <div className="panel border-r-[3px] border-r-alert bg-alert-soft p-4 text-sm">
+            {info.error}
+          </div>
+        ) : null}
+
+        {info.valid ? (
+          <div className="panel mt-5 grid gap-px overflow-hidden bg-line sm:grid-cols-3">
+            {[
+              { label: "کد سازنده", value: info.wmi, mono: true },
+              { label: "برند", value: make?.nameFa ?? "خارج از پوشش ما", mono: false },
+              { label: "سال ساخت", value: info.modelYear ?? "نامشخص", mono: false },
+            ].map((cell) => (
+              <div key={cell.label} className="bg-surface p-5">
+                <div className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-faint">
+                  {cell.label}
                 </div>
-                <div className="tnum text-xs text-faint">
-                  {generation.yearStart}
-                  {generation.yearEnd ? `–${generation.yearEnd}` : " به بعد"}
+                <div
+                  className={
+                    cell.mono
+                      ? "mono pt-2 text-lg font-bold"
+                      : "tnum pt-2 font-display text-lg font-black"
+                  }
+                >
+                  {String(cell.value)}
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
-          <p className="pt-3 text-xs text-faint">
-            رسیدن به تیپ و موتور دقیق نیاز به جدول دکد کامل سازنده دارد؛ فعلاً تا سطح مدل و سال تشخیص داده می‌شود.
-          </p>
-        </section>
-      ) : null}
+        ) : null}
+
+        {candidates.length > 0 ? (
+          <section className="pt-10">
+            <div className="rule pb-5">
+              <h2 className="font-display text-base font-bold">خودروهای محتمل</h2>
+              <span className="rule-label">select one</span>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {candidates.map(({ model, generation }) => (
+                <Link
+                  key={generation.id}
+                  href={`/catalog?generationId=${generation.id}`}
+                  className="panel p-4 transition-colors hover:border-brass"
+                >
+                  <div className="font-display text-sm font-bold">
+                    {make?.nameFa} {model.nameFa} {generation.nameFa}
+                  </div>
+                  <div className="tnum pt-1 text-xs text-faint">
+                    {generation.yearStart}
+                    {generation.yearEnd ? ` – ${generation.yearEnd}` : " به بعد"}
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <p className="pt-4 text-xs text-faint">
+              تیپ و موتور دقیق با جدول دکد کامل سازنده مشخص می‌شود؛ فعلاً تا سطح مدل و سال.
+            </p>
+          </section>
+        ) : null}
+      </div>
     </div>
   );
 }

@@ -31,15 +31,15 @@ export default async function AdminPartsPage() {
 
   return (
     <div>
-      <h1 className="text-lg font-bold">قطعات و قیمت</h1>
+      <div className="rule pb-3"><h1 className="font-display text-xl font-black">قطعات و قیمت</h1><span className="rule-label">pricing</span></div>
       <p className="pt-1 text-sm text-muted">
         برای هر قطعه می‌توانید حالت قیمت‌گذاری، حاشیه سود، قفل قیمت و پیشنهادهایش را جداگانه تنظیم کنید.
       </p>
 
-      <div className="mt-5 overflow-x-auto rounded-lg border border-line bg-surface">
+      <div className="panel mt-5 overflow-x-auto">
         <table className="w-full min-w-[720px] text-sm">
           <thead>
-            <tr className="bg-surface-2 text-xs text-faint">
+            <tr className="bg-steel-2 text-xs text-faint">
               <th className="px-3 py-2 text-right font-medium">قطعه</th>
               <th className="px-3 py-2 text-right font-medium">شماره فنی</th>
               <th className="px-3 py-2 text-right font-medium">حالت قیمت</th>
@@ -60,10 +60,10 @@ export default async function AdminPartsPage() {
                     <div className="font-medium">{part.nameFa}</div>
                     <div className="text-xs text-faint">{part.category.nameFa}</div>
                   </td>
-                  <td className="pn px-3 py-2 text-muted">{part.numbers[0]?.number ?? "—"}</td>
+                  <td className="px-3 py-2">{part.numbers[0] ? <span className="plate text-xs">{part.numbers[0].number}</span> : "—"}</td>
                   <td className="px-3 py-2 text-muted">
                     {part.priceMode ? MODE_LABEL[part.priceMode] : "ارث از تنظیمات"}
-                    {part.priceLocked ? <span className="pr-1 text-xs text-signal">(قفل)</span> : null}
+                    {part.priceLocked ? <span className="pr-1 text-xs text-alert">(قفل)</span> : null}
                   </td>
                   <td className="tnum px-3 py-2 text-muted">{part.offers.length}</td>
                   <td className="tnum px-3 py-2">
@@ -73,13 +73,13 @@ export default async function AdminPartsPage() {
                         <span className="text-xs text-muted">{moneyLabel(unit)}</span>
                       </>
                     ) : (
-                      <span className="text-signal">استعلام</span>
+                      <span className="text-alert">استعلام</span>
                     )}
                   </td>
                   <td className="px-3 py-2 text-left">
                     <Link
                       href={`/admin/parts/${part.id}`}
-                      className="rounded border border-line px-3 py-1.5 text-xs hover:border-accent hover:text-accent"
+                      className="rounded border border-line px-3 py-1.5 text-xs hover:border-brass hover:text-brass-dark"
                     >
                       ویرایش قیمت
                     </Link>

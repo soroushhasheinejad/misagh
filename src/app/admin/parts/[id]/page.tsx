@@ -45,13 +45,13 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs text-muted">{label}</span>
+      <span className="field-label">{label}</span>
       <input
         name={name}
         type={type}
         step="any"
         defaultValue={defaultValue === null || defaultValue === undefined ? "" : String(defaultValue)}
-        className="w-full rounded border border-line bg-surface px-3 py-2 text-sm"
+        className="field"
       />
       {hint ? <span className="pt-1 block text-[11px] text-faint">{hint}</span> : null}
     </label>
@@ -71,11 +71,11 @@ function SelectField({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs text-muted">{label}</span>
+      <span className="field-label">{label}</span>
       <select
         name={name}
         defaultValue={defaultValue ?? "INHERIT"}
-        className="w-full rounded border border-line bg-surface px-3 py-2 text-sm"
+        className="field"
       >
         {options.map(([v, l]) => (
           <option key={v} value={v}>
@@ -87,24 +87,34 @@ function SelectField({
   );
 }
 
+/**
+ * سوییچ سه‌حالته. «ارث» یعنی این سطح تصمیم نمی‌گیرد و مقدار از سطح بالاتر می‌آید —
+ * بدون این حالت، خاموشِ پیش‌فرضِ یک پیشنهاد، تصمیم قطعه را باطل می‌کرد.
+ */
 function Toggle({
   label,
   name,
-  defaultChecked,
+  value,
+  hint,
 }: {
   label: string;
   name: string;
-  defaultChecked?: boolean | null;
+  value?: boolean | null;
+  hint?: string;
 }) {
   return (
-    <label className="flex items-center gap-2 text-sm">
-      <input
-        type="checkbox"
+    <label className="block text-sm">
+      <span className="field-label">{label}</span>
+      <select
         name={name}
-        defaultChecked={defaultChecked ?? false}
-        className="size-4 accent-[var(--color-accent)]"
-      />
-      <span>{label}</span>
+        defaultValue={value === null || value === undefined ? "INHERIT" : String(value)}
+        className="field"
+      >
+        <option value="INHERIT">ارث از سطح بالاتر</option>
+        <option value="true">روشن</option>
+        <option value="false">خاموش</option>
+      </select>
+      {hint ? <span className="block pt-1 text-[11px] text-faint">{hint}</span> : null}
     </label>
   );
 }
@@ -141,24 +151,24 @@ export default async function AdminPartPricingPage({
 
   return (
     <div>
-      <Link href="/admin/parts" className="text-xs text-muted hover:text-accent">
+      <Link href="/admin/parts" className="text-xs text-muted hover:text-brass-dark">
         ← بازگشت به فهرست قطعات
       </Link>
-      <h1 className="pt-2 text-lg font-bold">{part.nameFa}</h1>
+      <h1 className="pt-2 font-display text-xl font-black">{part.nameFa}</h1>
       <div className="pt-1 text-sm text-muted">
         {part.category.nameFa}
         {part.numbers[0] ? (
           <>
             {" — "}
-            <span className="pn">{part.numbers[0].number}</span>
+            <span className="plate text-xs">{part.numbers[0].number}</span>
           </>
         ) : null}
       </div>
 
       {/* ---------------- قیمت‌گذاری در سطح قطعه ---------------- */}
-      <form action={savePartPricing} className="mt-6 rounded-lg border border-line bg-surface p-4">
+      <form action={savePartPricing} className="panel panel-brass mt-6 p-5">
         <input type="hidden" name="id" value={part.id} />
-        <h2 className="pb-1 text-sm font-bold">قیمت‌گذاری قطعه</h2>
+        <h2 className="font-display text-base font-bold">قیمت‌گذاری قطعه</h2>
         <p className="pb-4 text-xs text-muted">
           این تنظیمات پیش‌فرض همه پیشنهادهای این قطعه است. هر پیشنهاد می‌تواند مقدار خودش را داشته باشد.
         </p>
@@ -179,14 +189,19 @@ export default async function AdminPartPricingPage({
           <Field label="حداقل تعداد سفارش" name="minOrderQty" type="number" defaultValue={part.minOrderQty} />
         </div>
 
-        <div className="flex flex-wrap gap-5 pt-4">
-          <Toggle label="قفل قیمت (با تغییر نرخ ارز تکان نخورد)" name="priceLocked" defaultChecked={part.priceLocked} />
-          <Toggle label="نمایش قیمت" name="showPrice" defaultChecked={part.showPrice} />
-          <Toggle label="اجازه استعلام قیمت" name="allowInquiry" defaultChecked={part.allowInquiry} />
-          <Toggle label="نمایش چند پیشنهاد" name="allowMultiOffer" defaultChecked={part.allowMultiOffer} />
+        <div className="grid gap-4 pt-4 sm:grid-cols-4">
+          <Toggle
+            label="قفل قیمت"
+            name="priceLocked"
+            value={part.priceLocked}
+            hint="قیمت قفل‌شده، قیمت نهایی است و نرخ ارز تکانش نمی‌دهد"
+          />
+          <Toggle label="نمایش قیمت" name="showPrice" value={part.showPrice} />
+          <Toggle label="اجازه استعلام" name="allowInquiry" value={part.allowInquiry} />
+          <Toggle label="نمایش چند پیشنهاد" name="allowMultiOffer" value={part.allowMultiOffer} />
         </div>
 
-        <button type="submit" className="mt-4 rounded bg-accent px-5 py-2 text-sm font-medium text-white hover:bg-accent-dark">
+        <button type="submit" className="btn btn-brass mt-4">
           ذخیره قیمت قطعه
         </button>
       </form>
@@ -198,7 +213,7 @@ export default async function AdminPartPricingPage({
         {part.offers.map((offer) => {
           const computed = priced.find((p) => p.id === offer.id);
           return (
-            <form key={offer.id} action={saveOfferPricing} className="rounded-lg border border-line bg-surface p-4">
+            <form key={offer.id} action={saveOfferPricing} className="panel p-5">
               <input type="hidden" name="id" value={offer.id} />
 
               <div className="flex flex-wrap items-baseline justify-between gap-2 pb-3">
@@ -214,7 +229,7 @@ export default async function AdminPartPricingPage({
                       قیمت نهایی: {formatMoney(computed.price.amountIrr, unit)} {moneyLabel(unit)}
                     </span>
                   ) : computed?.price.kind === "inquiry" ? (
-                    <span className="text-signal">استعلام قیمت</span>
+                    <span className="text-alert">استعلام قیمت</span>
                   ) : (
                     <span className="text-faint">بدون نمایش قیمت</span>
                   )}
@@ -241,14 +256,20 @@ export default async function AdminPartPricingPage({
                 <SelectField label="وضعیت" name="status" options={STATUS_OPTIONS} defaultValue={offer.status} />
               </div>
 
-              <div className="flex flex-wrap gap-5 pt-4">
-                <Toggle label="قفل قیمت" name="priceLocked" defaultChecked={offer.priceLocked} />
-                <Toggle label="نمایش قیمت" name="showPrice" defaultChecked={offer.showPrice} />
-                <Toggle label="اجازه استعلام" name="allowInquiry" defaultChecked={offer.allowInquiry} />
-                <Toggle label="پیشنهاد پیش‌فرض" name="isDefault" defaultChecked={offer.isDefault} />
+              <div className="grid gap-4 pt-4 sm:grid-cols-4">
+                <Toggle label="قفل قیمت" name="priceLocked" value={offer.priceLocked} />
+                <Toggle label="نمایش قیمت" name="showPrice" value={offer.showPrice} />
+                <Toggle label="اجازه استعلام" name="allowInquiry" value={offer.allowInquiry} />
+                <label className="block text-sm">
+                  <span className="field-label">پیشنهاد پیش‌فرض</span>
+                  <select name="isDefault" defaultValue={String(offer.isDefault)} className="field">
+                    <option value="true">بله</option>
+                    <option value="false">خیر</option>
+                  </select>
+                </label>
               </div>
 
-              <button type="submit" className="mt-4 rounded bg-accent px-5 py-2 text-sm font-medium text-white hover:bg-accent-dark">
+              <button type="submit" className="btn btn-brass mt-4">
                 ذخیره این پیشنهاد
               </button>
             </form>
