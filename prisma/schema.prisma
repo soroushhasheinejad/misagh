@@ -1,0 +1,786 @@
+// ---------------------------------------------------------------------------
+// misagh — فروشگاه قطعات یدکی کیا و هیوندا
+// مدل داده: کاتالوگ خودرو، قطعات، شماره فنی و کراس‌رفرنس، پیشنهادهای فروش،
+// موتور قیمت‌گذاری، استعلام، و سفارش.
+// ---------------------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================ کاتالوگ خودرو =================================
+
+model VehicleMake {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  nameFa    String
+  nameEn    String
+  logoUrl   String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  models   VehicleModel[]
+  fitments Fitment[]
+  vinRules VinRule[]
+}
+
+model VehicleModel {
+  id        String   @id @default(cuid())
+  makeId    String
+  slug      String
+  nameFa    String
+  nameEn    String
+  imageUrl  String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  make        VehicleMake         @relation(fields: [makeId], references: [id], onDelete: Cascade)
+  generations VehicleGeneration[]
+  fitments    Fitment[]
+
+  @@unique([makeId, slug])
+  @@index([makeId])
+}
+
+/// نسل خودرو — مثلاً اسپورتیج نسل چهارم (QL)
+model VehicleGeneration {
+  id        String   @id @default(cuid())
+  modelId   String
+  slug      String
+  nameFa    String
+  nameEn    String
+  code      String? // کد داخلی سازنده مثل QL یا TL
+  yearStart Int
+  yearEnd   Int?
+  imageUrl  String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  model    VehicleModel   @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  trims    VehicleTrim[]
+  fitments Fitment[]
+  garage   UserVehicle[]
+
+  @@unique([modelId, slug])
+  @@index([modelId])
+}
+
+/// تیپ / موتور — واحدی که سازگاری قطعه در دقیق‌ترین حالت به آن بسته می‌شود
+model VehicleTrim {
+  id           String        @id @default(cuid())
+  generationId String
+  slug         String
+  nameFa       String
+  nameEn       String
+  engineCode   String?
+  engineVolume Decimal?      @db.Decimal(4, 1)
+  fuel         FuelType      @default(PETROL)
+  transmission Transmission?
+  bodyType     BodyType?
+  driveType    DriveType?
+  yearStart    Int?
+  yearEnd      Int?
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  generation VehicleGeneration @relation(fields: [generationId], references: [id], onDelete: Cascade)
+  fitments   Fitment[]
+  garage     UserVehicle[]
+
+  @@unique([generationId, slug])
+  @@index([generationId])
+}
+
+/// قاعده تشخیص خودرو از روی VIN — رقم دهم سال و کد سازنده
+model VinRule {
+  id           String   @id @default(cuid())
+  makeId       String
+  wmi          String // سه کاراکتر اول VIN
+  pattern      String? // الگوی regex روی کاراکترهای ۴ تا ۸
+  modelHint    String?
+  yearCharMap  Json? // نگاشت کاراکتر دهم به سال میلادی
+  note         String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  make VehicleMake @relation(fields: [makeId], references: [id], onDelete: Cascade)
+
+  @@index([wmi])
+}
+
+// ============================== قطعات =======================================
+
+model PartCategory {
+  id        String   @id @default(cuid())
+  parentId  String?
+  slug      String   @unique
+  nameFa    String
+  nameEn    String?
+  iconKey   String?
+  imageUrl  String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent   PartCategory?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children PartCategory[] @relation("CategoryTree")
+  parts    Part[]
+
+  @@index([parentId])
+}
+
+/// برند قطعه — جنیون، موبیس، های‌کپی، متفرقه
+model PartBrand {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  nameFa      String
+  nameEn      String?
+  country     String?
+  qualityTier QualityTier @default(AFTERMARKET)
+  logoUrl     String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+
+  parts       Part[]
+  partNumbers PartNumber[]
+  offers      Offer[]
+}
+
+model Part {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  nameFa      String
+  nameEn      String?
+  categoryId  String
+  brandId     String?
+  description String?
+  specs       Json? // مشخصات فنی آزاد: ضخامت، قطر، تعداد دندانه …
+  weightGram  Int?
+  lengthMm    Int?
+  widthMm     Int?
+  heightMm    Int?
+  isActive    Boolean @default(true)
+  isFeatured  Boolean @default(false)
+
+  // ---- تنظیمات قیمت در سطح قطعه (پیش‌فرض همه پیشنهادهای این قطعه) ----
+  priceMode        PriceMode? // خالی یعنی از تنظیمات کلی فروشگاه ارث می‌برد
+  basePriceIrr     Decimal?      @db.Decimal(18, 2)
+  baseCurrencyCode String?
+  basePriceForeign Decimal?      @db.Decimal(18, 4)
+  marginPercent    Decimal?      @db.Decimal(6, 2)
+  discountPercent  Decimal?      @db.Decimal(6, 2)
+  discountUntil    DateTime?
+  roundingRule     RoundingRule?
+  priceLocked      Boolean       @default(false) // با تغییر نرخ ارز بازمحاسبه نشود
+  lockedPriceIrr   Decimal?      @db.Decimal(18, 2)
+  priceValidUntil  DateTime?
+  showPrice        Boolean       @default(true) // خاموش کردن نمایش قیمت
+  allowInquiry     Boolean? // دکمه استعلام قیمت
+  allowMultiOffer  Boolean? // نمایش چند پیشنهاد برای همین قطعه
+  dealerMargin     Decimal?      @db.Decimal(6, 2) // حاشیه سود قیمت همکار
+  minOrderQty      Int           @default(1)
+
+  // ---- کش قیمت محاسبه‌شده ----
+  computedPriceIrr Decimal?  @db.Decimal(18, 2)
+  computedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category     PartCategory   @relation(fields: [categoryId], references: [id])
+  brand        PartBrand?     @relation(fields: [brandId], references: [id])
+  numbers      PartNumber[]
+  fitments     Fitment[]
+  offers       Offer[]
+  images       PartImage[]
+  priceHistory PriceHistory[]
+  orderItems   OrderItem[]
+  inquiries    Inquiry[]
+
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([isActive])
+}
+
+model PartImage {
+  id        String   @id @default(cuid())
+  partId    String
+  url       String
+  alt       String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  part Part @relation(fields: [partId], references: [id], onDelete: Cascade)
+
+  @@index([partId])
+}
+
+/// شماره فنی — یک قطعه می‌تواند چند شماره داشته باشد
+model PartNumber {
+  id         String         @id @default(cuid())
+  partId     String
+  brandId    String?
+  number     String // شکل نمایشی: 86511-D9000
+  normalized String // شکل جستجو: 86511D9000
+  type       PartNumberType @default(OEM)
+  isPrimary  Boolean        @default(false)
+  note       String?
+  createdAt  DateTime       @default(now())
+
+  part         Part                @relation(fields: [partId], references: [id], onDelete: Cascade)
+  brand        PartBrand?          @relation(fields: [brandId], references: [id])
+  crossMembers CrossGroupMember[]
+  supersededBy Supersession[]      @relation("SupersededFrom")
+  supersedes   Supersession[]      @relation("SupersededTo")
+
+  @@index([normalized])
+  @@index([partId])
+}
+
+/// گروه معادل‌ها — همه شماره‌های داخل یک گروه با هم قابل جایگزینی‌اند
+model CrossGroup {
+  id        String   @id @default(cuid())
+  label     String?
+  source    String? // منبع: کاتالوگ سازنده، تجربه فروش، لیست واردکننده
+  verified  Boolean  @default(false)
+  note      String?
+  createdAt DateTime @default(now())
+
+  members CrossGroupMember[]
+}
+
+model CrossGroupMember {
+  id           String   @id @default(cuid())
+  groupId      String
+  partNumberId String
+  createdAt    DateTime @default(now())
+
+  group      CrossGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  partNumber PartNumber @relation(fields: [partNumberId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, partNumberId])
+  @@index([partNumberId])
+}
+
+/// جایگزینی جهت‌دار — کد قدیمی با کد جدید عوض شده است
+model Supersession {
+  id        String   @id @default(cuid())
+  fromId    String
+  toId      String
+  note      String?
+  createdAt DateTime @default(now())
+
+  from PartNumber @relation("SupersededFrom", fields: [fromId], references: [id], onDelete: Cascade)
+  to   PartNumber @relation("SupersededTo", fields: [toId], references: [id], onDelete: Cascade)
+
+  @@unique([fromId, toId])
+}
+
+/// جدول سازگاری — حلقه اتصال قطعه به خودرو
+model Fitment {
+  id           String      @id @default(cuid())
+  partId       String
+  makeId       String?
+  modelId      String?
+  generationId String?
+  trimId       String?
+  yearFrom     Int?
+  yearTo       Int?
+  position     FitPosition @default(UNIVERSAL)
+  note         String? // «فقط اتوماتیک» یا «از شاسی … به بعد»
+  verified     Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+
+  part       Part               @relation(fields: [partId], references: [id], onDelete: Cascade)
+  make       VehicleMake?       @relation(fields: [makeId], references: [id])
+  model      VehicleModel?      @relation(fields: [modelId], references: [id])
+  generation VehicleGeneration? @relation(fields: [generationId], references: [id])
+  trim       VehicleTrim?       @relation(fields: [trimId], references: [id])
+
+  @@index([partId])
+  @@index([generationId])
+  @@index([trimId])
+  @@index([modelId])
+}
+
+// ===================== تامین‌کننده و پیشنهادهای فروش ========================
+
+model Supplier {
+  id              String   @id @default(cuid())
+  name            String
+  phone           String?
+  telegram        String?
+  note            String?
+  defaultLeadDays Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  offers Offer[]
+}
+
+/// یک پیشنهاد فروش برای یک قطعه — مثل fitinpart چند پیشنهاد برای یک قطعه.
+/// اگر «چند پیشنهادی» در پنل خاموش باشد فقط پیشنهاد پیش‌فرض نمایش داده می‌شود.
+model Offer {
+  id         String      @id @default(cuid())
+  partId     String
+  supplierId String?
+  brandId    String? // برند این پیشنهاد: جنیون، موبیس، های‌کپی …
+  sku        String?     @unique
+  status     OfferStatus @default(ACTIVE)
+  isDefault  Boolean     @default(false)
+  sortOrder  Int         @default(0)
+
+  // ---- موجودی ----
+  stockQty       Int  @default(0)
+  reservedQty    Int  @default(0)
+  lowStockAlert  Int  @default(2)
+  leadTimeDays   Int  @default(0) // زمان تحویل، معادل ستون روز در fitinpart
+  warehouseNote  String?
+
+  // ---- قیمت‌گذاری در سطح پیشنهاد (روی تنظیمات قطعه اولویت دارد) ----
+  priceMode        PriceMode?
+  basePriceIrr     Decimal?      @db.Decimal(18, 2)
+  baseCurrencyCode String?
+  basePriceForeign Decimal?      @db.Decimal(18, 4)
+  costPriceIrr     Decimal?      @db.Decimal(18, 2) // قیمت خرید، فقط در پنل
+  marginPercent    Decimal?      @db.Decimal(6, 2)
+  discountPercent  Decimal?      @db.Decimal(6, 2)
+  discountUntil    DateTime?
+  roundingRule     RoundingRule?
+  priceLocked      Boolean       @default(false)
+  lockedPriceIrr   Decimal?      @db.Decimal(18, 2)
+  priceValidUntil  DateTime?
+  showPrice        Boolean       @default(true)
+  allowInquiry     Boolean?
+  dealerPriceIrr   Decimal?      @db.Decimal(18, 2)
+  minOrderQty      Int?
+
+  computedPriceIrr Decimal?  @db.Decimal(18, 2)
+  computedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  part         Part           @relation(fields: [partId], references: [id], onDelete: Cascade)
+  supplier     Supplier?      @relation(fields: [supplierId], references: [id])
+  brand        PartBrand?     @relation(fields: [brandId], references: [id])
+  priceHistory PriceHistory[]
+  orderItems   OrderItem[]
+  cartItems    CartItem[]
+
+  @@index([partId])
+  @@index([status])
+}
+
+// ============================ قیمت و ارز ====================================
+
+model Currency {
+  code      String   @id // USD, AED, EUR, CNY
+  nameFa    String
+  rateIrr   Decimal  @db.Decimal(18, 2) // نرخ هر واحد به ریال
+  isDefault Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+
+  history ExchangeRateHistory[]
+}
+
+model ExchangeRateHistory {
+  id           String   @id @default(cuid())
+  currencyCode String
+  oldRateIrr   Decimal  @db.Decimal(18, 2)
+  newRateIrr   Decimal  @db.Decimal(18, 2)
+  changedById  String?
+  note         String?
+  createdAt    DateTime @default(now())
+
+  currency  Currency @relation(fields: [currencyCode], references: [code], onDelete: Cascade)
+  changedBy User?    @relation(fields: [changedById], references: [id])
+
+  @@index([currencyCode])
+}
+
+model PriceHistory {
+  id          String   @id @default(cuid())
+  partId      String?
+  offerId     String?
+  oldPriceIrr Decimal? @db.Decimal(18, 2)
+  newPriceIrr Decimal? @db.Decimal(18, 2)
+  reason      String? // تغییر نرخ ارز، ویرایش دستی، ایمپورت اکسل
+  changedById String?
+  createdAt   DateTime @default(now())
+
+  part      Part?  @relation(fields: [partId], references: [id], onDelete: Cascade)
+  offer     Offer? @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  changedBy User?  @relation(fields: [changedById], references: [id])
+
+  @@index([partId])
+  @@index([offerId])
+}
+
+/// تنظیمات فروشگاه — کلید/مقدار تا هر سوییچی از پنل قابل روشن و خاموش کردن باشد
+model Setting {
+  key       String   @id
+  value     Json
+  group     String   @default("general")
+  labelFa   String?
+  updatedAt DateTime @updatedAt
+}
+
+// ======================= کاربر، گاراژ، استعلام ==============================
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  fullName  String?
+  email     String?
+  role      UserRole @default(CUSTOMER)
+  isDealer  Boolean  @default(false) // قیمت همکار ببیند
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  vehicles      UserVehicle[]
+  addresses     Address[]
+  orders        Order[]
+  inquiries     Inquiry[]
+  carts         Cart[]
+  priceChanges  PriceHistory[]
+  rateChanges   ExchangeRateHistory[]
+  otpCodes      OtpCode[]
+  auditLogs     AuditLog[]
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  userId    String?
+  phone     String
+  codeHash  String
+  expiresAt DateTime
+  usedAt    DateTime?
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([phone])
+}
+
+/// گاراژ من — خودروهای ذخیره‌شده کاربر
+model UserVehicle {
+  id           String   @id @default(cuid())
+  userId       String
+  generationId String?
+  trimId       String?
+  nickname     String?
+  vin          String?
+  plate        String?
+  createdAt    DateTime @default(now())
+
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  generation VehicleGeneration? @relation(fields: [generationId], references: [id])
+  trim       VehicleTrim?       @relation(fields: [trimId], references: [id])
+
+  @@index([userId])
+}
+
+/// استعلام قیمت / درخواست قطعه نایاب
+model Inquiry {
+  id           String        @id @default(cuid())
+  userId       String?
+  partId       String?
+  phone        String
+  fullName     String?
+  vehicleText  String?
+  partText     String?
+  partNumber   String?
+  imageUrl     String?
+  channel      InquiryChannel @default(SITE)
+  status       InquiryStatus  @default(NEW)
+  quotedPrice  Decimal?       @db.Decimal(18, 2)
+  responseNote String?
+  orderId      String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  user  User?  @relation(fields: [userId], references: [id])
+  part  Part?  @relation(fields: [partId], references: [id])
+  order Order? @relation(fields: [orderId], references: [id])
+
+  @@index([status])
+  @@index([phone])
+}
+
+// ============================ سبد و سفارش ===================================
+
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String?
+  token     String   @unique // سبد مهمان
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User?      @relation(fields: [userId], references: [id])
+  items CartItem[]
+}
+
+model CartItem {
+  id          String   @id @default(cuid())
+  cartId      String
+  offerId     String
+  qty         Int      @default(1)
+  lockedPrice Decimal? @db.Decimal(18, 2) // قفل قیمت هنگام تسویه
+  lockedUntil DateTime?
+  createdAt   DateTime @default(now())
+
+  cart  Cart  @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  offer Offer @relation(fields: [offerId], references: [id])
+
+  @@unique([cartId, offerId])
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  userId     String
+  fullName   String
+  phone      String
+  province   String
+  city       String
+  postalCode String?
+  line       String
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@index([userId])
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  orderNo       String        @unique
+  userId        String
+  addressId     String?
+  status        OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(UNPAID)
+  subtotalIrr   Decimal       @db.Decimal(18, 2)
+  discountIrr   Decimal       @default(0) @db.Decimal(18, 2)
+  shippingIrr   Decimal       @default(0) @db.Decimal(18, 2)
+  totalIrr      Decimal       @db.Decimal(18, 2)
+  shippingMethod String?
+  trackingCode  String?
+  note          String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user      User        @relation(fields: [userId], references: [id])
+  address   Address?    @relation(fields: [addressId], references: [id])
+  items     OrderItem[]
+  payments  Payment[]
+  inquiries Inquiry[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  offerId   String?
+  partId    String?
+  titleFa   String // عنوان در لحظه ثبت سفارش
+  partNumber String?
+  qty       Int
+  unitPrice Decimal @db.Decimal(18, 2)
+  totalPrice Decimal @db.Decimal(18, 2)
+
+  order Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  offer Offer? @relation(fields: [offerId], references: [id])
+  part  Part?  @relation(fields: [partId], references: [id])
+
+  @@index([orderId])
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  orderId     String
+  gateway     String
+  amountIrr   Decimal       @db.Decimal(18, 2)
+  authority   String?
+  refId       String?
+  status      PaymentStatus @default(UNPAID)
+  rawResponse Json?
+  createdAt   DateTime      @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+// ============================ گزارش و لاگ ===================================
+
+/// جستجوهای بی‌نتیجه — گزارش «چه چیزی را باید بخرید»
+model SearchLog {
+  id          String   @id @default(cuid())
+  query       String
+  normalized  String
+  resultCount Int      @default(0)
+  searchType  String   @default("text") // text | oem | vehicle | vin
+  userId      String?
+  createdAt   DateTime @default(now())
+
+  @@index([normalized])
+  @@index([resultCount])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+}
+
+// =============================== enums ======================================
+
+enum FuelType {
+  PETROL
+  DIESEL
+  HYBRID
+  ELECTRIC
+  LPG
+}
+
+enum Transmission {
+  MANUAL
+  AUTOMATIC
+  CVT
+  DCT
+}
+
+enum BodyType {
+  SEDAN
+  HATCHBACK
+  SUV
+  CROSSOVER
+  VAN
+  PICKUP
+  COUPE
+  WAGON
+}
+
+enum DriveType {
+  FWD
+  RWD
+  AWD
+}
+
+enum PartNumberType {
+  OEM
+  SUPERSEDED
+  AFTERMARKET
+  INTERNAL
+}
+
+enum QualityTier {
+  GENUINE
+  OEM_SUPPLIER
+  HIGH_COPY
+  AFTERMARKET
+  USED
+}
+
+enum FitPosition {
+  UNIVERSAL
+  FRONT
+  REAR
+  LEFT
+  RIGHT
+  FRONT_LEFT
+  FRONT_RIGHT
+  REAR_LEFT
+  REAR_RIGHT
+  UPPER
+  LOWER
+}
+
+enum PriceMode {
+  FIXED /// قیمت ثابت ریالی
+  CURRENCY_LINKED /// وابسته به نرخ ارز
+  INQUIRY /// فقط استعلام، قیمت نمایش داده نمی‌شود
+  HIDDEN /// قطعه نمایش داده می‌شود ولی بدون قیمت و بدون خرید
+}
+
+enum RoundingRule {
+  NONE
+  NEAREST_1K
+  NEAREST_10K
+  NEAREST_100K
+  UP_10K
+  UP_100K
+}
+
+enum OfferStatus {
+  ACTIVE
+  OUT_OF_STOCK
+  DISABLED
+}
+
+enum InquiryStatus {
+  NEW
+  IN_PROGRESS
+  QUOTED
+  WON
+  LOST
+}
+
+enum InquiryChannel {
+  SITE
+  TELEGRAM
+  WHATSAPP
+  PHONE
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PREPARING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  WAREHOUSE
+  SUPPORT
+  CUSTOMER
+}

@@ -1,0 +1,688 @@
+<title>طرح فنی فروشگاه قطعات کیا و هیوندا</title>
+<style>
+  :root {
+    --ground: #EDF1F3;
+    --surface: #FFFFFF;
+    --surface-2: #E3E9EC;
+    --ink: #16212B;
+    --muted: #5B6B77;
+    --faint: #8697A3;
+    --line: #D2DAE0;
+    --line-strong: #B9C5CD;
+    --accent: #0E6D78;
+    --accent-soft: #D8EBEC;
+    --signal: #A8451A;
+    --signal-soft: #F3E1D8;
+    --shadow: 0 1px 2px rgba(22,33,43,.06), 0 8px 24px -16px rgba(22,33,43,.28);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0E151B;
+      --surface: #16202A;
+      --surface-2: #1D2933;
+      --ink: #E3EAEF;
+      --muted: #97A7B3;
+      --faint: #74858F;
+      --line: #26333E;
+      --line-strong: #35454F;
+      --accent: #55B8C2;
+      --accent-soft: #16333A;
+      --signal: #DE8B5C;
+      --signal-soft: #33231A;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0E151B;
+    --surface: #16202A;
+    --surface-2: #1D2933;
+    --ink: #E3EAEF;
+    --muted: #97A7B3;
+    --faint: #74858F;
+    --line: #26333E;
+    --line-strong: #35454F;
+    --accent: #55B8C2;
+    --accent-soft: #16333A;
+    --signal: #DE8B5C;
+    --signal-soft: #33231A;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    direction: rtl;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Tahoma, "Vazirmatn", "IRANSans", sans-serif;
+    font-size: 16px;
+    line-height: 1.85;
+    margin: 0;
+    padding: 0 20px 96px;
+  }
+
+  code, .mono, .num { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  @media (min-width: 1000px) {
+    .wrap { grid-template-columns: 200px minmax(0, 1fr); align-items: start; }
+    .rail { position: sticky; top: 32px; order: 2; }
+    main { order: 1; }
+  }
+
+  /* ---------- rail ---------- */
+  .rail { display: none; }
+  @media (min-width: 1000px) { .rail { display: block; } }
+  .rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .rail a {
+    display: block;
+    padding: 3px 10px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13.5px;
+    border-right: 2px solid var(--line);
+    transition: color .15s, border-color .15s;
+  }
+  .rail a:hover, .rail a:focus-visible { color: var(--accent); border-right-color: var(--accent); }
+  .rail-title {
+    font-size: 11px; letter-spacing: .14em; color: var(--faint);
+    padding: 0 10px 10px; margin: 0;
+  }
+
+  /* ---------- masthead ---------- */
+  header.top {
+    padding: 56px 0 36px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 44px;
+  }
+  .eyebrow {
+    font-size: 11.5px; letter-spacing: .16em; color: var(--accent);
+    margin: 0 0 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(28px, 4.6vw, 42px);
+    line-height: 1.35; font-weight: 700; margin: 0 0 16px;
+    text-wrap: balance; letter-spacing: -.01em;
+  }
+  .lede { font-size: 17.5px; color: var(--muted); margin: 0; max-width: 62ch; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+  .chip {
+    font-size: 12.5px; padding: 4px 11px; border-radius: 3px;
+    background: var(--surface); border: 1px solid var(--line); color: var(--muted);
+  }
+  .chip b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- sections ---------- */
+  section { margin-bottom: 60px; scroll-margin-top: 24px; }
+  h2 {
+    font-size: 22px; font-weight: 700; margin: 0 0 8px; letter-spacing: -.005em;
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  h2::before {
+    content: ""; flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); transform: translateY(-4px);
+  }
+  h3 { font-size: 16.5px; font-weight: 700; margin: 30px 0 8px; }
+  .sub { color: var(--muted); margin: 0 0 22px; max-width: 68ch; }
+  p { max-width: 70ch; }
+  ul { padding-right: 20px; margin: 10px 0; max-width: 70ch; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--faint); }
+  strong { font-weight: 600; }
+  a { color: var(--accent); }
+
+  /* ---------- table ---------- */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); box-shadow: var(--shadow); }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14.5px; }
+  th, td { text-align: right; padding: 11px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    font-size: 11.5px; letter-spacing: .1em; color: var(--faint); font-weight: 600;
+    background: var(--surface-2); border-bottom: 1px solid var(--line-strong);
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.pick { font-weight: 600; white-space: nowrap; }
+  td.why { color: var(--muted); }
+
+  /* ---------- cards ---------- */
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+    padding: 18px 20px; box-shadow: var(--shadow);
+  }
+  .card h4 { margin: 0 0 6px; font-size: 15px; font-weight: 700; }
+  .card p { margin: 0; font-size: 14px; color: var(--muted); }
+  .card ul { font-size: 14px; color: var(--muted); margin: 8px 0 0; }
+
+  /* ---------- architecture diagram ---------- */
+  .arch { display: flex; flex-direction: column; gap: 10px; }
+  .layer {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+    padding: 14px 16px; box-shadow: var(--shadow);
+  }
+  .layer-label {
+    font-size: 11px; letter-spacing: .12em; color: var(--faint); margin-bottom: 10px;
+  }
+  .boxes { display: flex; flex-wrap: wrap; gap: 8px; }
+  .box {
+    border: 1px solid var(--line-strong); border-radius: 4px; padding: 7px 12px;
+    font-size: 13.5px; background: var(--ground);
+  }
+  .box .t { display: block; font-size: 11px; color: var(--faint); }
+  .box.key { border-color: var(--accent); background: var(--accent-soft); }
+  .flow { text-align: center; color: var(--line-strong); font-size: 18px; line-height: 1; }
+
+  /* ---------- phases ---------- */
+  .phase { display: grid; grid-template-columns: auto 1fr; gap: 0 18px; }
+  .phase-row { display: contents; }
+  .pn {
+    grid-column: 1; font-size: 13px; font-weight: 700; color: var(--accent);
+    padding-top: 16px; text-align: center; position: relative; min-width: 44px;
+  }
+  .pbody { grid-column: 2; padding: 14px 0 22px; border-bottom: 1px dashed var(--line); }
+  .phase-row:last-child .pbody { border-bottom: 0; }
+  .pbody h4 { margin: 0 0 2px; font-size: 15.5px; }
+  .pbody .dur { font-size: 12.5px; color: var(--faint); margin-bottom: 6px; }
+  .pbody p { margin: 0; font-size: 14.5px; color: var(--muted); }
+
+  /* ---------- callout ---------- */
+  .note {
+    border-right: 3px solid var(--signal); background: var(--signal-soft);
+    padding: 14px 18px; border-radius: 0 4px 4px 0; font-size: 14.5px; color: var(--ink);
+  }
+  .note b { color: var(--signal); }
+  .note p { margin: 0; max-width: none; }
+
+  footer {
+    border-top: 1px solid var(--line); padding-top: 20px; color: var(--faint); font-size: 13px;
+  }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media print {
+    @page { size: A4; margin: 14mm 12mm; }
+    :root {
+      --ground: #FFFFFF;
+      --surface: #FFFFFF;
+      --surface-2: #F0F3F5;
+      --shadow: none;
+    }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { padding: 0; font-size: 11.5pt; line-height: 1.7; background: #fff; }
+    .wrap { max-width: none; grid-template-columns: 1fr; gap: 0; }
+    .rail { display: none; }
+    header.top { padding-top: 0; }
+    h1 { font-size: 24pt; }
+    h2 { font-size: 15pt; }
+    h3 { font-size: 12pt; }
+    .lede { font-size: 12pt; }
+    section { margin-bottom: 30px; break-inside: auto; }
+    h2, h3 { break-after: avoid; }
+    .card, .layer, .phase-row, .note, tr { break-inside: avoid; }
+    .tablewrap { overflow: visible; }
+    table { min-width: 0; font-size: 10pt; }
+    #arch, #phases, #cost { break-before: page; }
+    footer { break-inside: avoid; }
+  }
+</style>
+
+<div class="wrap">
+  <nav class="rail" aria-label="فهرست">
+    <p class="rail-title">فهرست</p>
+    <ol>
+      <li><a href="#arch">معماری کلی</a></li>
+      <li><a href="#stack">اجزای فنی</a></li>
+      <li><a href="#data">مدل داده و سازگاری</a></li>
+      <li><a href="#search">موتور جستجو</a></li>
+      <li><a href="#shop">ماژول‌های فروشگاه</a></li>
+      <li><a href="#admin">پنل مدیریت</a></li>
+      <li><a href="#pay">پرداخت و ارسال</a></li>
+      <li><a href="#lead">استعلام و پیام‌رسان</a></li>
+      <li><a href="#seo">سئو و سرعت</a></li>
+      <li><a href="#sec">امنیت</a></li>
+      <li><a href="#infra">زیرساخت و استقرار</a></li>
+      <li><a href="#phases">فازبندی اجرا</a></li>
+      <li><a href="#cost">هزینه‌های جاری</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="top">
+      <p class="eyebrow">سند فنی — جلسه شروع پروژه</p>
+      <h1>فروشگاه اینترنتی قطعات یدکی کیا و هیوندا</h1>
+      <p class="lede">
+        سایتی که مشتری در آن اول <strong>خودروی خودش</strong> را انتخاب می‌کند و از آن لحظه به بعد فقط
+        قطعات سازگار با همان خودرو را می‌بیند؛ در کنارش جستجو با <strong>شماره فنی سازنده</strong> و
+        فرم <strong>استعلام قیمت</strong> برای قطعات نایاب. این سند تمام اجزای فنی، دلیل هر انتخاب،
+        زمان‌بندی و هزینه‌ها را برای طرح در جلسه جمع کرده است.
+      </p>
+      <div class="chips">
+        <span class="chip">بازار: <b>ایران</b></span>
+        <span class="chip">فرانت و بک: <b>Next.js</b></span>
+        <span class="chip">دیتابیس: <b>PostgreSQL</b></span>
+        <span class="chip">جستجو: <b>Meilisearch</b></span>
+        <span class="chip">پرداخت: <b>درگاه داخلی</b></span>
+        <span class="chip">هاست: <b>سرور ایران</b></span>
+        <span class="chip">وضعیت انبار: <b>اکسل / دستی</b></span>
+      </div>
+    </header>
+
+    <section id="arch">
+      <h2>معماری کلی</h2>
+      <p class="sub">
+        معماری تک‌سرویسی (Monolith) با Next.js: یعنی سایت و API و پنل مدیریت همه در یک پروژه‌اند.
+        برای این مقیاس این ساده‌ترین و ارزان‌ترین گزینه است و بعداً هم می‌شود بخش‌ها را جدا کرد.
+      </p>
+      <div class="arch">
+        <div class="layer">
+          <div class="layer-label">کاربر</div>
+          <div class="boxes">
+            <span class="box">مرورگر موبایل <span class="t">۷۰٪ ترافیک</span></span>
+            <span class="box">دسکتاپ</span>
+            <span class="box">اپراتور فروش <span class="t">پنل مدیریت</span></span>
+            <span class="box">گوگل <span class="t">ربات ایندکس</span></span>
+          </div>
+        </div>
+        <div class="flow">↓</div>
+        <div class="layer">
+          <div class="layer-label">لبه</div>
+          <div class="boxes">
+            <span class="box">CDN و کش تصاویر</span>
+            <span class="box">SSL / HTTPS</span>
+            <span class="box">دیوار آتش و ضد ربات</span>
+          </div>
+        </div>
+        <div class="flow">↓</div>
+        <div class="layer">
+          <div class="layer-label">اپلیکیشن</div>
+          <div class="boxes">
+            <span class="box key">Next.js <span class="t">صفحات + API</span></span>
+            <span class="box">لایه منطق فروش <span class="t">سبد، سفارش، قیمت</span></span>
+            <span class="box">پنل مدیریت</span>
+            <span class="box">کارهای پس‌زمینه <span class="t">ایمپورت اکسل، پیامک</span></span>
+          </div>
+        </div>
+        <div class="flow">↓</div>
+        <div class="layer">
+          <div class="layer-label">داده</div>
+          <div class="boxes">
+            <span class="box key">PostgreSQL <span class="t">محصول، سفارش، کاتالوگ خودرو</span></span>
+            <span class="box key">Meilisearch <span class="t">جستجوی فارسی و OEM</span></span>
+            <span class="box">Redis <span class="t">کش و صف</span></span>
+            <span class="box">فضای ابری <span class="t">تصاویر قطعات</span></span>
+          </div>
+        </div>
+        <div class="flow">↓</div>
+        <div class="layer">
+          <div class="layer-label">سرویس‌های بیرونی</div>
+          <div class="boxes">
+            <span class="box">درگاه پرداخت</span>
+            <span class="box">پنل پیامک <span class="t">کد ورود و وضعیت سفارش</span></span>
+            <span class="box">پست و تیپاکس <span class="t">رهگیری مرسوله</span></span>
+            <span class="box">ربات تلگرام / واتساپ</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="stack">
+      <h2>اجزای فنی و دلیل انتخاب</h2>
+      <p class="sub">هر ردیف یک تصمیم است که در جلسه قابل دفاع یا قابل تغییر است.</p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>لایه</th><th>انتخاب</th><th>چرا این؟</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>چارچوب اصلی</td>
+              <td class="pick mono">Next.js 15 (App Router)</td>
+              <td class="why">صفحات محصول روی سرور رندر می‌شوند؛ یعنی گوگل کامل می‌بیندشان و صفحه سریع باز می‌شود. فرانت و بک در یک پروژه، پس تیم کوچک‌تر و هزینه کمتر.</td>
+            </tr>
+            <tr>
+              <td>زبان</td>
+              <td class="pick mono">TypeScript</td>
+              <td class="why">کاتالوگ سازگاری قطعه و خودرو پر از جزئیات است؛ تایپ‌ها جلوی دسته بزرگی از خطاها را قبل از اجرا می‌گیرند.</td>
+            </tr>
+            <tr>
+              <td>ظاهر</td>
+              <td class="pick mono">Tailwind CSS + shadcn/ui</td>
+              <td class="why">راست‌چین کامل، رابط موبایل‌اول، و کامپوننت‌های آماده و قابل ویرایش. طراحی اختصاصی می‌ماند ولی سرعت ساخت بالا می‌رود.</td>
+            </tr>
+            <tr>
+              <td>فونت</td>
+              <td class="pick mono">وزیرمتن (لوکال)</td>
+              <td class="why">فونت فارسی روی خود سرور میزبانی می‌شود؛ بدون وابستگی به CDN خارجی که در ایران کند یا مسدود است.</td>
+            </tr>
+            <tr>
+              <td>دیتابیس</td>
+              <td class="pick mono">PostgreSQL</td>
+              <td class="why">روابط پیچیده «قطعه ↔ خودرو» و تراکنش سفارش را درست نگه می‌دارد. رایگان و روی هر سرور ایرانی قابل نصب.</td>
+            </tr>
+            <tr>
+              <td>لایه دسترسی داده</td>
+              <td class="pick mono">Prisma ORM</td>
+              <td class="why">تعریف مدل‌ها و مهاجرت‌های نسخه‌دار دیتابیس؛ تغییر ساختار در آینده بدون ترس.</td>
+            </tr>
+            <tr>
+              <td>جستجو</td>
+              <td class="pick mono">Meilisearch</td>
+              <td class="why">غلط‌گیری تایپی، جستجوی آنی هنگام تایپ، و پشتیبانی خوب از فارسی. سبک است و روی همان سرور بالا می‌آید (برخلاف Elasticsearch که رم زیادی می‌خواهد).</td>
+            </tr>
+            <tr>
+              <td>کش و صف</td>
+              <td class="pick mono">Redis</td>
+              <td class="why">کش صفحات پربازدید و اجرای کارهای زمان‌بر (ایمپورت اکسل، ارسال انبوه پیامک) خارج از مسیر کاربر.</td>
+            </tr>
+            <tr>
+              <td>تصاویر</td>
+              <td class="pick">فضای ابری داخلی (S3)</td>
+              <td class="why">عکس قطعات روی سرور اپلیکیشن نمی‌ماند؛ با CDN سریع سرو می‌شود و بکاپ ساده‌تر است.</td>
+            </tr>
+            <tr>
+              <td>ورود کاربر</td>
+              <td class="pick mono">Auth.js + OTP پیامکی</td>
+              <td class="why">ورود با شماره موبایل و کد یک‌بارمصرف؛ رفتار پیش‌فرض کاربر ایرانی و بدون دردسر رمز عبور.</td>
+            </tr>
+            <tr>
+              <td>پنل مدیریت</td>
+              <td class="pick">اختصاصی داخل همان پروژه</td>
+              <td class="why">چون فرم ثبت قطعه باید سازگاری با خودروها را بگیرد، پنل آماده جواب نمی‌دهد.</td>
+            </tr>
+            <tr>
+              <td>استقرار</td>
+              <td class="pick mono">Docker + سرور ابری ایران</td>
+              <td class="why">درگاه بانکی و سرعت داخلی، هر دو سرور داخل کشور را ایجاب می‌کنند. Docker یعنی محیط توسعه و سرور یکسان است.</td>
+            </tr>
+            <tr>
+              <td>انتشار نسخه</td>
+              <td class="pick mono">Git + CI/CD</td>
+              <td class="why">هر تغییر تست و بعد منتشر می‌شود؛ برگشت به نسخه قبلی در چند دقیقه.</td>
+            </tr>
+            <tr>
+              <td>پایش</td>
+              <td class="pick mono">Sentry + Umami</td>
+              <td class="why">خطاهای کاربران واقعی و آمار بازدید، بدون فرستادن داده به سرویس‌های خارجی.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="data">
+      <h2>مدل داده — قلب پروژه</h2>
+      <p class="sub">
+        تفاوت یک سایت لوازم یدکی با یک فروشگاه معمولی دقیقاً همین‌جاست: یک قطعه به چند خودرو می‌خورد و
+        یک خودرو چند هزار قطعه دارد. این رابطه باید از روز اول درست ساخته شود، وگرنه بعداً اصلاحش
+        یعنی بازنویسی.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h4>کاتالوگ خودرو</h4>
+          <p>برند ← مدل ← نسل ← تیپ ← سال ← موتور. مثال: کیا → اسپورتیج → نسل چهارم → ۲.۴ لیتری → ۱۳۹۶–۱۳۹۹.</p>
+        </div>
+        <div class="card">
+          <h4>قطعه</h4>
+          <p>نام فارسی، نام انگلیسی، دسته، برند سازنده (جنیون / های‌کپی / متفرقه)، عکس، وزن و ابعاد برای محاسبه کرایه.</p>
+        </div>
+        <div class="card">
+          <h4>شماره فنی</h4>
+          <p>کد اصلی سازنده، به‌علاوه کدهای معادل و جایگزین. جستجوی <span class="mono num">86511-D9000</span> باید همه معادل‌ها را هم بیاورد.</p>
+        </div>
+        <div class="card">
+          <h4>جدول سازگاری</h4>
+          <p>حلقه اتصال قطعه به خودرو، به‌همراه یادداشت شرطی مثل «فقط تیپ اتوماتیک» یا «از شاسی فلان به بعد».</p>
+        </div>
+        <div class="card">
+          <h4>موجودی و قیمت</h4>
+          <p>قیمت خرید، قیمت فروش، تخفیف، موجودی، حد هشدار، و تاریخچه تغییر قیمت.</p>
+        </div>
+        <div class="card">
+          <h4>سفارش</h4>
+          <p>سبد، آدرس، روش ارسال، وضعیت پرداخت، کد رهگیری مرسوله، و گردش وضعیت سفارش.</p>
+        </div>
+      </div>
+      <div class="note" style="margin-top:20px">
+        <p><b>مهم‌ترین ریسک داده:</b> کاتالوگ خودروهای کیا و هیوندا و شماره‌های فنی، خودشان یک پروژه داده‌ای هستند. باید تصمیم بگیریم این داده از کجا می‌آید: کاتالوگ خریداری‌شده، ورود دستی تدریجی، یا شروع محدود با ۵ تا ۱۰ مدل پرفروش. این تصمیم مستقیماً روی زمان فاز اول اثر دارد.</p>
+      </div>
+    </section>
+
+    <section id="search">
+      <h2>موتور جستجو — سه مسیر ورود</h2>
+      <p class="sub">مشتری لوازم یدکی از سه راه مختلف وارد می‌شود و هر سه باید بی‌نقص کار کنند.</p>
+      <h3>۱. از روی خودرو</h3>
+      <ul>
+        <li>انتخاب پله‌ای برند ← مدل ← سال ← تیپ، در نوار بالای سایت.</li>
+        <li>خودروی انتخاب‌شده در حساب کاربر ذخیره می‌شود («گاراژ من») و در بازدیدهای بعدی فعال می‌ماند.</li>
+        <li>بعد از انتخاب، همه دسته‌ها و نتایج فیلتر می‌شوند و روی کارت هر قطعه برچسب «سازگار با خودروی شما» می‌آید.</li>
+      </ul>
+      <h3>۲. با شماره فنی</h3>
+      <ul>
+        <li>حذف خودکار خط تیره و فاصله؛ <span class="mono num">86511 D9000</span> و <span class="mono num">86511-D9000</span> یک نتیجه می‌دهند.</li>
+        <li>نمایش کدهای معادل و پیشنهاد جایگزین وقتی کد اصلی ناموجود است.</li>
+        <li>هر شماره فنی صفحه اختصاصی خودش را دارد؛ این دقیقاً همان چیزی است که مردم در گوگل سرچ می‌کنند.</li>
+      </ul>
+      <h3>۳. جستجوی متنی فارسی</h3>
+      <ul>
+        <li>یکسان‌سازی «ی/ک» عربی و فارسی، اعداد فارسی و انگلیسی، و نیم‌فاصله.</li>
+        <li>مترادف‌ها: «لنت جلو» = «لنت ترمز جلو»، «دیسک چرخ» = «دیسک ترمز».</li>
+        <li>تحمل غلط تایپی و نمایش پیشنهاد آنی هنگام تایپ.</li>
+      </ul>
+    </section>
+
+    <section id="shop">
+      <h2>ماژول‌های فروشگاه</h2>
+      <div class="grid">
+        <div class="card">
+          <h4>حساب کاربری</h4>
+          <ul><li>ورود با موبایل و کد پیامکی</li><li>گاراژ من (خودروهای ثبت‌شده)</li><li>آدرس‌ها، سفارش‌ها، علاقه‌مندی‌ها</li></ul>
+        </div>
+        <div class="card">
+          <h4>سبد و تسویه</h4>
+          <ul><li>سبد مهمان و ادغام آن پس از ورود</li><li>کد تخفیف</li><li>انتخاب روش ارسال و محاسبه کرایه</li></ul>
+        </div>
+        <div class="card">
+          <h4>مدیریت سفارش</h4>
+          <ul><li>گردش وضعیت: ثبت ← پرداخت ← آماده‌سازی ← ارسال ← تحویل</li><li>اطلاع‌رسانی پیامکی در هر مرحله</li><li>مرجوعی و لغو</li></ul>
+        </div>
+        <div class="card">
+          <h4>محتوا و اعتماد</h4>
+          <ul><li>وبلاگ آموزشی برای سئو</li><li>نظر و امتیاز مشتری</li><li>صفحه ضمانت اصالت و شرایط مرجوعی</li></ul>
+        </div>
+        <div class="card">
+          <h4>قیمت‌گذاری چندسطحی</h4>
+          <ul><li>قیمت خرده و قیمت همکار</li><li>حداقل سفارش برای مکانیک‌ها و تعمیرگاه‌ها</li></ul>
+        </div>
+        <div class="card">
+          <h4>مقایسه و پیشنهاد</h4>
+          <ul><li>«جنیون یا های‌کپی؟» کنار هم</li><li>قطعات معمولاً همراه (لنت + دیسک)</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="admin">
+      <h2>پنل مدیریت و مهاجرت از اکسل</h2>
+      <p class="sub">
+        چون امروز همه چیز دستی و در اکسل است، پنل باید طوری ساخته شود که کارمند فعلی بدون آموزش سنگین
+        با آن کار کند و داده‌های موجود بدون تایپ مجدد وارد شوند.
+      </p>
+      <ul>
+        <li><strong>ورود گروهی از اکسل:</strong> آپلود فایل، نگاشت ستون‌ها، پیش‌نمایش خطاها، و سپس ثبت نهایی. همین مسیر برای به‌روزرسانی دوره‌ای قیمت‌ها هم استفاده می‌شود.</li>
+        <li><strong>ثبت قطعه:</strong> فرم واحد شامل مشخصات، شماره‌های فنی، عکس‌ها و انتخاب خودروهای سازگار.</li>
+        <li><strong>انبار:</strong> ویرایش سریع موجودی، هشدار موجودی رو به اتمام، و گزارش کالای راکد.</li>
+        <li><strong>سفارش‌ها:</strong> چاپ فاکتور و برچسب پستی، ثبت کد رهگیری، تغییر وضعیت.</li>
+        <li><strong>استعلام‌ها:</strong> صندوق درخواست‌های قطعه نایاب با امکان پاسخ و تبدیل به سفارش.</li>
+        <li><strong>سطوح دسترسی:</strong> مدیر، انباردار، پشتیبان — هرکس فقط بخش خودش.</li>
+        <li><strong>گزارش:</strong> فروش روزانه، پرفروش‌ترین قطعات، و پرتکرارترین جستجوهای بی‌نتیجه (یعنی چه چیزی را باید بخرید).</li>
+      </ul>
+    </section>
+
+    <section id="pay">
+      <h2>پرداخت و ارسال</h2>
+      <div class="grid">
+        <div class="card">
+          <h4>درگاه پرداخت</h4>
+          <p>زرین‌پال برای شروع سریع (بدون نیاز به نماد در آغاز)، یا درگاه مستقیم بانکی برای کارمزد کمتر در حجم بالا. معماری طوری نوشته می‌شود که تعویض درگاه یک ماژول باشد نه بازنویسی.</p>
+        </div>
+        <div class="card">
+          <h4>تایید پرداخت</h4>
+          <p>تایید دوطرفه تراکنش و ثبت لاگ کامل؛ اگر پول کم شد و سفارش ثبت نشد، سیستم خودش تشخیص می‌دهد.</p>
+        </div>
+        <div class="card">
+          <h4>ارسال</h4>
+          <p>پست پیشتاز، تیپاکس، و پیک شهری. کرایه بر اساس وزن قطعه و مقصد محاسبه می‌شود — برای قطعات سنگین مثل دیسک و کمک‌فنر ضروری است.</p>
+        </div>
+        <div class="card">
+          <h4>پرداخت در محل</h4>
+          <p>برای شهر خودتان، با سقف مبلغ و تایید تلفنی سفارش.</p>
+        </div>
+      </div>
+      <div class="note" style="margin-top:20px">
+        <p><b>پیش‌نیاز حقوقی:</b> اتصال به هر درگاه بانکی نیاز به نماد اعتماد الکترونیکی و مجوز کسب‌وکار اینترنتی دارد. گرفتن این‌ها چند هفته زمان می‌برد و باید <b>همزمان با شروع کدنویسی</b> استارت بخورد، نه در پایان.</p>
+      </div>
+    </section>
+
+    <section id="lead">
+      <h2>استعلام قیمت و پیام‌رسان‌ها</h2>
+      <p class="sub">بخش زیادی از فروش لوازم یدکی هنوز گفت‌وگویی است. سایت باید این گفت‌وگو را ثبت کند، نه اینکه جایش را بگیرد.</p>
+      <ul>
+        <li><strong>فرم درخواست قطعه:</strong> مشخصات خودرو، نام یا عکس قطعه، شماره تماس. درخواست در پنل ثبت و به اپراتور پیامک می‌شود.</li>
+        <li><strong>دکمه واتساپ و تلگرام:</strong> روی هر صفحه محصول، با متن آماده شامل نام و کد همان قطعه — اپراتور بلافاصله می‌داند درباره چه چیزی صحبت می‌شود.</li>
+        <li><strong>ربات تلگرام (اختیاری، فاز بعد):</strong> اعلام سفارش جدید در گروه کاری و امکان پاسخ به استعلام از داخل تلگرام.</li>
+        <li><strong>ثبت سرنخ:</strong> هر استعلام یک رکورد است تا بعداً بشود دید چقدر از آن‌ها به فروش رسیده.</li>
+      </ul>
+    </section>
+
+    <section id="seo">
+      <h2>سئو و سرعت</h2>
+      <p class="sub">در این صنف بیشتر مشتری از گوگل می‌آید و معمولاً با اسم قطعه به‌علاوه اسم خودرو یا شماره فنی سرچ می‌کند.</p>
+      <ul>
+        <li>صفحات هدفمند برای هر ترکیب «قطعه + خودرو»: مثلاً «لنت ترمز جلو هیوندا توسان ۲۰۱۸».</li>
+        <li>صفحه اختصاصی برای هر شماره فنی.</li>
+        <li>داده ساختاریافته محصول (قیمت، موجودی، امتیاز) برای نمایش بهتر در نتایج گوگل.</li>
+        <li>نقشه سایت خودکار، آدرس‌های فارسی خوانا، و مدیریت درست صفحات حذف‌شده.</li>
+        <li>عکس‌ها با فرمت WebP و بارگذاری تنبل؛ هدف باز شدن زیر ۲ ثانیه روی اینترنت موبایل.</li>
+      </ul>
+    </section>
+
+    <section id="sec">
+      <h2>امنیت</h2>
+      <ul>
+        <li>محدودسازی تعداد درخواست روی ارسال کد پیامکی و فرم‌ها (جلوگیری از هدررفت اعتبار پنل پیامک).</li>
+        <li>هش امن رمز، توکن نشست امن، و محافظت در برابر CSRF و XSS.</li>
+        <li>قیمت و موجودی همیشه سمت سرور بازمحاسبه می‌شود؛ کاربر نمی‌تواند مبلغ را دستکاری کند.</li>
+        <li>بکاپ خودکار روزانه دیتابیس با نگهداری خارج از سرور اصلی، و تست بازیابی.</li>
+        <li>لاگ تغییرات پنل: چه کسی چه قیمتی را کی عوض کرد.</li>
+      </ul>
+    </section>
+
+    <section id="infra">
+      <h2>زیرساخت و استقرار</h2>
+      <div class="grid">
+        <div class="card">
+          <h4>سرور</h4>
+          <p>یک سرور ابری ایرانی برای شروع (حدود ۴ گیگ رم، ۲ هسته)، قابل ارتقا. دیتابیس و Meilisearch و اپلیکیشن روی همان ماشین با Docker.</p>
+        </div>
+        <div class="card">
+          <h4>محیط‌ها</h4>
+          <p>محیط تست جدا از محیط اصلی، تا هر تغییر قبل از رسیدن به مشتری دیده شود.</p>
+        </div>
+        <div class="card">
+          <h4>انتشار</h4>
+          <p>هر ادغام در شاخه اصلی به‌صورت خودکار تست و منتشر می‌شود؛ برگشت به نسخه قبل با یک دستور.</p>
+        </div>
+        <div class="card">
+          <h4>پایش</h4>
+          <p>هشدار قطعی سرویس، گزارش خطای کاربران، و آمار بازدید — همه روی زیرساخت خودمان.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="phases">
+      <h2>فازبندی اجرا</h2>
+      <p class="sub">ترتیب واقعی کار؛ هر فاز خروجی قابل نمایش دارد. زمان‌ها بر اساس یک تیم دو نفره برآورد شده است.</p>
+      <div class="phase">
+        <div class="phase-row">
+          <div class="pn num">۰</div>
+          <div class="pbody">
+            <h4>کشف و طراحی</h4>
+            <div class="dur">۱ تا ۲ هفته</div>
+            <p>نهایی‌سازی فهرست خودروهای پوشش‌داده‌شده، ساختار دسته‌بندی قطعات، طراحی رابط کاربری، و شروع موازی فرآیند نماد اعتماد و درگاه.</p>
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="pn num">۱</div>
+          <div class="pbody">
+            <h4>هسته کاتالوگ</h4>
+            <div class="dur">۳ تا ۴ هفته</div>
+            <p>مدل داده، کاتالوگ خودرو، ثبت قطعه، جدول سازگاری، ورود گروهی از اکسل، و پنل مدیریت اولیه. بدون این فاز بقیه معنی ندارد.</p>
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="pn num">۲</div>
+          <div class="pbody">
+            <h4>سایت فروشگاهی</h4>
+            <div class="dur">۳ تا ۴ هفته</div>
+            <p>صفحه اصلی، انتخاب خودرو، صفحات دسته و محصول، جستجوی سه‌گانه، حساب کاربری با ورود پیامکی.</p>
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="pn num">۳</div>
+          <div class="pbody">
+            <h4>سبد، پرداخت، ارسال</h4>
+            <div class="dur">۲ تا ۳ هفته</div>
+            <p>سبد خرید، تسویه، اتصال درگاه، محاسبه کرایه، گردش وضعیت سفارش و پیامک‌های اطلاع‌رسانی.</p>
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="pn num">۴</div>
+          <div class="pbody">
+            <h4>استعلام، سئو، راه‌اندازی</h4>
+            <div class="dur">۲ هفته</div>
+            <p>فرم استعلام و اتصال واتساپ/تلگرام، بهینه‌سازی سئو و سرعت، تست نهایی، ورود داده واقعی و انتشار.</p>
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="pn num">۵</div>
+          <div class="pbody">
+            <h4>پس از انتشار</h4>
+            <div class="dur">مستمر</div>
+            <p>تحلیل جستجوهای بی‌نتیجه، افزودن خودروهای جدید، ربات تلگرام، پنل همکاران و باشگاه مشتریان.</p>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:18px;color:var(--muted)">جمع تا انتشار نسخه اول: <strong>حدود ۳ تا ۴ ماه</strong>، مشروط بر اینکه داده کاتالوگ به‌موقع آماده شود.</p>
+    </section>
+
+    <section id="cost">
+      <h2>هزینه‌های جاری</h2>
+      <p class="sub">هزینه‌های ماهانه و سالانه سرویس‌ها، جدا از هزینه توسعه. ارقام برای برآورد اولیه‌اند و باید در زمان خرید استعلام شوند.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>مورد</th><th>دوره</th><th>توضیح</th></tr></thead>
+          <tbody>
+            <tr><td>دامنه <span class="mono">.ir</span> یا <span class="mono">.com</span></td><td>سالانه</td><td class="why">هزینه ناچیز؛ ثبت <span class="mono">.ir</span> ارزان‌تر است.</td></tr>
+            <tr><td>سرور ابری</td><td>ماهانه</td><td class="why">اصلی‌ترین هزینه ثابت؛ با رشد ترافیک ارتقا می‌یابد.</td></tr>
+            <tr><td>فضای ابری تصاویر + CDN</td><td>ماهانه</td><td class="why">بر اساس حجم و پهنای باند مصرفی.</td></tr>
+            <tr><td>پنل پیامک</td><td>مصرفی</td><td class="why">هر پیامک کد ورود و اطلاع‌رسانی سفارش هزینه دارد؛ با تعداد سفارش رشد می‌کند.</td></tr>
+            <tr><td>کارمزد درگاه</td><td>درصدی</td><td class="why">درصدی از هر تراکنش موفق، معمولاً با سقف مشخص.</td></tr>
+            <tr><td>نماد اعتماد</td><td>یک‌بار / سالانه</td><td class="why">هزینه مالی کم، ولی زمان‌بر.</td></tr>
+            <tr><td>پشتیبانی فنی</td><td>ماهانه</td><td class="why">به‌روزرسانی امنیتی، بکاپ، رفع اشکال و تغییرات کوچک.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      سند فنی نسخه اول — تهیه‌شده برای جلسه شروع پروژه. ارقام زمانی و هزینه‌ای برآوردی‌اند و پس از نهایی شدن تصمیم‌های بالا دقیق می‌شوند.
+    </footer>
+  </main>
+</div>

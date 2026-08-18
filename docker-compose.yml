@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: misagh-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: misagh
+      POSTGRES_PASSWORD: misagh_dev_password
+      POSTGRES_DB: misagh
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U misagh -d misagh"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  search:
+    image: getmeili/meilisearch:v1.11
+    container_name: misagh-search
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: misagh_dev_master_key
+      MEILI_ENV: development
+    ports:
+      - "7700:7700"
+    volumes:
+      - search_data:/meili_data
+
+  cache:
+    image: redis:7-alpine
+    container_name: misagh-cache
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - cache_data:/data
+
+volumes:
+  db_data:
+  search_data:
+  cache_data:
