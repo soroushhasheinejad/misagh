@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# misagh — فروشگاه قطعات یدکی کیا و هیوندا
 
-## Getting Started
+فروشگاه اینترنتی قطعات یدکی با سه مسیر جستجو (خودرو، شماره فنی، شماره شاسی)،
+کراس‌رفرنس کدهای معادل، و موتور قیمت‌گذاری چندحالته که کاملاً از پنل مدیریت کنترل می‌شود.
 
-First, run the development server:
+## راه‌اندازی
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up -d          # پستگرس، میلی‌سرچ، ردیس
+npm install
+npx prisma migrate dev        # ساخت جدول‌ها
+npm run db:seed               # داده اولیه: خودروها، دسته‌بندی، قطعات نمونه
+npm run dev                   # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+پنل مدیریت: `/admin`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## استک
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| لایه | انتخاب |
+|---|---|
+| چارچوب | Next.js (App Router) + TypeScript |
+| ظاهر | Tailwind CSS v4، راست‌چین، فونت وزیرمتن لوکال |
+| دیتابیس | PostgreSQL + Prisma (نسخه ۶) |
+| جستجوی متنی | Meilisearch (کانتینر بالا هست، اتصالش در فاز بعد) |
+| کش و صف | Redis (کانتینر بالا هست، در فاز بعد) |
 
-## Learn More
+## ساختار
 
-To learn more about Next.js, take a look at the following resources:
+```
+prisma/schema.prisma   مدل داده کامل: خودرو، قطعه، شماره فنی، کراس‌رفرنس، پیشنهاد، قیمت، سفارش
+prisma/seed.ts         داده اولیه
+src/lib/pricing.ts     موتور قیمت — ارث‌بری پیشنهاد ← قطعه ← تنظیمات
+src/lib/catalog.ts     جستجوی شماره فنی با معادل‌یابی، جستجوی خودرو، قیمت‌گذاری پیشنهادها
+src/lib/normalize.ts   یکسان‌سازی فارسی، شماره فنی، و دکد VIN
+src/lib/settings.ts    تنظیمات فروشگاه با پیش‌فرض‌ها
+src/app/admin/         پنل مدیریت: تنظیمات، نرخ ارز، قیمت قطعات و پیشنهادها
+scripts/set-setting.mts   تغییر یک تنظیم از خط فرمان
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## موتور قیمت‌گذاری
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+هر تنظیم قیمتی در سه سطح قابل تعریف است و از بالا به پایین ارث می‌برد:
 
-## Deploy on Vercel
+```
+پیشنهاد (Offer)  ←  قطعه (Part)  ←  تنظیمات فروشگاه
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+چهار حالت قیمت:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **FIXED** — قیمت ثابت ریالی.
+- **CURRENCY_LINKED** — قیمت پایه ارزی × نرخ ارز مرکزی. با تغییر نرخ در `/admin/rates` کل سایت به‌روز می‌شود.
+- **INQUIRY** — قیمت نمایش داده نمی‌شود؛ دکمه استعلام و لینک تلگرام/واتساپ.
+- **HIDDEN** — قطعه دیده می‌شود ولی بدون قیمت و بدون خرید.
+
+روی این‌ها: حاشیه سود، تخفیف زمان‌دار، قاعده رند کردن، **قفل قیمت** (قیمت نهایی ثابت که نرخ ارز
+تکانش نمی‌دهد)، اعتبار زمانی قیمت، قیمت همکار، حداقل سفارش، و خاموش کردن نمایش قیمت.
+
+## چند پیشنهاد برای یک قطعه
+
+هر قطعه می‌تواند چند `Offer` داشته باشد (جنیون / های‌کپی / تامین‌کننده‌های مختلف) با قیمت،
+موجودی و زمان تحویل جدا و برچسب‌های «پیشنهاد ما / ارزان‌ترین / سریع‌ترین».
+از `/admin/settings` کاملاً قابل خاموش کردن است — در حالت خاموش فقط پیشنهاد پیش‌فرض دیده می‌شود.
+
+## وضعیت فعلی
+
+انجام شده: مدل داده، موتور قیمت، جستجوی شماره فنی با معادل‌یابی، جستجوی خودرو،
+صفحه محصول، دکد VIN، فرم استعلام، پنل تنظیمات و نرخ ارز و ویرایش قیمت.
+
+فاز بعد: ایمپورت اکسل، سبد خرید و ورود پیامکی، درگاه پرداخت و ارسال، اتصال Meilisearch، سئو.
+
+## نکته درباره داده کاتالوگ
+
+داده خودرو و شماره‌های فنی از لیست واردکننده‌ها، فاکتورهای خودمان و کاتالوگ رسمی سازنده وارد
+می‌شود. کپی‌برداری از دیتابیس‌های لایسنس‌دار (TecDoc و سایت‌هایی که رویش سوارند) در این پروژه
+انجام نمی‌شود.
