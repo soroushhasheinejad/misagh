@@ -1,15 +1,21 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { searchByVehicle, priceOffers, getCategoryTree } from "@/lib/catalog";
+import { searchByVehicle, priceOffers, getCategoryTree, PAGE_SIZE } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
 import { formatMoney, moneyLabel } from "@/lib/pricing";
 
 export default async function CatalogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ generationId?: string; trimId?: string; categoryId?: string }>;
+  searchParams: Promise<{
+    generationId?: string;
+    trimId?: string;
+    categoryId?: string;
+    page?: string;
+  }>;
 }) {
-  const { generationId, trimId, categoryId } = await searchParams;
+  const { generationId, trimId, categoryId, page: pageParam } = await searchParams;
+  const page = Math.max(1, Number(pageParam) || 1);
   const settings = await getSettings();
   const unit = settings["store.displayUnit"] as "toman" | "rial";
 
@@ -23,20 +29,30 @@ export default async function CatalogPage({
       : null,
   ]);
 
-  let results: Awaited<ReturnType<typeof searchByVehicle>> = [];
+  let results: Awaited<ReturnType<typeof searchByVehicle>>["items"] = [];
+  let total = 0;
+  let pageCount = 1;
 
   if (generationId || trimId) {
-    results = await searchByVehicle({ generationId, trimId, categoryId });
+    const found = await searchByVehicle({ generationId, trimId, categoryId, page });
+    results = found.items;
+    total = found.total;
+    pageCount = found.pageCount;
   } else if (categoryId) {
+    const where = { categoryId, isActive: true };
+    total = await prisma.part.count({ where });
+    pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
     const parts = await prisma.part.findMany({
-      where: { categoryId, isActive: true },
+      where,
+      orderBy: { nameFa: "asc" },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
       include: {
         offers: { where: { status: { not: "DISABLED" } }, include: { brand: true, supplier: true } },
         images: { take: 1 },
         numbers: { where: { isPrimary: true }, take: 1 },
         category: true,
       },
-      take: 60,
     });
     results = await Promise.all(
       parts.map(async (p) => ({ part: p, offers: await priceOffers(p, p.offers, { settings }) })),
@@ -45,6 +61,14 @@ export default async function CatalogPage({
 
   const keep = (id: string) =>
     `/catalog?${new URLSearchParams({ ...(generationId ? { generationId } : {}), categoryId: id })}`;
+
+  const pageHref = (n: number) =>
+    `/catalog?${new URLSearchParams({
+      ...(generationId ? { generationId } : {}),
+      ...(trimId ? { trimId } : {}),
+      ...(categoryId ? { categoryId } : {}),
+      ...(n > 1 ? { page: String(n) } : {}),
+    })}`;
 
   return (
     <div>
@@ -112,11 +136,11 @@ export default async function CatalogPage({
           <div>
             <div className="rule pb-6">
               <h1 className="font-display text-lg font-bold">
-                {results.length > 0
-                  ? `${results.length.toLocaleString("fa-IR")} قطعه`
-                  : "قطعه‌ای پیدا نشد"}
+                {total > 0 ? `${total.toLocaleString("fa-IR")} قطعه` : "قطعه‌ای پیدا نشد"}
               </h1>
-              <span className="rule-label">results</span>
+              <span className="rule-label">
+                {pageCount > 1 ? `صفحه ${page.toLocaleString("fa-IR")} از ${pageCount.toLocaleString("fa-IR")}` : "results"}
+              </span>
             </div>
 
             {results.length === 0 ? (
@@ -179,6 +203,28 @@ export default async function CatalogPage({
                 })}
               </div>
             )}
+
+            {pageCount > 1 ? (
+              <nav className="flex items-center justify-between gap-3 pt-8" aria-label="صفحه‌بندی">
+                {page > 1 ? (
+                  <Link href={pageHref(page - 1)} className="btn btn-ghost px-4 py-2 text-xs">
+                    صفحه قبل
+                  </Link>
+                ) : (
+                  <span />
+                )}
+                <span className="tnum font-mono text-xs text-faint">
+                  {page} / {pageCount}
+                </span>
+                {page < pageCount ? (
+                  <Link href={pageHref(page + 1)} className="btn btn-ghost px-4 py-2 text-xs">
+                    صفحه بعد
+                  </Link>
+                ) : (
+                  <span />
+                )}
+              </nav>
+            ) : null}
           </div>
         </div>
       </div>

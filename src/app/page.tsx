@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
 import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { SearchPanel } from "@/components/SearchPanel";
-import { DiscDiagram } from "@/components/DiscDiagram";
 
 export default async function HomePage() {
   const [makes, categories, settings, latest] = await Promise.all([
@@ -32,7 +31,6 @@ export default async function HomePage() {
     <div>
       {/* ---------------- سربرگ: کاپوت بسته ---------------- */}
       <section className="relative overflow-hidden bg-carbon pb-28 pt-14 text-white">
-        <DiscDiagram className="pointer-events-none absolute -left-16 top-2 hidden h-[420px] w-[420px] text-brass/35 lg:block" />
         <div className="relative mx-auto max-w-[1120px] px-5">
           <div className="rise rise-1 font-mono text-[0.7rem] uppercase tracking-[0.3em] text-brass">
             kia &amp; hyundai

@@ -1,0 +1,1786 @@
+{
+  "2M": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "جنسیس",
+      "modelEn": "Genesis",
+      "gen": "کوپه BK",
+      "genFa": "کوپه BK",
+      "yearStart": 2010,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 12 از 15 ردیف ← جنسیس کوپه + جدول کد پروژه سازنده",
+    "partCount": 61
+  },
+  "2E": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "توسان",
+      "modelEn": "Tucson",
+      "gen": "JM",
+      "genFa": "JM",
+      "yearStart": 2004,
+      "yearEnd": 2009
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 57 از 69 ردیف ← توسان2008-2009 + جدول کد پروژه سازنده",
+    "partCount": 305
+  },
+  "3S": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سوناتا",
+      "modelEn": "Sonata",
+      "gen": "YF",
+      "genFa": "YF",
+      "yearStart": 2010,
+      "yearEnd": 2014
+    },
+    "siblings": [
+      {
+        "make": "kia",
+        "modelFa": "اپتیما",
+        "modelEn": "Optima",
+        "gen": "TF",
+        "genFa": "TF",
+        "yearStart": 2011,
+        "yearEnd": 2015
+      },
+      {
+        "make": "hyundai",
+        "modelFa": "آزرا",
+        "modelEn": "Azera",
+        "gen": "HG",
+        "genFa": "HG",
+        "yearStart": 2012,
+        "yearEnd": 2016
+      }
+    ],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 49 از 53 ردیف ← سوناتا2010-2014 + جدول کد پروژه سازنده",
+    "partCount": 200
+  },
+  "2H": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "HD",
+      "genFa": "HD",
+      "yearStart": 2007,
+      "yearEnd": 2010
+    },
+    "siblings": [
+      {
+        "make": "hyundai",
+        "modelFa": "i30",
+        "modelEn": "i30",
+        "gen": "FD",
+        "genFa": "FD",
+        "yearStart": 2007,
+        "yearEnd": 2011
+      },
+      {
+        "make": "kia",
+        "modelFa": "سراتو",
+        "modelEn": "Cerato",
+        "gen": "TD",
+        "genFa": "TD",
+        "yearStart": 2009,
+        "yearEnd": 2012
+      }
+    ],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 10 از 18 ردیف ← سراتو 2009-2011",
+    "partCount": 41
+  },
+  "3K": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سوناتا",
+      "modelEn": "Sonata",
+      "gen": "NF",
+      "genFa": "NF",
+      "yearStart": 2005,
+      "yearEnd": 2009
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 56 از 78 ردیف ← سوناتا2005-2009 + جدول کد پروژه سازنده",
+    "partCount": 291
+  },
+  "2S": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "توسان",
+      "modelEn": "Tucson",
+      "gen": "ix35 / LM",
+      "genFa": "ix35 / LM",
+      "yearStart": 2010,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 62 از 73 ردیف ← توسان2010-2015 + جدول کد پروژه سازنده",
+    "partCount": 321
+  },
+  "2F": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "توسان",
+      "modelEn": "Tucson",
+      "gen": "ix35 / LM",
+      "genFa": "ix35 / LM",
+      "yearStart": 2010,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 4 ردیف",
+    "partCount": 36
+  },
+  "C8": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i20",
+      "modelEn": "i20",
+      "gen": "GB",
+      "genFa": "GB",
+      "yearStart": 2015,
+      "yearEnd": 2020
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 4 از 7 ردیف ← i20 کرمان موتور",
+    "partCount": 41
+  },
+  "22": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "اکسنت",
+      "modelEn": "Accent",
+      "gen": "ورنا RB",
+      "genFa": "ورنا RB",
+      "yearStart": 2011,
+      "yearEnd": 2017
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 7
+  },
+  "3F": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اپیروس",
+      "modelEn": "Opirus",
+      "gen": "GH",
+      "genFa": "GH",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 9 از 17 ردیف ← اپیروس",
+    "partCount": 98
+  },
+  "49": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 3
+  },
+  "25": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سانتافه",
+      "modelEn": "Santa Fe",
+      "gen": "DM",
+      "genFa": "DM",
+      "yearStart": 2013,
+      "yearEnd": 2018
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 6 از 23 ردیف",
+    "partCount": 112
+  },
+  "A7": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سراتو",
+      "modelEn": "Cerato",
+      "gen": "YD",
+      "genFa": "YD",
+      "yearStart": 2013,
+      "yearEnd": 2018
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 26 از 28 ردیف ← سراتو2012-2017 + جدول کد پروژه سازنده",
+    "partCount": 91
+  },
+  "3J": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "وراکروز",
+      "modelEn": "Veracruz",
+      "gen": "EN",
+      "genFa": "EN",
+      "yearStart": 2007,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 54 از 54 ردیف ← وراکروز + جدول کد پروژه سازنده",
+    "partCount": 201
+  },
+  "3M": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "جنسیس",
+      "modelEn": "Genesis",
+      "gen": "سدان BH",
+      "genFa": "سدان BH",
+      "yearStart": 2009,
+      "yearEnd": 2014
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 12 از 14 ردیف ← جنسیس سدان + جدول کد پروژه سازنده",
+    "partCount": 187
+  },
+  "D4": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اپتیما",
+      "modelEn": "Optima",
+      "gen": "JF",
+      "genFa": "JF",
+      "yearStart": 2016,
+      "yearEnd": 2020
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 15 از 18 ردیف ← اپتیما 2016-2017 + جدول کد پروژه سازنده",
+    "partCount": 80
+  },
+  "2J": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "موهاوی",
+      "modelEn": "Mohave",
+      "gen": "HM",
+      "genFa": "HM",
+      "yearStart": 2008,
+      "yearEnd": 2019
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 21 از 23 ردیف ← موهاوی + جدول کد پروژه سازنده",
+    "partCount": 134
+  },
+  "3X": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "MD",
+      "genFa": "MD",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 46 از 47 ردیف ← النترا 2010–2015 + جدول کد پروژه سازنده",
+    "partCount": 192
+  },
+  "3E": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سورنتو",
+      "modelEn": "Sorento",
+      "gen": "BL",
+      "genFa": "BL",
+      "yearStart": 2007,
+      "yearEnd": 2009
+    },
+    "siblings": [
+      {
+        "make": "kia",
+        "modelFa": "اسپورتیج",
+        "modelEn": "Sportage",
+        "gen": "KM",
+        "genFa": "KM",
+        "yearStart": 2004,
+        "yearEnd": 2010
+      }
+    ],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 14 از 31 ردیف ← سورنتو 2007-2009",
+    "partCount": 178
+  },
+  "3A": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سانتافه",
+      "modelEn": "Santa Fe",
+      "gen": "CM",
+      "genFa": "CM",
+      "yearStart": 2007,
+      "yearEnd": 2012
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 3 ردیف",
+    "partCount": 8
+  },
+  "D3": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "توسان",
+      "modelEn": "Tucson",
+      "gen": "TL",
+      "genFa": "TL",
+      "yearStart": 2016,
+      "yearEnd": 2020
+    },
+    "siblings": [
+      {
+        "make": "kia",
+        "modelFa": "اسپورتیج",
+        "modelEn": "Sportage",
+        "gen": "QL",
+        "genFa": "QL",
+        "yearStart": 2016,
+        "yearEnd": 2021
+      }
+    ],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 14 از 15 ردیف ← توسان2016-2017 + جدول کد پروژه سازنده",
+    "partCount": 132
+  },
+  "3V": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "آزرا",
+      "modelEn": "Azera",
+      "gen": "HG",
+      "genFa": "HG",
+      "yearStart": 2012,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 8 از 11 ردیف ← آزرا(گرنجور)2012-2013 + جدول کد پروژه سازنده",
+    "partCount": 89
+  },
+  "3L": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "آزرا",
+      "modelEn": "Azera",
+      "gen": "TG",
+      "genFa": "TG",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 16 از 21 ردیف ← آزرا2007-2011 + جدول کد پروژه سازنده",
+    "partCount": 167
+  },
+  "3W": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اسپورتیج",
+      "modelEn": "Sportage",
+      "gen": "SL",
+      "genFa": "SL",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 14 از 16 ردیف ← اسپورتیج 2011-2015 + جدول کد پروژه سازنده",
+    "partCount": 108
+  },
+  "2W": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سانتافه",
+      "modelEn": "Santa Fe",
+      "gen": "DM",
+      "genFa": "DM",
+      "yearStart": 2013,
+      "yearEnd": 2018
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 100 از 106 ردیف ← سانتافه2013-2017 + جدول کد پروژه سازنده",
+    "partCount": 405
+  },
+  "2P": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سورنتو",
+      "modelEn": "Sorento",
+      "gen": "XM",
+      "genFa": "XM",
+      "yearStart": 2010,
+      "yearEnd": 2014
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 12 از 29 ردیف ← سورنتو 2010-2014",
+    "partCount": 110
+  },
+  "1M": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سراتو",
+      "modelEn": "Cerato",
+      "gen": "TD",
+      "genFa": "TD",
+      "yearStart": 2009,
+      "yearEnd": 2012
+    },
+    "siblings": [
+      {
+        "make": "hyundai",
+        "modelFa": "النترا",
+        "modelEn": "Elantra",
+        "gen": "HD",
+        "genFa": "HD",
+        "yearStart": 2007,
+        "yearEnd": 2010
+      },
+      {
+        "make": "hyundai",
+        "modelFa": "i30",
+        "modelEn": "i30",
+        "gen": "FD",
+        "genFa": "FD",
+        "yearStart": 2007,
+        "yearEnd": 2011
+      }
+    ],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 49 از 55 ردیف ← سراتو 2009-2011 + جدول کد پروژه سازنده",
+    "partCount": 207
+  },
+  "D9": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اسپورتیج",
+      "modelEn": "Sportage",
+      "gen": "QL",
+      "genFa": "QL",
+      "yearStart": 2016,
+      "yearEnd": 2021
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل کم است: 2 از 2 ردیف ← اسپورتیج 2016-2017",
+    "partCount": 11
+  },
+  "37": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "توسان",
+      "modelEn": "Tucson",
+      "gen": "JM",
+      "genFa": "JM",
+      "yearStart": 2004,
+      "yearEnd": 2009
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 5 از 16 ردیف",
+    "partCount": 95
+  },
+  "3D": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سوناتا",
+      "modelEn": "Sonata",
+      "gen": "NF",
+      "genFa": "NF",
+      "yearStart": 2005,
+      "yearEnd": 2009
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 3
+  },
+  "3B": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "توسان",
+      "modelEn": "Tucson",
+      "gen": "ix35 / LM",
+      "genFa": "ix35 / LM",
+      "yearStart": 2010,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 7 از 28 ردیف",
+    "partCount": 71
+  },
+  "C1": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سوناتا",
+      "modelEn": "Sonata",
+      "gen": "LF",
+      "genFa": "LF",
+      "yearStart": 2015,
+      "yearEnd": 2019
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 22 از 28 ردیف ← سوناتا2015-2017 + جدول کد پروژه سازنده",
+    "partCount": 156
+  },
+  "2G": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اپتیما",
+      "modelEn": "Optima",
+      "gen": "MG",
+      "genFa": "MG",
+      "yearStart": 2006,
+      "yearEnd": 2010
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 7 از 52 ردیف ← سانتافه2013-2017",
+    "partCount": 390
+  },
+  "M1": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "F6": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 9
+  },
+  "2T": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اپتیما",
+      "modelEn": "Optima",
+      "gen": "TF",
+      "genFa": "TF",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 39 از 43 ردیف ← اپتیما 2011-2015 + جدول کد پروژه سازنده",
+    "partCount": 170
+  },
+  "1R": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "اکسنت",
+      "modelEn": "Accent",
+      "gen": "RB",
+      "genFa": "RB",
+      "yearStart": 2011,
+      "yearEnd": 2017
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 24 از 28 ردیف ← اکسنت + جدول کد پروژه سازنده",
+    "partCount": 122
+  },
+  "2B": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سانتافه",
+      "modelEn": "Santa Fe",
+      "gen": "CM",
+      "genFa": "CM",
+      "yearStart": 2007,
+      "yearEnd": 2012
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 81 از 98 ردیف ← سانتافه2008-2012 + جدول کد پروژه سازنده",
+    "partCount": 370
+  },
+  "2C": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "جنسیس",
+      "modelEn": "Genesis",
+      "gen": "کوپه BK",
+      "genFa": "کوپه BK",
+      "yearStart": 2010,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 2 از 2 ردیف",
+    "partCount": 30
+  },
+  "3N": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سنتنیال",
+      "modelEn": "Centennial",
+      "gen": "VI",
+      "genFa": "VI",
+      "yearStart": 2009,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 3 از 6 ردیف ← سنتنیال",
+    "partCount": 25
+  },
+  "1H": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 13
+  },
+  "1J": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i20",
+      "modelEn": "i20",
+      "gen": "PB",
+      "genFa": "PB",
+      "yearStart": 2008,
+      "yearEnd": 2014
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 16 از 16 ردیف ← i20 + جدول کد پروژه سازنده",
+    "partCount": 107
+  },
+  "2D": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "آوانته",
+      "genFa": "آوانته",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 8 از 13 ردیف",
+    "partCount": 53
+  },
+  "C5": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سورنتو",
+      "modelEn": "Sorento",
+      "gen": "UM",
+      "genFa": "UM",
+      "yearStart": 2015,
+      "yearEnd": 2020
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 39 از 41 ردیف ← سورنتو2015-2017 + جدول کد پروژه سازنده",
+    "partCount": 134
+  },
+  "2L": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i30",
+      "modelEn": "i30",
+      "gen": "FD",
+      "genFa": "FD",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 3 از 5 ردیف",
+    "partCount": 19
+  },
+  "1F": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اسپورتیج",
+      "modelEn": "Sportage",
+      "gen": "KM",
+      "genFa": "KM",
+      "yearStart": 2004,
+      "yearEnd": 2010
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 2 از 3 ردیف",
+    "partCount": 31
+  },
+  "2V": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "ولستر",
+      "modelEn": "Veloster",
+      "gen": "FS",
+      "genFa": "FS",
+      "yearStart": 2012,
+      "yearEnd": 2017
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 4 از 5 ردیف ← ولستر + جدول کد پروژه سازنده",
+    "partCount": 38
+  },
+  "4R": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 3
+  },
+  "3Q": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "توسان",
+      "modelEn": "Tucson",
+      "gen": "ix35 / LM",
+      "genFa": "ix35 / LM",
+      "yearStart": 2010,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 5 ردیف",
+    "partCount": 16
+  },
+  "2Q": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "F2": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "AD",
+      "genFa": "AD",
+      "yearStart": 2016,
+      "yearEnd": 2020
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 15 از 16 ردیف ← النترا2016-2017 + جدول کد پروژه سازنده",
+    "partCount": 73
+  },
+  "E6": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سوناتا",
+      "modelEn": "Sonata",
+      "gen": "LF",
+      "genFa": "LF",
+      "yearStart": 2015,
+      "yearEnd": 2019
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 14 از 18 ردیف ← سوناتا2015-2017 + جدول کد پروژه سازنده",
+    "partCount": 65
+  },
+  "C9": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اپیروس",
+      "modelEn": "Opirus",
+      "gen": "GH",
+      "genFa": "GH",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 2 از 3 ردیف",
+    "partCount": 5
+  },
+  "3C": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "آزرا",
+      "modelEn": "Azera",
+      "gen": "TG",
+      "genFa": "TG",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 49 از 84 ردیف ← آزرا2007-2011",
+    "partCount": 325
+  },
+  "23": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i30",
+      "modelEn": "i30",
+      "gen": "FD",
+      "genFa": "FD",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 3 از 11 ردیف",
+    "partCount": 72
+  },
+  "3R": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "اکسنت",
+      "modelEn": "Accent",
+      "gen": "RB",
+      "genFa": "RB",
+      "yearStart": 2011,
+      "yearEnd": 2017
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 10 از 26 ردیف ← اکسنت",
+    "partCount": 90
+  },
+  "0U": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سراتو",
+      "modelEn": "Cerato",
+      "gen": "YD",
+      "genFa": "YD",
+      "yearStart": 2013,
+      "yearEnd": 2018
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 3 ردیف",
+    "partCount": 9
+  },
+  "1G": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i20",
+      "modelEn": "i20",
+      "gen": "PB",
+      "genFa": "PB",
+      "yearStart": 2008,
+      "yearEnd": 2014
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 7
+  },
+  "B1": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "جنسیس",
+      "modelEn": "Genesis",
+      "gen": "کوپه BK",
+      "genFa": "کوپه BK",
+      "yearStart": 2010,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 8
+  },
+  "4E": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 3
+  },
+  "03": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "پیکانتو",
+      "modelEn": "Picanto",
+      "gen": "TA",
+      "genFa": "TA",
+      "yearStart": 2011,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 3 از 4 ردیف",
+    "partCount": 10
+  },
+  "1P": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "1U": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سورنتو",
+      "modelEn": "Sorento",
+      "gen": "XM",
+      "genFa": "XM",
+      "yearStart": 2010,
+      "yearEnd": 2014
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 3 از 3 ردیف",
+    "partCount": 7
+  },
+  "C2": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 7
+  },
+  "39": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "وراکروز",
+      "modelEn": "Veracruz",
+      "gen": "EN",
+      "genFa": "EN",
+      "yearStart": 2007,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 2 از 5 ردیف",
+    "partCount": 27
+  },
+  "36": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "26": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سانتافه",
+      "modelEn": "Santa Fe",
+      "gen": "CM",
+      "genFa": "CM",
+      "yearStart": 2007,
+      "yearEnd": 2012
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 18
+  },
+  "09": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 4
+  },
+  "A5": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "MD",
+      "genFa": "MD",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 2 از 6 ردیف",
+    "partCount": 17
+  },
+  "G2": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "1C": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سراتو",
+      "modelEn": "Cerato",
+      "gen": "TD",
+      "genFa": "TD",
+      "yearStart": 2009,
+      "yearEnd": 2012
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 2 ردیف",
+    "partCount": 5
+  },
+  "1Y": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "پیکانتو",
+      "modelEn": "Picanto",
+      "gen": "TA",
+      "genFa": "TA",
+      "yearStart": 2011,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 10 از 10 ردیف ← پیکانتو + جدول کد پروژه سازنده",
+    "partCount": 17
+  },
+  "B0": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i40",
+      "modelEn": "i40",
+      "gen": "VF",
+      "genFa": "VF",
+      "yearStart": 2011,
+      "yearEnd": 2019
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل کم است: 2 از 2 ردیف ← i40",
+    "partCount": 3
+  },
+  "3Z": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i40",
+      "modelEn": "i40",
+      "gen": "VF",
+      "genFa": "VF",
+      "yearStart": 2011,
+      "yearEnd": 2019
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل کم است: 1 از 2 ردیف ← اپتیما 2011-2015",
+    "partCount": 14
+  },
+  "3T": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "توسان",
+      "modelEn": "Tucson",
+      "gen": "TL",
+      "genFa": "TL",
+      "yearStart": 2016,
+      "yearEnd": 2020
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 7
+  },
+  "24": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "وراکروز",
+      "modelEn": "Veracruz",
+      "gen": "EN",
+      "genFa": "EN",
+      "yearStart": 2007,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 4 از 5 ردیف ← وراکروز",
+    "partCount": 12
+  },
+  "1D": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سنتنیال",
+      "modelEn": "Centennial",
+      "gen": "VI",
+      "genFa": "VI",
+      "yearStart": 2009,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 6
+  },
+  "2K": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سول",
+      "modelEn": "Soul",
+      "gen": "AM",
+      "genFa": "AM",
+      "yearStart": 2009,
+      "yearEnd": 2013
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل کم است: 1 از 2 ردیف ← سول",
+    "partCount": 9
+  },
+  "G0": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سوناتا",
+      "modelEn": "Sonata",
+      "gen": "LF",
+      "genFa": "LF",
+      "yearStart": 2015,
+      "yearEnd": 2019
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 4
+  },
+  "H1": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "وراکروز",
+      "modelEn": "Veracruz",
+      "gen": "EN",
+      "genFa": "EN",
+      "yearStart": 2007,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 4
+  },
+  "4B": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "4F": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "جنسیس",
+      "modelEn": "Genesis",
+      "gen": "کوپه BK",
+      "genFa": "کوپه BK",
+      "yearStart": 2010,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 3
+  },
+  "4D": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 16
+  },
+  "35": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سراتو",
+      "modelEn": "Cerato",
+      "gen": "YD",
+      "genFa": "YD",
+      "yearStart": 2013,
+      "yearEnd": 2018
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 4 ردیف",
+    "partCount": 9
+  },
+  "B8": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سانتافه",
+      "modelEn": "Santa Fe",
+      "gen": "CM",
+      "genFa": "CM",
+      "yearStart": 2007,
+      "yearEnd": 2012
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل پراکنده است: 3 از 6 ردیف ← سانتافه2008-2012",
+    "partCount": 15
+  },
+  "07": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 4
+  },
+  "38": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "جنسیس",
+      "modelEn": "Genesis",
+      "gen": "کوپه BK",
+      "genFa": "کوپه BK",
+      "yearStart": 2010,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 3 ردیف",
+    "partCount": 9
+  },
+  "KD": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 3
+  },
+  "2A": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 7
+  },
+  "D7": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "توسان",
+      "modelEn": "Tucson",
+      "gen": "TL",
+      "genFa": "TL",
+      "yearStart": 2016,
+      "yearEnd": 2020
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 11 از 11 ردیف ← توسان2016-2017 + جدول کد پروژه سازنده",
+    "partCount": 17
+  },
+  "28": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i30",
+      "modelEn": "i30",
+      "gen": "FD",
+      "genFa": "FD",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 3
+  },
+  "J9": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "2Y": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سوناتا",
+      "modelEn": "Sonata",
+      "gen": "YF",
+      "genFa": "YF",
+      "yearStart": 2010,
+      "yearEnd": 2014
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 2 از 5 ردیف",
+    "partCount": 9
+  },
+  "17": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 3
+  },
+  "G3": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "11": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i30",
+      "modelEn": "i30",
+      "gen": "FD",
+      "genFa": "FD",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 3 ردیف",
+    "partCount": 11
+  },
+  "4C": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "جنسیس",
+      "modelEn": "Genesis",
+      "gen": "کوپه BK",
+      "genFa": "کوپه BK",
+      "yearStart": 2010,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 2 از 2 ردیف",
+    "partCount": 4
+  },
+  "C3": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "A9": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سورنتو",
+      "modelEn": "Sorento",
+      "gen": "XM",
+      "genFa": "XM",
+      "yearStart": 2010,
+      "yearEnd": 2014
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "02": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i20",
+      "modelEn": "i20",
+      "gen": "PB",
+      "genFa": "PB",
+      "yearStart": 2008,
+      "yearEnd": 2014
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "01": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "سوناتا",
+      "modelEn": "Sonata",
+      "gen": "NF",
+      "genFa": "NF",
+      "yearStart": 2005,
+      "yearEnd": 2009
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 2 ردیف",
+    "partCount": 3
+  },
+  "1W": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "ریو",
+      "modelEn": "Rio",
+      "gen": "UB",
+      "genFa": "UB",
+      "yearStart": 2012,
+      "yearEnd": 2017
+    },
+    "siblings": [],
+    "confidence": "بالا",
+    "basis": "شواهد فایل: 18 از 20 ردیف ← ریو + جدول کد پروژه سازنده",
+    "partCount": 27
+  },
+  "0M": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اسپورتیج",
+      "modelEn": "Sportage",
+      "gen": "KM",
+      "genFa": "KM",
+      "yearStart": 2004,
+      "yearEnd": 2010
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "J3": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "L1": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "J5": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "2Z": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "29": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 3
+  },
+  "10": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سول",
+      "modelEn": "Soul",
+      "gen": "AM",
+      "genFa": "AM",
+      "yearStart": 2009,
+      "yearEnd": 2013
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 1 از 2 ردیف",
+    "partCount": 6
+  },
+  "0Q": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سراتو",
+      "modelEn": "Cerato",
+      "gen": "TD",
+      "genFa": "TD",
+      "yearStart": 2009,
+      "yearEnd": 2012
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 3 از 5 ردیف",
+    "partCount": 10
+  },
+  "4L": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "MD",
+      "genFa": "MD",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 2 از 2 ردیف",
+    "partCount": 3
+  },
+  "1S": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "MD",
+      "genFa": "MD",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "J7": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "AD",
+      "genFa": "AD",
+      "yearStart": 2016,
+      "yearEnd": 2020
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل کم است: 2 از 2 ردیف ← النترا2016-2017",
+    "partCount": 2
+  },
+  "A2": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "سراتو",
+      "modelEn": "Cerato",
+      "gen": "TD",
+      "genFa": "TD",
+      "yearStart": 2009,
+      "yearEnd": 2012
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "A4": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "کادنزا",
+      "modelEn": "Cadenza",
+      "gen": "VG",
+      "genFa": "VG",
+      "yearStart": 2011,
+      "yearEnd": 2016
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل کم است: 2 از 2 ردیف ← کادنزا",
+    "partCount": 4
+  },
+  "0W": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "M6": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "30": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "MD",
+      "genFa": "MD",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "ZZ": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "B9": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i10",
+      "modelEn": "i10",
+      "gen": "PA",
+      "genFa": "PA",
+      "yearStart": 2008,
+      "yearEnd": 2013
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل کم است: 2 از 2 ردیف ← i10",
+    "partCount": 5
+  },
+  "C7": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i30",
+      "modelEn": "i30",
+      "gen": "FD",
+      "genFa": "FD",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 5
+  },
+  "20": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "3U": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اسپورتیج",
+      "modelEn": "Sportage",
+      "gen": "SL",
+      "genFa": "SL",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "شواهد فایل: 2 از 2 ردیف",
+    "partCount": 4
+  },
+  "B4": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "A6": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "i30",
+      "modelEn": "i30",
+      "gen": "FD",
+      "genFa": "FD",
+      "yearStart": 2007,
+      "yearEnd": 2011
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 2
+  },
+  "F1": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "اسپورتیج",
+      "modelEn": "Sportage",
+      "gen": "QL",
+      "genFa": "QL",
+      "yearStart": 2016,
+      "yearEnd": 2021
+    },
+    "siblings": [],
+    "confidence": "متوسط",
+    "basis": "جدول کد پروژه سازنده — شواهد فایل کم است: 3 از 4 ردیف ← اسپورتیج 2016-2017",
+    "partCount": 6
+  },
+  "86": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "0Z": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "K7": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "G7": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "31": {
+    "vehicle": {
+      "make": "hyundai",
+      "modelFa": "النترا",
+      "modelEn": "Elantra",
+      "gen": "آوانته",
+      "genFa": "آوانته",
+      "yearStart": 2011,
+      "yearEnd": 2015
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "14": {
+    "vehicle": null,
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  },
+  "52": {
+    "vehicle": {
+      "make": "kia",
+      "modelFa": "موهاوی",
+      "modelEn": "Mohave",
+      "gen": "HM",
+      "genFa": "HM",
+      "yearStart": 2008,
+      "yearEnd": 2019
+    },
+    "siblings": [],
+    "confidence": "نیاز به بررسی",
+    "basis": "بدون شاهد و بدون کد شناخته‌شده",
+    "partCount": 1
+  }
+}

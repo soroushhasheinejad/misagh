@@ -287,23 +287,32 @@ export async function searchByOem(rawQuery: string): Promise<OemSearchResult> {
 }
 
 /** قطعات سازگار با یک خودرو */
+export const PAGE_SIZE = 24;
+
 export async function searchByVehicle(params: {
   generationId?: string;
   trimId?: string;
   categoryId?: string;
+  page?: number;
 }) {
-  const { generationId, trimId, categoryId } = params;
-  const parts = await prisma.part.findMany({
-    where: {
-      isActive: true,
-      ...(categoryId ? { categoryId } : {}),
-      fitments: {
-        some: {
-          ...(trimId ? { OR: [{ trimId }, { trimId: null, generationId }] } : {}),
-          ...(!trimId && generationId ? { generationId } : {}),
-        },
+  const { generationId, trimId, categoryId, page = 1 } = params;
+  const where: Prisma.PartWhereInput = {
+    isActive: true,
+    ...(categoryId ? { categoryId } : {}),
+    fitments: {
+      some: {
+        ...(trimId ? { OR: [{ trimId }, { trimId: null, generationId }] } : {}),
+        ...(!trimId && generationId ? { generationId } : {}),
       },
     },
+  };
+
+  const total = await prisma.part.count({ where });
+  const parts = await prisma.part.findMany({
+    where,
+    orderBy: [{ categoryId: "asc" }, { nameFa: "asc" }],
+    skip: (page - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
     include: {
       images: { orderBy: { sortOrder: "asc" }, take: 1 },
       numbers: { where: { isPrimary: true }, take: 1 },
@@ -313,18 +322,19 @@ export async function searchByVehicle(params: {
       },
       category: true,
     },
-    take: 60,
   });
 
   const settings = await getSettings();
   const rates = await getExchangeRates();
 
-  return Promise.all(
+  const items = await Promise.all(
     parts.map(async (p) => ({
       part: p,
       offers: await priceOffers(p, p.offers, { settings, rates }),
     })),
   );
+
+  return { items, total, page, pageCount: Math.max(1, Math.ceil(total / PAGE_SIZE)) };
 }
 
 export async function getPartBySlug(slug: string) {
