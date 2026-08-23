@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
 import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { SearchPanel } from "@/components/SearchPanel";
+import { CarBlueprint } from "@/components/CarBlueprint";
 
 export default async function HomePage() {
   const [makes, categories, settings, latest, posts] = await Promise.all([
@@ -36,6 +37,9 @@ export default async function HomePage() {
     <div>
       {/* ---------------- سربرگ: کاپوت بسته ---------------- */}
       <section className="relative overflow-hidden bg-carbon pb-28 pt-14 text-white">
+        {/* کروکی فنی — پس‌زمینه سربرگ */}
+        <CarBlueprint className="pointer-events-none absolute left-0 bottom-20 hidden w-[56%] text-brass/50 [mask-image:linear-gradient(to_right,black_50%,transparent_95%)] lg:block xl:w-[52%]" />
+
         <div className="relative mx-auto max-w-[1120px] px-5">
           <div className="rise rise-1 font-mono text-[0.7rem] uppercase tracking-[0.3em] text-brass">
             kia &amp; hyundai
