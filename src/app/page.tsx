@@ -6,7 +6,7 @@ import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { SearchPanel } from "@/components/SearchPanel";
 
 export default async function HomePage() {
-  const [makes, categories, settings, latest] = await Promise.all([
+  const [makes, categories, settings, latest, posts] = await Promise.all([
     getMakes(),
     getCategoryTree(),
     getSettings(),
@@ -19,6 +19,11 @@ export default async function HomePage() {
         numbers: { where: { isPrimary: true }, take: 1 },
         offers: { where: { status: { not: "DISABLED" } }, include: { brand: true, supplier: true } },
       },
+    }),
+    prisma.post.findMany({
+      where: { isPublished: true },
+      orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
+      take: 3,
     }),
   ]);
 
@@ -133,6 +138,41 @@ export default async function HomePage() {
           })}
         </div>
       </section>
+
+      {/* بلاگ فنی — پاسخ سوال‌هایی که قبل از خرید پرسیده می‌شود */}
+      {posts.length > 0 ? (
+        <section className="mx-auto max-w-[1120px] px-5 pb-16">
+          <div className="rule pb-6">
+            <h2 className="font-display text-lg font-bold">از بلاگ فنی</h2>
+            <span className="rule-label">journal</span>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {posts.map((post) => (
+              <Link
+                key={post.id}
+                href={`/blog/${post.slug}`}
+                className="panel group flex flex-col p-6 transition-colors hover:border-brass"
+              >
+                <div className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-brass-dark">
+                  {post.tag}
+                </div>
+                <h3 className="pt-3 font-display text-base font-bold leading-8 group-hover:text-brass-dark">
+                  {post.title}
+                </h3>
+                <p className="pt-2 text-sm leading-7 text-muted">{post.excerpt}</p>
+                <span className="tnum mt-auto pt-4 font-mono text-[0.64rem] text-faint">
+                  {post.readMinutes} دقیقه مطالعه
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          <Link href="/blog" className="btn btn-ghost mt-6">
+            همه مقاله‌ها
+          </Link>
+        </section>
+      ) : null}
     </div>
   );
 }

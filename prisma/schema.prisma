@@ -70,6 +70,7 @@ model VehicleGeneration {
   trims    VehicleTrim[]
   fitments Fitment[]
   garage   UserVehicle[]
+  posts    Post[]
 
   @@unique([modelId, slug])
   @@index([modelId])
@@ -137,6 +138,7 @@ model PartCategory {
   parent   PartCategory?  @relation("CategoryTree", fields: [parentId], references: [id])
   children PartCategory[] @relation("CategoryTree")
   parts    Part[]
+  posts    Post[]
 
   @@index([parentId])
 }
@@ -632,6 +634,39 @@ model Payment {
 // ============================ گزارش و لاگ ===================================
 
 /// جستجوهای بی‌نتیجه — گزارش «چه چیزی را باید بخرید»
+// ============================== بلاگ ========================================
+
+/// مقاله آموزشی — موتور سئوی سایت و پاسخ به سوال‌های تکراری مشتری
+model Post {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  content     String // مارک‌داون
+  coverUrl    String?
+  tag         String   @default("راهنما")
+  author      String   @default("تیم فنی میثاق یدک")
+  readMinutes Int      @default(4)
+  isPublished Boolean  @default(false)
+  isFeatured  Boolean  @default(false)
+  publishedAt DateTime?
+  views       Int      @default(0)
+
+  /// دسته قطعه‌ای که مقاله درباره‌اش است — برای لینک «قطعات مرتبط»
+  categoryId   String?
+  /// خودروی مرتبط با مقاله
+  generationId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category   PartCategory?      @relation(fields: [categoryId], references: [id])
+  generation VehicleGeneration? @relation(fields: [generationId], references: [id])
+
+  @@index([isPublished, publishedAt])
+  @@index([tag])
+}
+
 model SearchLog {
   id          String   @id @default(cuid())
   query       String

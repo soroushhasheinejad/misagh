@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { DEFAULT_SETTINGS, type SettingKey } from "@/lib/settings";
 
@@ -171,4 +172,85 @@ export async function savePartPricing(formData: FormData) {
   });
 
   revalidatePath(`/admin/parts/${id}`);
+}
+
+// ------------------------------- بلاگ ---------------------------------------
+
+/** ثبت یا ویرایش مقاله */
+export async function savePost(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  const slug = String(formData.get("slug") ?? "").trim();
+  const title = String(formData.get("title") ?? "").trim();
+  if (!slug || !title) return;
+
+  const isPublished = formData.get("isPublished") === "on";
+  const data = {
+    slug,
+    title,
+    excerpt: String(formData.get("excerpt") ?? "").trim(),
+    content: String(formData.get("content") ?? ""),
+    tag: String(formData.get("tag") ?? "راهنما").trim() || "راهنما",
+    readMinutes: Math.max(1, Number(formData.get("readMinutes")) || 4),
+    isFeatured: formData.get("isFeatured") === "on",
+    isPublished,
+    categoryId: String(formData.get("categoryId") ?? "") || null,
+  };
+
+  if (id) {
+    const current = await prisma.post.findUnique({ where: { id } });
+    await prisma.post.update({
+      where: { id },
+      data: {
+        ...data,
+        // تاریخ انتشار فقط بار اول ثبت می‌شود
+        publishedAt: isPublished ? (current?.publishedAt ?? new Date()) : null,
+      },
+    });
+  } else {
+    await prisma.post.create({
+      data: { ...data, publishedAt: isPublished ? new Date() : null },
+    });
+  }
+
+  revalidatePath("/admin/posts");
+  revalidatePath("/blog");
+  redirect("/admin/posts");
+}
+
+/** انتشار یا برگرداندن مقاله به پیش‌نویس */
+export async function togglePost(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+
+  const post = await prisma.post.findUnique({ where: { id } });
+  if (!post) return;
+
+  await prisma.post.update({
+    where: { id },
+    data: {
+      isPublished: !post.isPublished,
+      publishedAt: !post.isPublished ? (post.publishedAt ?? new Date()) : post.publishedAt,
+    },
+  });
+
+  revalidatePath("/admin/posts");
+  revalidatePath("/blog");
+}
+
+/** وضعیت استعلام */
+export async function updateInquiryStatus(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  const status = String(formData.get("status") ?? "");
+  if (!id || !status) return;
+
+  await prisma.inquiry.update({
+    where: { id },
+    data: {
+      status: status as never,
+      responseNote: String(formData.get("responseNote") ?? "") || undefined,
+      quotedPrice: formData.get("quotedPrice") ? Number(formData.get("quotedPrice")) : undefined,
+    },
+  });
+
+  revalidatePath("/admin/inquiries");
 }

@@ -3,16 +3,53 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "میثاق یدک — قطعات کیا و هیوندا",
+  title: {
+    default: "میثاق یدک — قطعات کیا و هیوندا",
+    template: "%s | میثاق یدک",
+  },
   description:
     "قطعات یدکی کیا و هیوندا. جستجو بر اساس خودرو، شماره فنی و شماره شاسی، با موجودی و زمان تحویل مشخص.",
 };
 
 const NAV = [
   { href: "/catalog", label: "کاتالوگ" },
+  { href: "/vehicles", label: "خودروها" },
   { href: "/search", label: "شماره فنی" },
   { href: "/vin", label: "شماره شاسی" },
+  { href: "/blog", label: "بلاگ" },
   { href: "/inquiry", label: "استعلام" },
+];
+
+const FOOTER = [
+  {
+    title: "خرید",
+    hint: "shop",
+    links: [
+      { href: "/catalog", label: "کاتالوگ قطعات" },
+      { href: "/vehicles", label: "خودروهای تحت پوشش" },
+      { href: "/search", label: "جستجوی شماره فنی" },
+      { href: "/vin", label: "تشخیص با شماره شاسی" },
+    ],
+  },
+  {
+    title: "راهنما",
+    hint: "help",
+    links: [
+      { href: "/blog", label: "بلاگ فنی" },
+      { href: "/faq", label: "سوالات متداول" },
+      { href: "/shipping", label: "ارسال و پرداخت" },
+      { href: "/returns", label: "ضمانت و مرجوعی" },
+    ],
+  },
+  {
+    title: "فروشگاه",
+    hint: "company",
+    links: [
+      { href: "/about", label: "درباره ما" },
+      { href: "/contact", label: "تماس با ما" },
+      { href: "/inquiry", label: "استعلام قیمت" },
+    ],
+  },
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </span>
             </Link>
 
-            <nav className="hidden items-center gap-6 text-sm text-white/70 md:flex">
+            <nav className="hidden items-center gap-6 text-sm text-white/70 lg:flex">
               {NAV.map((item) => (
                 <Link key={item.href} href={item.href} className="link-brass hover:text-white">
                   {item.label}
@@ -45,8 +82,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Link>
             </div>
           </div>
-          {/* روی موبایل، مسیرها زیر لوگو می‌آیند */}
-          <nav className="flex gap-5 overflow-x-auto border-t border-white/10 px-5 py-2.5 text-sm text-white/70 md:hidden">
+          {/* روی موبایل و تبلت، مسیرها زیر لوگو می‌آیند */}
+          <nav className="flex gap-5 overflow-x-auto border-t border-white/10 px-5 py-2.5 text-sm text-white/70 lg:hidden">
             {NAV.map((item) => (
               <Link key={item.href} href={item.href} className="whitespace-nowrap hover:text-brass">
                 {item.label}
@@ -58,39 +95,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1">{children}</main>
 
         <footer className="mt-20 bg-carbon text-white/60">
-          <div className="mx-auto grid max-w-[1120px] gap-8 px-5 py-12 sm:grid-cols-3">
+          <div className="mx-auto grid max-w-[1120px] gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="font-display text-lg font-black text-white">میثاق یدک</div>
-              <p className="pt-2 text-sm leading-7">
-                قطعات یدکی کیا و هیوندا، با شماره فنی مشخص و موجودی واقعی.
-              </p>
-            </div>
-            <div>
-              <div className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-brass">
-                جستجو
-              </div>
-              <ul className="pt-3 text-sm">
-                {NAV.map((item) => (
-                  <li key={item.href} className="py-1">
-                    <Link href={item.href} className="link-brass hover:text-white">
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <div className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-brass">
-                تماس
-              </div>
               <p className="pt-3 text-sm leading-7">
-                برای قطعات نایاب فرم استعلام را پر کنید؛ کارشناس ما قیمت و موجودی را اعلام می‌کند.
+                قطعات یدکی کیا و هیوندا، با شماره فنی مشخص، سازگاری بررسی‌شده و موجودی واقعی.
               </p>
             </div>
+
+            {FOOTER.map((col) => (
+              <div key={col.title}>
+                <div className="font-mono text-[0.66rem] uppercase tracking-[0.18em] text-brass">
+                  {col.hint}
+                </div>
+                <ul className="pt-3 text-sm">
+                  {col.links.map((link) => (
+                    <li key={link.href} className="py-1">
+                      <Link href={link.href} className="link-brass hover:text-white">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
+
           <div className="border-t border-white/10">
-            <div className="mx-auto max-w-[1120px] px-5 py-4 font-mono text-[0.68rem] tracking-[0.12em] text-white/35">
-              MISAGH YADAK — KIA &amp; HYUNDAI PARTS
+            <div className="mx-auto flex max-w-[1120px] flex-wrap items-center justify-between gap-3 px-5 py-4 font-mono text-[0.68rem] tracking-[0.12em] text-white/35">
+              <span>MISAGH YADAK — KIA &amp; HYUNDAI PARTS</span>
+              <span>{new Date().getFullYear()}</span>
             </div>
           </div>
         </footer>

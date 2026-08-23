@@ -5,6 +5,8 @@ const NAV = [
   { href: "/admin/settings", label: "تنظیمات فروشگاه", hint: "settings" },
   { href: "/admin/rates", label: "نرخ ارز", hint: "rates" },
   { href: "/admin/parts", label: "قطعات و قیمت", hint: "pricing" },
+  { href: "/admin/inquiries", label: "استعلام‌ها", hint: "inquiries" },
+  { href: "/admin/posts", label: "بلاگ", hint: "journal" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
