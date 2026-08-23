@@ -219,8 +219,14 @@ export function computePrice(args: ComputeArgs): PriceResult {
     if (hours > 0) validUntil = new Date(now.getTime() + hours * 3_600_000);
   }
 
-  // ۸) ناموجود ولی قابل استعلام
-  if (stockQty !== undefined && stockQty <= 0) {
+  // ۸) ناموجود: قیمت را پنهان کنیم یا با برچسب ناموجود نشان بدهیم؟
+  // پیش‌فرض نمایش است — در کاتالوگی که بیشتر قطعات سفارشی‌اند، پنهان کردن
+  // قیمت همه چیز را به استعلام تبدیل می‌کند.
+  if (
+    settings["pricing.hideWhenOutOfStock"] &&
+    stockQty !== undefined &&
+    stockQty <= 0
+  ) {
     const allowInquiry = pick("allowInquiry", offer, part) ?? settings["inquiry.enabled"];
     if (allowInquiry) return { kind: "inquiry", reason: "out-of-stock" };
   }

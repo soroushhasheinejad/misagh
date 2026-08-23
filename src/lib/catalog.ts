@@ -7,7 +7,7 @@ import {
   type PriceResult,
   type OfferBadge,
 } from "@/lib/pricing";
-import { normalizePartNumber } from "@/lib/normalize";
+import { normalizePartNumber, normalizeFa } from "@/lib/normalize";
 import type { Prisma } from "@prisma/client";
 
 type Decimalish = Prisma.Decimal | number | null | undefined;
@@ -359,4 +359,182 @@ export async function getPartBySlug(slug: string) {
 
   const offers = await priceOffers(part, part.offers);
   return { part, offers };
+}
+
+// --------------------------- صفحه محصولات -----------------------------------
+
+export type PartSort = "newest" | "name" | "cheapest" | "expensive";
+
+export type SearchPartsParams = {
+  q?: string;
+  categoryId?: string;
+  generationId?: string;
+  trimId?: string;
+  brandId?: string;
+  inStock?: boolean;
+  hasPrice?: boolean;
+  sort?: PartSort;
+  page?: number;
+};
+
+/** دسته و همه زیردسته‌هایش — انتخاب «ترمز» باید لنت و دیسک را هم بیاورد */
+async function categoryWithChildren(categoryId: string): Promise<string[]> {
+  const children = await prisma.partCategory.findMany({
+    where: { parentId: categoryId },
+    select: { id: true },
+  });
+  return [categoryId, ...children.map((c) => c.id)];
+}
+
+function buildWhere(
+  params: SearchPartsParams,
+  categoryIds: string[] | null,
+): Prisma.PartWhereInput {
+  const { q, generationId, trimId, brandId, inStock, hasPrice } = params;
+
+  const filters: Prisma.PartWhereInput[] = [{ isActive: true }];
+
+  if (categoryIds) filters.push({ categoryId: { in: categoryIds } });
+
+  if (q && q.trim()) {
+    const text = normalizeFa(q);
+    const asNumber = normalizePartNumber(q);
+
+    // جستجو باید واژه‌ای باشد نه زیررشته‌ای: «لنت» نباید داخل «النترا» پیدا شود.
+    // پس یا ابتدای نام است، یا بعد از فاصله یا نیم‌فاصله می‌آید.
+    const wordStarts = (needle: string): Prisma.PartWhereInput[] => [
+      { nameFa: { startsWith: needle, mode: "insensitive" } },
+      { nameFa: { contains: ` ${needle}`, mode: "insensitive" } },
+      { nameFa: { contains: `‌${needle}`, mode: "insensitive" } },
+      { nameFa: { contains: `(${needle}`, mode: "insensitive" } },
+    ];
+
+    const needles = [...new Set([q.trim(), text])].filter((n) => n.length > 0);
+
+    filters.push({
+      OR: [
+        ...needles.flatMap(wordStarts),
+        ...(asNumber.length >= 3
+          ? [{ numbers: { some: { normalized: { startsWith: asNumber } } } }]
+          : []),
+      ],
+    });
+  }
+
+  if (generationId || trimId) {
+    filters.push({
+      fitments: {
+        some: trimId
+          ? { OR: [{ trimId }, { trimId: null, generationId }] }
+          : { generationId },
+      },
+    });
+  }
+
+  if (brandId) {
+    filters.push({ OR: [{ brandId }, { offers: { some: { brandId } } }] });
+  }
+
+  if (inStock) {
+    filters.push({ offers: { some: { status: "ACTIVE", stockQty: { gt: 0 } } } });
+  }
+
+  if (hasPrice) {
+    filters.push({
+      offers: { some: { status: { not: "DISABLED" }, basePriceIrr: { not: null } } },
+    });
+  }
+
+  return { AND: filters };
+}
+
+const PART_INCLUDE = {
+  category: true,
+  images: { orderBy: { sortOrder: "asc" as const }, take: 1 },
+  numbers: { where: { isPrimary: true }, take: 1 },
+  offers: {
+    where: { status: { not: "DISABLED" as const } },
+    include: { brand: true, supplier: true },
+  },
+};
+
+/**
+ * جستجوی صفحه محصولات — همه فیلترها با هم ترکیب می‌شوند.
+ * مرتب‌سازی بر اساس قیمت چون به کمترین قیمت پیشنهادها وابسته است،
+ * اول شناسه‌ها را با groupBy مرتب می‌کند و بعد قطعات را می‌خواند.
+ */
+export async function searchParts(params: SearchPartsParams) {
+  const page = Math.max(1, params.page ?? 1);
+  const sort: PartSort = params.sort ?? "newest";
+  const categoryIds = params.categoryId ? await categoryWithChildren(params.categoryId) : null;
+  const where = buildWhere(params, categoryIds);
+
+  const settings = await getSettings();
+  const rates = await getExchangeRates();
+
+  let parts: Prisma.PartGetPayload<{ include: typeof PART_INCLUDE }>[];
+  let total: number;
+
+  if (sort === "cheapest" || sort === "expensive") {
+    // فقط قطعاتی که قیمت پایه دارند قابل مرتب‌سازی قیمتی‌اند
+    const candidates = await prisma.part.findMany({
+      where: {
+        AND: [
+          where,
+          { offers: { some: { status: { not: "DISABLED" }, basePriceIrr: { not: null } } } },
+        ],
+      },
+      select: { id: true },
+    });
+    const ids = candidates.map((c) => c.id);
+    total = ids.length;
+
+    const grouped = ids.length
+      ? await prisma.offer.groupBy({
+          by: ["partId"],
+          where: { partId: { in: ids }, status: { not: "DISABLED" }, basePriceIrr: { not: null } },
+          _min: { basePriceIrr: true },
+          orderBy: { _min: { basePriceIrr: sort === "cheapest" ? "asc" : "desc" } },
+          skip: (page - 1) * PAGE_SIZE,
+          take: PAGE_SIZE,
+        })
+      : [];
+
+    const pageIds = grouped.map((g) => g.partId);
+    const found = await prisma.part.findMany({
+      where: { id: { in: pageIds } },
+      include: PART_INCLUDE,
+    });
+    // ترتیب groupBy را نگه می‌داریم
+    const byId = new Map(found.map((p) => [p.id, p]));
+    parts = pageIds.map((id) => byId.get(id)!).filter(Boolean);
+  } else {
+    total = await prisma.part.count({ where });
+    parts = await prisma.part.findMany({
+      where,
+      orderBy: sort === "name" ? { nameFa: "asc" } : { createdAt: "desc" },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+      include: PART_INCLUDE,
+    });
+  }
+
+  const items = await Promise.all(
+    parts.map(async (p) => ({
+      part: p,
+      offers: await priceOffers(p, p.offers, { settings, rates }),
+    })),
+  );
+
+  return { items, total, page, pageCount: Math.max(1, Math.ceil(total / PAGE_SIZE)) };
+}
+
+/** برندهایی که واقعاً روی پیشنهادها استفاده شده‌اند */
+export async function getUsedBrands() {
+  const brands = await prisma.partBrand.findMany({
+    where: { isActive: true, offers: { some: {} } },
+    orderBy: { nameFa: "asc" },
+    include: { _count: { select: { offers: true } } },
+  });
+  return brands;
 }

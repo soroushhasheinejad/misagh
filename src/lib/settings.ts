@@ -17,6 +17,7 @@ export const DEFAULT_SETTINGS = {
   "pricing.showPriceValidity": true,
   "pricing.vatPercent": 0,
   "pricing.autoRecalcOnRateChange": true, // با تغییر نرخ ارز، قیمت‌ها بازمحاسبه شوند
+  "pricing.hideWhenOutOfStock": false, // قیمت قطعه ناموجود پنهان شود و جایش استعلام بیاید
 
   // ---- چند پیشنهاد برای یک قطعه (مثل fitinpart) ----
   "offers.multiOfferEnabled": true, // خاموش شود: فقط پیشنهاد پیش‌فرض دیده می‌شود

@@ -12,6 +12,7 @@ const LABELS: Record<SettingKey, string> = {
   "pricing.showPriceValidity": "نمایش «قیمت تا … معتبر است»",
   "pricing.vatPercent": "مالیات بر ارزش افزوده (٪)",
   "pricing.autoRecalcOnRateChange": "بازمحاسبه خودکار با تغییر نرخ ارز",
+  "pricing.hideWhenOutOfStock": "پنهان کردن قیمت قطعات ناموجود",
   "offers.multiOfferEnabled": "نمایش چند پیشنهاد برای هر قطعه",
   "offers.showSupplierName": "نمایش نام تامین‌کننده به مشتری",
   "offers.showLeadTime": "نمایش زمان تحویل",

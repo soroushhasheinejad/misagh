@@ -1,213 +1,189 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
-import { searchByVehicle, priceOffers, getCategoryTree, PAGE_SIZE } from "@/lib/catalog";
+import { searchParts, getCategoryTree, getUsedBrands, type PartSort } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
-import { formatMoney, moneyLabel } from "@/lib/pricing";
+import { ProductCard } from "@/components/ProductCard";
+import { ProductFilters, SortBar } from "@/components/ProductFilters";
+
+export const metadata: Metadata = {
+  title: "محصولات",
+  description:
+    "کاتالوگ کامل قطعات یدکی کیا و هیوندا با شماره فنی، موجودی و قیمت. فیلتر بر اساس خودرو، دسته و برند.",
+};
+
+type Params = {
+  q?: string;
+  categoryId?: string;
+  brandId?: string;
+  generationId?: string;
+  trimId?: string;
+  inStock?: string;
+  hasPrice?: string;
+  sort?: string;
+  page?: string;
+};
+
+const SORTS: PartSort[] = ["newest", "name", "cheapest", "expensive"];
 
 export default async function CatalogPage({
   searchParams,
 }: {
-  searchParams: Promise<{
-    generationId?: string;
-    trimId?: string;
-    categoryId?: string;
-    page?: string;
-  }>;
+  searchParams: Promise<Params>;
 }) {
-  const { generationId, trimId, categoryId, page: pageParam } = await searchParams;
-  const page = Math.max(1, Number(pageParam) || 1);
-  const settings = await getSettings();
-  const unit = settings["store.displayUnit"] as "toman" | "rial";
+  const sp = await searchParams;
+  const page = Math.max(1, Number(sp.page) || 1);
+  const sort = (SORTS.includes(sp.sort as PartSort) ? sp.sort : "newest") as PartSort;
 
-  const [categories, generation] = await Promise.all([
+  const [settings, categories, brands, generation, category, brand] = await Promise.all([
+    getSettings(),
     getCategoryTree(),
-    generationId
+    getUsedBrands(),
+    sp.generationId
       ? prisma.vehicleGeneration.findUnique({
-          where: { id: generationId },
+          where: { id: sp.generationId },
           include: { model: { include: { make: true } } },
         })
       : null,
+    sp.categoryId ? prisma.partCategory.findUnique({ where: { id: sp.categoryId } }) : null,
+    sp.brandId ? prisma.partBrand.findUnique({ where: { id: sp.brandId } }) : null,
   ]);
 
-  let results: Awaited<ReturnType<typeof searchByVehicle>>["items"] = [];
-  let total = 0;
-  let pageCount = 1;
+  const unit = settings["store.displayUnit"] as "toman" | "rial";
 
-  if (generationId || trimId) {
-    const found = await searchByVehicle({ generationId, trimId, categoryId, page });
-    results = found.items;
-    total = found.total;
-    pageCount = found.pageCount;
-  } else if (categoryId) {
-    const where = { categoryId, isActive: true };
-    total = await prisma.part.count({ where });
-    pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
-    const parts = await prisma.part.findMany({
-      where,
-      orderBy: { nameFa: "asc" },
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-      include: {
-        offers: { where: { status: { not: "DISABLED" } }, include: { brand: true, supplier: true } },
-        images: { take: 1 },
-        numbers: { where: { isPrimary: true }, take: 1 },
-        category: true,
-      },
+  const { items, total, pageCount } = await searchParts({
+    q: sp.q,
+    categoryId: sp.categoryId,
+    generationId: sp.generationId,
+    trimId: sp.trimId,
+    brandId: sp.brandId,
+    inStock: sp.inStock === "1",
+    hasPrice: sp.hasPrice === "1",
+    sort,
+    page,
+  });
+
+  // آدرس صفحه بعد و قبل با حفظ همه فیلترها
+  const hrefFor = (overrides: Record<string, string | undefined>) => {
+    const next = new URLSearchParams();
+    const base: Record<string, string | undefined> = { ...sp, ...overrides };
+    for (const [key, value] of Object.entries(base)) {
+      if (value) next.set(key, value);
+    }
+    return `/catalog${next.toString() ? `?${next}` : ""}`;
+  };
+
+  // برچسب فیلترهای فعال، هر کدام با امکان حذف
+  const chips: Array<{ label: string; href: string }> = [];
+  if (generation) {
+    chips.push({
+      label: `${generation.model.make.nameFa} ${generation.model.nameFa} ${generation.nameFa}`,
+      href: hrefFor({ generationId: undefined, trimId: undefined, page: undefined }),
     });
-    results = await Promise.all(
-      parts.map(async (p) => ({ part: p, offers: await priceOffers(p, p.offers, { settings }) })),
-    );
   }
-
-  const keep = (id: string) =>
-    `/catalog?${new URLSearchParams({ ...(generationId ? { generationId } : {}), categoryId: id })}`;
-
-  const pageHref = (n: number) =>
-    `/catalog?${new URLSearchParams({
-      ...(generationId ? { generationId } : {}),
-      ...(trimId ? { trimId } : {}),
-      ...(categoryId ? { categoryId } : {}),
-      ...(n > 1 ? { page: String(n) } : {}),
-    })}`;
+  if (category) chips.push({ label: category.nameFa, href: hrefFor({ categoryId: undefined, page: undefined }) });
+  if (brand) chips.push({ label: brand.nameFa, href: hrefFor({ brandId: undefined, page: undefined }) });
+  if (sp.q) chips.push({ label: `«${sp.q}»`, href: hrefFor({ q: undefined, page: undefined }) });
+  if (sp.inStock === "1") chips.push({ label: "موجود", href: hrefFor({ inStock: undefined, page: undefined }) });
+  if (sp.hasPrice === "1")
+    chips.push({ label: "دارای قیمت", href: hrefFor({ hasPrice: undefined, page: undefined }) });
 
   return (
     <div>
-      {/* نوار خودروی انتخابی — همیشه معلوم باشد فیلتر روی چیست */}
-      {generation ? (
-        <div className="border-b border-brass/25 bg-carbon text-white">
-          <div className="mx-auto flex max-w-[1120px] flex-wrap items-center justify-between gap-3 px-5 py-4">
-            <div className="flex flex-wrap items-baseline gap-3">
-              <span className="font-mono text-[0.66rem] uppercase tracking-[0.16em] text-brass">
-                vehicle
-              </span>
-              <span className="font-display text-base font-bold">
-                {generation.model.make.nameFa} {generation.model.nameFa} {generation.nameFa}
-              </span>
+      {/* سربرگ: اگر خودرو انتخاب شده، همان تیتر صفحه است */}
+      <section className="border-b border-brass/25 bg-carbon py-10 text-white">
+        <div className="mx-auto max-w-[1120px] px-5">
+          <div className="font-mono text-[0.68rem] uppercase tracking-[0.24em] text-brass">
+            {generation ? "vehicle" : "catalog"}
+          </div>
+          <div className="flex flex-wrap items-baseline justify-between gap-3 pt-4">
+            <h1 className="font-display text-2xl font-black">
+              {generation
+                ? `قطعات ${generation.model.make.nameFa} ${generation.model.nameFa} ${generation.nameFa}`
+                : "محصولات"}
+            </h1>
+            {generation ? (
               <span className="tnum text-sm text-white/50">
                 {generation.yearStart}
                 {generation.yearEnd ? ` – ${generation.yearEnd}` : " به بعد"}
               </span>
-            </div>
-            <Link href="/" className="text-xs text-white/50 link-brass hover:text-white">
-              تغییر خودرو
-            </Link>
+            ) : (
+              <span className="text-sm text-white/50">
+                {total.toLocaleString("fa-IR")} قطعه کیا و هیوندا
+              </span>
+            )}
           </div>
+
+          {chips.length > 0 ? (
+            <div className="flex flex-wrap items-center gap-2 pt-5">
+              {chips.map((chip) => (
+                <Link
+                  key={chip.label}
+                  href={chip.href}
+                  className="flex items-center gap-2 rounded border border-white/20 px-3 py-1 text-xs text-white/80 transition-colors hover:border-brass hover:text-white"
+                >
+                  {chip.label}
+                  <span className="font-mono text-brass">×</span>
+                </Link>
+              ))}
+              <Link href="/catalog" className="text-xs text-white/40 hover:text-brass">
+                حذف همه فیلترها
+              </Link>
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      </section>
 
       <div className="mx-auto max-w-[1120px] px-5 py-10">
-        <div className="grid gap-10 lg:grid-cols-[210px_1fr]">
+        <div className="grid gap-10 lg:grid-cols-[240px_1fr]">
           <aside>
-            <div className="rule pb-4">
-              <span className="rule-label">categories</span>
-            </div>
-            <ul className="text-sm">
-              {categories.map((c) => (
-                <li key={c.id} className="pb-3">
-                  <Link
-                    href={keep(c.id)}
-                    className={
-                      categoryId === c.id
-                        ? "font-display font-bold text-brass-dark"
-                        : "font-display font-bold hover:text-brass-dark"
-                    }
-                  >
-                    {c.nameFa}
-                  </Link>
-                  <ul className="border-r border-line-2 pr-3 pt-1">
-                    {c.children.map((ch) => (
-                      <li key={ch.id} className="py-0.5">
-                        <Link
-                          href={keep(ch.id)}
-                          className={
-                            categoryId === ch.id ? "text-brass-dark" : "text-muted link-brass"
-                          }
-                        >
-                          {ch.nameFa}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
+            <Suspense fallback={<div className="h-64 animate-pulse rounded bg-line" />}>
+              <ProductFilters
+                categories={categories.map((c) => ({
+                  id: c.id,
+                  nameFa: c.nameFa,
+                  children: c.children.map((ch) => ({ id: ch.id, nameFa: ch.nameFa })),
+                }))}
+                brands={brands.map((b) => ({ id: b.id, nameFa: b.nameFa }))}
+              />
+            </Suspense>
           </aside>
 
           <div>
-            <div className="rule pb-6">
-              <h1 className="font-display text-lg font-bold">
-                {total > 0 ? `${total.toLocaleString("fa-IR")} قطعه` : "قطعه‌ای پیدا نشد"}
-              </h1>
-              <span className="rule-label">
-                {pageCount > 1 ? `صفحه ${page.toLocaleString("fa-IR")} از ${pageCount.toLocaleString("fa-IR")}` : "results"}
-              </span>
-            </div>
+            <Suspense fallback={<div className="h-8 animate-pulse rounded bg-line" />}>
+              <SortBar total={total} />
+            </Suspense>
 
-            {results.length === 0 ? (
-              <div className="panel p-8 text-center">
-                <p className="text-sm text-muted">
-                  {generation
-                    ? "برای این خودرو در این دسته هنوز قطعه‌ای ثبت نشده است."
-                    : "یک خودرو یا دسته‌بندی انتخاب کنید."}
+            {items.length === 0 ? (
+              <div className="panel p-10 text-center">
+                <p className="text-muted">
+                  با این فیلترها قطعه‌ای پیدا نشد. فیلترها را کم کنید یا درخواست قطعه ثبت کنید.
                 </p>
-                <Link href="/inquiry" className="btn btn-brass mt-4">
-                  درخواست قطعه
-                </Link>
+                <div className="flex flex-wrap justify-center gap-3 pt-5">
+                  <Link href="/catalog" className="btn btn-ghost">
+                    حذف فیلترها
+                  </Link>
+                  <Link href="/inquiry" className="btn btn-brass">
+                    درخواست قطعه
+                  </Link>
+                </div>
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {results.map(({ part, offers }) => {
-                  const best = offers.find((o) => o.price.kind === "price");
-                  return (
-                    <article
-                      key={part.id}
-                      className="panel flex flex-col p-5 transition-colors hover:border-brass"
-                    >
-                      <Link
-                        href={`/part/${part.slug}`}
-                        className="font-display text-[0.95rem] font-bold leading-7 hover:text-brass-dark"
-                      >
-                        {part.nameFa}
-                      </Link>
-                      {"numbers" in part && part.numbers[0] ? (
-                        <div className="pt-3">
-                          <span className="plate text-xs">{part.numbers[0].number}</span>
-                        </div>
-                      ) : null}
-                      <div className="mt-auto flex items-end justify-between gap-3 pt-5">
-                        <div>
-                          {best && best.price.kind === "price" ? (
-                            <div className="tnum font-display text-lg font-black">
-                              {formatMoney(best.price.amountIrr, unit)}
-                              <span className="pr-1 text-[0.7rem] font-medium text-muted">
-                                {moneyLabel(unit)}
-                              </span>
-                            </div>
-                          ) : (
-                            <div className="font-display text-sm font-bold text-alert">
-                              استعلام قیمت
-                            </div>
-                          )}
-                          {offers.length > 1 ? (
-                            <div className="pt-1 text-xs text-faint">
-                              {offers.length} پیشنهاد فروش
-                            </div>
-                          ) : null}
-                        </div>
-                        <Link href={`/part/${part.slug}`} className="btn btn-ghost px-3 py-1.5 text-xs">
-                          جزئیات
-                        </Link>
-                      </div>
-                    </article>
-                  );
-                })}
+                {items.map(({ part, offers }) => (
+                  <ProductCard key={part.id} part={part} offers={offers} unit={unit} />
+                ))}
               </div>
             )}
 
             {pageCount > 1 ? (
-              <nav className="flex items-center justify-between gap-3 pt-8" aria-label="صفحه‌بندی">
+              <nav className="flex items-center justify-between gap-3 pt-10" aria-label="صفحه‌بندی">
                 {page > 1 ? (
-                  <Link href={pageHref(page - 1)} className="btn btn-ghost px-4 py-2 text-xs">
+                  <Link
+                    href={hrefFor({ page: String(page - 1) })}
+                    className="btn btn-ghost px-4 py-2 text-xs"
+                  >
                     صفحه قبل
                   </Link>
                 ) : (
@@ -217,7 +193,10 @@ export default async function CatalogPage({
                   {page} / {pageCount}
                 </span>
                 {page < pageCount ? (
-                  <Link href={pageHref(page + 1)} className="btn btn-ghost px-4 py-2 text-xs">
+                  <Link
+                    href={hrefFor({ page: String(page + 1) })}
+                    className="btn btn-ghost px-4 py-2 text-xs"
+                  >
                     صفحه بعد
                   </Link>
                 ) : (
