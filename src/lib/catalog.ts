@@ -538,3 +538,70 @@ export async function getUsedBrands() {
   });
   return brands;
 }
+
+// ------------------- کمک به جستجوی شماره فنی بی‌نتیجه -----------------------
+
+/**
+ * وقتی کد پیدا نشد: قطعات هم‌گروه را پیشنهاد می‌دهد.
+ * پنج رقم اول شماره فنی نوع قطعه است، پس 58101-XXXXX یعنی «لنت جلو»؛
+ * حتی اگر آن کد خاص را نداشته باشیم، لنت جلوهای دیگر را نشان می‌دهیم.
+ */
+export async function suggestSameGroup(rawQuery: string, take = 6) {
+  const normalized = normalizePartNumber(rawQuery);
+  if (normalized.length < 5 || !/^\d{5}/.test(normalized)) return [];
+
+  const prefix = normalized.slice(0, 5);
+  const numbers = await prisma.partNumber.findMany({
+    where: { normalized: { startsWith: prefix } },
+    include: {
+      part: {
+        include: {
+          category: true,
+          numbers: { where: { isPrimary: true }, take: 1 },
+          offers: {
+            where: { status: { not: "DISABLED" } },
+            include: { brand: true, supplier: true },
+          },
+          fitments: {
+            take: 1,
+            include: { generation: { include: { model: { include: { make: true } } } } },
+          },
+        },
+      },
+    },
+    take: take * 3,
+  });
+
+  const settings = await getSettings();
+  const rates = await getExchangeRates();
+
+  const seen = new Set<string>();
+  const unique = numbers.filter((n) => {
+    if (seen.has(n.partId) || !n.part.isActive) return false;
+    seen.add(n.partId);
+    return true;
+  });
+
+  return Promise.all(
+    unique.slice(0, take).map(async (n) => ({
+      part: n.part,
+      offers: await priceOffers(n.part, n.part.offers, { settings, rates }),
+      vehicle: n.part.fitments[0]?.generation
+        ? `${n.part.fitments[0].generation.model.make.nameFa} ${n.part.fitments[0].generation.model.nameFa} ${n.part.fitments[0].generation.nameFa}`
+        : null,
+    })),
+  );
+}
+
+/** پرتکرارترین جستجوهای موفق — برای صفحه خالی جستجو */
+export async function getPopularSearches(take = 8) {
+  // گروه‌بندی روی شکل نرمال‌شده، وگرنه «58101-D3A00» و «58101D3A00» دو ردیف می‌شوند
+  const rows = await prisma.searchLog.groupBy({
+    by: ["normalized"],
+    where: { searchType: "oem", resultCount: { gt: 0 }, normalized: { not: "" } },
+    _count: true,
+    orderBy: { _count: { normalized: "desc" } },
+    take,
+  });
+  return rows.map((r) => ({ query: r.normalized, count: r._count }));
+}
