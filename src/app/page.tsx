@@ -5,6 +5,7 @@ import { getSettings } from "@/lib/settings";
 import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { SearchPanel } from "@/components/SearchPanel";
 import { CarBlueprint } from "@/components/CarBlueprint";
+import { HeroStage } from "@/components/HeroStage";
 
 export default async function HomePage() {
   const [makes, categories, settings, latest, posts] = await Promise.all([
@@ -36,9 +37,29 @@ export default async function HomePage() {
   return (
     <div>
       {/* ---------------- سربرگ: کاپوت بسته ---------------- */}
-      <section className="relative overflow-hidden bg-carbon pb-28 pt-14 text-white">
-        {/* کروکی فنی — پس‌زمینه سربرگ */}
-        <CarBlueprint className="pointer-events-none absolute left-0 bottom-20 hidden w-[56%] text-brass/50 [mask-image:linear-gradient(to_right,black_50%,transparent_95%)] lg:block xl:w-[52%]" />
+      <section className="relative bg-carbon pb-36 pt-14 text-white">
+        {/* کاغذ نقشه: شبکه میلی‌متری کم‌رنگ */}
+        <div
+          className="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.055]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, #b4832b 1px, transparent 1px), linear-gradient(to bottom, #b4832b 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
+            maskImage: "radial-gradient(120% 90% at 25% 60%, black 20%, transparent 75%)",
+          }}
+        />
+
+        {/* کروکی روی صحنه سه‌بعدی — از لبه پایین سربرگ بیرون می‌زند */}
+        <div className="pointer-events-none absolute -bottom-6 left-0 z-20 hidden w-[52%] [mask-image:linear-gradient(to_bottom,black_62%,transparent_98%)] lg:block xl:w-[48%]">
+          <HeroStage>
+            <CarBlueprint className="w-full text-brass/55 drop-shadow-[0_26px_36px_rgba(0,0,0,0.55)] [mask-image:linear-gradient(to_right,black_55%,transparent_97%)]" />
+          </HeroStage>
+          {/* سایه تماس روی خط مرز */}
+          <div
+            className="absolute bottom-8 left-[8%] h-6 w-[62%] rounded-[50%] blur-xl"
+            style={{ background: "radial-gradient(closest-side, rgba(0,0,0,0.55), transparent)" }}
+          />
+        </div>
 
         <div className="relative mx-auto max-w-[1120px] px-5">
           <div className="rise rise-1 font-mono text-[0.7rem] uppercase tracking-[0.3em] text-brass">
@@ -62,7 +83,7 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------- کنسول جستجو ---------------- */}
-      <div className="mx-auto -mt-20 max-w-[1120px] px-5">
+      <div className="relative z-10 mx-auto -mt-20 max-w-[1120px] px-5">
         <div className="rise rise-3">
           <SearchPanel makes={makes.map((m) => ({ id: m.id, nameFa: m.nameFa }))} />
         </div>
