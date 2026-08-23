@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local
 .env
+
+# نمونه بدون مقدار — این یکی باید در مخزن باشد
+!.env.example

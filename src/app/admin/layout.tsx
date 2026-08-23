@@ -1,4 +1,19 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { SESSION_COOKIE } from "@/lib/auth";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
+
+async function logout() {
+  "use server";
+  const store = await cookies();
+  store.delete(SESSION_COOKIE);
+  redirect("/");
+}
 
 const NAV = [
   { href: "/admin", label: "خلاصه", hint: "overview" },
@@ -33,6 +48,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </Link>
             ))}
           </nav>
+
+          <div className="flex flex-col gap-2 pt-6">
+            <Link href="/" className="text-xs text-muted hover:text-brass-dark">
+              دیدن سایت ←
+            </Link>
+            <form action={logout}>
+              <button type="submit" className="text-xs text-muted hover:text-alert">
+                خروج از پنل
+              </button>
+            </form>
+          </div>
         </aside>
         <div>{children}</div>
       </div>

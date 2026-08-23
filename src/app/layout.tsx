@@ -72,15 +72,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </Link>
               ))}
             </nav>
-
-            <div className="mr-auto flex items-center gap-3">
-              <Link
-                href="/admin"
-                className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-white/45 transition-colors hover:text-brass"
-              >
-                admin
-              </Link>
-            </div>
           </div>
           {/* روی موبایل و تبلت، مسیرها زیر لوگو می‌آیند */}
           <nav className="flex gap-5 overflow-x-auto border-t border-white/10 px-5 py-2.5 text-sm text-white/70 lg:hidden">
