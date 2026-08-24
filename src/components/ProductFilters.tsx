@@ -79,9 +79,6 @@ export function ProductFilters({
       </div>
 
       <div>
-        <div className="rule pb-3">
-          <span className="rule-label">category</span>
-        </div>
         <select
           name="categoryId"
           defaultValue={current.categoryId}
@@ -104,9 +101,6 @@ export function ProductFilters({
 
       {brands.length > 0 ? (
         <div>
-          <div className="rule pb-3">
-            <span className="rule-label">brand</span>
-          </div>
           <select name="brandId" defaultValue={current.brandId} onChange={submit} className="field">
             <option value="">همه برندها</option>
             {brands.map((b) => (
@@ -119,9 +113,6 @@ export function ProductFilters({
       ) : null}
 
       <div>
-        <div className="rule pb-3">
-          <span className="rule-label">filter</span>
-        </div>
         <label className="flex items-center gap-2 py-1 text-sm">
           <input
             type="checkbox"
@@ -177,7 +168,7 @@ export function SortBar({ total }: { total: number }) {
         {total > 0 ? `${total.toLocaleString("fa-IR")} قطعه` : "قطعه‌ای پیدا نشد"}
       </div>
       <div className="flex items-center gap-2">
-        <span className="font-mono text-[0.64rem] uppercase tracking-[0.14em] text-faint">sort</span>
+        <span className="text-xs text-faint">ترتیب</span>
         <select
           value={sort}
           onChange={(e) => change(e.target.value)}

@@ -12,7 +12,6 @@ export default async function AdminPostsPage() {
     <div>
       <div className="rule pb-6">
         <h1 className="font-display text-xl font-black">بلاگ</h1>
-        <span className="rule-label">journal</span>
       </div>
 
       <div className="flex items-center justify-between pb-5">

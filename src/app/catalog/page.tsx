@@ -6,6 +6,7 @@ import { searchParts, getCategoryTree, getUsedBrands, type PartSort } from "@/li
 import { getSettings } from "@/lib/settings";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductFilters, SortBar } from "@/components/ProductFilters";
+import { faYearRange } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "محصولات",
@@ -94,9 +95,7 @@ export default async function CatalogPage({
       {/* سربرگ: اگر خودرو انتخاب شده، همان تیتر صفحه است */}
       <section className="border-b border-brass/25 bg-carbon py-10 text-white">
         <div className="mx-auto max-w-[1120px] px-5">
-          <div className="font-mono text-[0.68rem] uppercase tracking-[0.24em] text-brass">
-            {generation ? "vehicle" : "catalog"}
-          </div>
+          <span className="block size-[7px] rotate-45 bg-brass" />
           <div className="flex flex-wrap items-baseline justify-between gap-3 pt-4">
             <h1 className="font-display text-2xl font-black">
               {generation
@@ -105,8 +104,7 @@ export default async function CatalogPage({
             </h1>
             {generation ? (
               <span className="tnum text-sm text-white/50">
-                {generation.yearStart}
-                {generation.yearEnd ? ` – ${generation.yearEnd}` : " به بعد"}
+                {faYearRange(generation.yearStart, generation.yearEnd)}
               </span>
             ) : (
               <span className="text-sm text-white/50">
@@ -189,8 +187,8 @@ export default async function CatalogPage({
                 ) : (
                   <span />
                 )}
-                <span className="tnum font-mono text-xs text-faint">
-                  {page} / {pageCount}
+                <span className="tnum text-xs text-faint">
+                  صفحه {page.toLocaleString("fa-IR")} از {pageCount.toLocaleString("fa-IR")}
                 </span>
                 {page < pageCount ? (
                   <Link

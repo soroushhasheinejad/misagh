@@ -33,7 +33,7 @@ export default async function InquiryPage({
   if (sent) {
     return (
       <div className="mx-auto max-w-lg px-5 py-24 text-center">
-        <div className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-ok">received</div>
+        <span className="mx-auto block size-[7px] rotate-45 bg-ok" />
         <h1 className="pt-4 font-display text-xl font-black">درخواست شما ثبت شد</h1>
         <p className="pt-3 text-sm text-muted">
           قیمت و موجودی را بررسی می‌کنیم و با همان شماره تماس می‌گیریم.
@@ -51,7 +51,6 @@ export default async function InquiryPage({
         <div>
           <div className="rule pb-5">
             <h1 className="font-display text-xl font-black">استعلام قیمت</h1>
-            <span className="rule-label">inquiry</span>
           </div>
           <p className="max-w-lg text-muted">
             قطعه‌ای که دنبالش هستید در سایت نیست یا قیمتش اعلام نشده؟ مشخصات را بنویسید؛ کارشناس ما
@@ -99,10 +98,7 @@ export default async function InquiryPage({
 
         <aside className="lg:pt-16">
           <div className="panel bg-carbon p-6 text-white">
-            <div className="font-mono text-[0.66rem] uppercase tracking-[0.18em] text-brass">
-              direct
-            </div>
-            <h2 className="pt-3 font-display text-base font-bold">ترجیح می‌دهید پیام بدهید؟</h2>
+                        <h2 className="pt-3 font-display text-base font-bold">ترجیح می‌دهید پیام بدهید؟</h2>
             <p className="pt-2 text-sm leading-7 text-white/60">
               عکس قطعه یا شماره فنی را بفرستید؛ همان‌جا قیمت می‌دهیم.
             </p>

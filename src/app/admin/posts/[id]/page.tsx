@@ -23,7 +23,6 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
       </Link>
       <div className="rule pb-6 pt-2">
         <h1 className="font-display text-xl font-black">{post.title}</h1>
-        <span className="rule-label">{post.isPublished ? "published" : "draft"}</span>
       </div>
       <PostForm post={post} categories={categories} />
     </div>

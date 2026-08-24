@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/PageHeader";
+import { faYearRange, faNumber } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "خودروهای تحت پوشش",
@@ -35,7 +36,6 @@ export default async function VehiclesPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="coverage"
         title="خودروهایی که برایشان قطعه داریم"
         lede={`${totalGenerations.toLocaleString("fa-IR")} نسل از کیا و هیوندا. روی هر نسل بزنید تا قطعات سازگارش را ببینید.`}
       />
@@ -50,7 +50,6 @@ export default async function VehiclesPage() {
               <section key={make.id}>
                 <div className="rule pb-6">
                   <h2 className="font-display text-xl font-black">{make.nameFa}</h2>
-                  <span className="rule-label">{make.nameEn}</span>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -58,9 +57,6 @@ export default async function VehiclesPage() {
                     <div key={model.id} className="panel p-5">
                       <div className="flex items-baseline justify-between gap-2">
                         <h3 className="font-display text-base font-bold">{model.nameFa}</h3>
-                        <span className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-faint">
-                          {model.nameEn}
-                        </span>
                       </div>
 
                       <ul className="pt-3">
@@ -73,8 +69,7 @@ export default async function VehiclesPage() {
                               <span>
                                 {gen.nameFa}
                                 <span className="tnum pr-2 text-xs text-faint">
-                                  {gen.yearStart}
-                                  {gen.yearEnd ? `–${gen.yearEnd}` : "+"}
+                                  {faYearRange(gen.yearStart, gen.yearEnd)}
                                 </span>
                               </span>
                               <span className="tnum font-mono text-[0.68rem] text-faint">

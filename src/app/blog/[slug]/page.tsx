@@ -68,14 +68,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <div className="mx-auto max-w-[1120px] px-5">
             <Link
               href="/blog"
-              className="font-mono text-[0.66rem] uppercase tracking-[0.2em] text-brass hover:text-brass-lite"
+              className="text-xs text-brass hover:text-brass-lite"
             >
               ← بلاگ
             </Link>
             <h1 className="max-w-3xl pt-5 font-display text-3xl font-black leading-[1.55]">
               {post.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-4 pt-5 font-mono text-[0.66rem] uppercase tracking-[0.14em] text-white/45">
+            <div className="flex flex-wrap items-center gap-4 pt-5 text-xs text-white/45">
               <span className="text-brass">{post.tag}</span>
               <span>{faDate(post.publishedAt)}</span>
               <span className="tnum">{post.readMinutes} دقیقه مطالعه</span>
@@ -111,9 +111,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <aside className="flex flex-col gap-8">
               {post.category ? (
                 <div>
-                  <div className="rule pb-4">
-                    <span className="rule-label">related</span>
-                  </div>
                   <div className="font-display text-sm font-bold">
                     قطعات {post.category.nameFa}
                   </div>
@@ -158,13 +155,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               ) : null}
 
               <div>
-                <div className="rule pb-4">
-                  <span className="rule-label">more</span>
-                </div>
                 <div className="flex flex-col gap-3">
                   {more.map((p) => (
                     <Link key={p.id} href={`/blog/${p.slug}`} className="group block">
-                      <div className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-brass-dark">
+                      <div className="text-xs text-brass-dark">
                         {p.tag}
                       </div>
                       <div className="pt-1 text-sm leading-7 group-hover:text-brass-dark">

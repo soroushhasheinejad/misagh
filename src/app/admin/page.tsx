@@ -21,25 +21,21 @@ export default async function AdminHome() {
   ]);
 
   const cards = [
-    { label: "قطعات", hint: "parts", value: parts, href: "/admin/parts" },
-    { label: "پیشنهاد فروش", hint: "offers", value: offers, href: "/admin/parts" },
-    { label: "نسل خودرو", hint: "vehicles", value: generations, href: "/admin" },
-    { label: "استعلام جدید", hint: "inquiries", value: inquiries, href: "/admin" },
+    { label: "قطعات", value: parts, href: "/admin/parts" },
+    { label: "پیشنهاد فروش", value: offers, href: "/admin/parts" },
+    { label: "نسل خودرو", value: generations, href: "/admin" },
+    { label: "استعلام جدید", value: inquiries, href: "/admin" },
   ];
 
   return (
     <div>
       <div className="rule pb-6">
         <h1 className="font-display text-xl font-black">خلاصه فروشگاه</h1>
-        <span className="rule-label">overview</span>
       </div>
 
       <div className="grid gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (
           <Link key={c.label} href={c.href} className="bg-surface p-5 transition-colors hover:bg-steel-2">
-            <div className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-faint">
-              {c.hint}
-            </div>
             <div className="tnum pt-2 font-display text-2xl font-black">
               {c.value.toLocaleString("fa-IR")}
             </div>
@@ -52,7 +48,6 @@ export default async function AdminHome() {
         <section className="panel p-5">
           <div className="rule pb-4">
             <h2 className="font-display text-base font-bold">قیمت‌گذاری</h2>
-            <span className="rule-label">pricing</span>
           </div>
           <dl className="text-sm">
             {[
@@ -76,7 +71,6 @@ export default async function AdminHome() {
         <section className="panel p-5">
           <div className="rule pb-4">
             <h2 className="font-display text-base font-bold">جستجوهای بی‌نتیجه</h2>
-            <span className="rule-label">gaps</span>
           </div>
           <p className="pb-3 text-xs text-muted">
             مشتری دنبال این کدها بوده و ما نداشتیم — فهرست خرید بعدی شما.

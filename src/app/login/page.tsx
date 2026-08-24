@@ -55,9 +55,7 @@ export default async function LoginPage({
 
   return (
     <div className="mx-auto flex max-w-md flex-col px-5 py-24">
-      <div className="font-mono text-[0.68rem] uppercase tracking-[0.24em] text-brass">
-        restricted
-      </div>
+      <span className="block size-[7px] rotate-45 bg-brass" />
       <h1 className="pt-4 font-display text-2xl font-black">ورود به پنل مدیریت</h1>
       <p className="pt-2 text-sm leading-7 text-muted">
         این بخش برای مدیریت فروشگاه است و برای مشتری‌ها باز نیست.

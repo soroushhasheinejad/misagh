@@ -40,7 +40,7 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
       {/* سربرگ قطعه */}
       <div className="bg-carbon text-white">
         <div className="mx-auto max-w-[1120px] px-5 py-9">
-          <nav className="font-mono text-[0.66rem] uppercase tracking-[0.14em] text-white/40">
+          <nav className="text-xs text-white/40">
             <Link href="/" className="hover:text-brass">
               home
             </Link>
@@ -72,7 +72,6 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
         <section>
           <div className="rule pb-4">
             <h2 className="font-display text-base font-bold">پیشنهادهای فروش</h2>
-            <span className="rule-label">offers</span>
           </div>
           <OfferTable
             offers={offers}
@@ -86,7 +85,6 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
           <section>
             <div className="rule pb-4">
               <h2 className="font-display text-base font-bold">خودروهای سازگار</h2>
-              <span className="rule-label">fitment</span>
             </div>
             <div className="panel overflow-x-auto">
               <table className="spec min-w-[420px]">
@@ -125,7 +123,6 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
           <section>
             <div className="rule pb-4">
               <h2 className="font-display text-base font-bold">شماره‌های فنی</h2>
-              <span className="rule-label">part numbers</span>
             </div>
             <div className="panel overflow-x-auto">
               <table className="spec min-w-[380px]">
@@ -154,7 +151,6 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
               <div className="pt-8">
                 <div className="rule pb-4">
                   <h2 className="font-display text-base font-bold">مشخصات</h2>
-                  <span className="rule-label">specs</span>
                 </div>
                 <div className="panel overflow-hidden">
                   <table className="spec">

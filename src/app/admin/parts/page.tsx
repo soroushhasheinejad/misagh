@@ -31,7 +31,7 @@ export default async function AdminPartsPage() {
 
   return (
     <div>
-      <div className="rule pb-3"><h1 className="font-display text-xl font-black">قطعات و قیمت</h1><span className="rule-label">pricing</span></div>
+      <div className="rule pb-3"><h1 className="font-display text-xl font-black">قطعات و قیمت</h1></div>
       <p className="pt-1 text-sm text-muted">
         برای هر قطعه می‌توانید حالت قیمت‌گذاری، حاشیه سود، قفل قیمت و پیشنهادهایش را جداگانه تنظیم کنید.
       </p>

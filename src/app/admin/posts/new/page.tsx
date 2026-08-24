@@ -12,7 +12,6 @@ export default async function NewPostPage() {
     <div>
       <div className="rule pb-6">
         <h1 className="font-display text-xl font-black">مقاله جدید</h1>
-        <span className="rule-label">new</span>
       </div>
       <PostForm post={null} categories={categories} />
     </div>

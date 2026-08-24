@@ -32,7 +32,6 @@ export default function ShippingPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="delivery"
         title="ارسال و پرداخت"
         lede="قطعه سنگین و سبک هزینه ارسال یکسان ندارند؛ کرایه بر اساس وزن واقعی قطعه محاسبه می‌شود."
       />
@@ -41,7 +40,6 @@ export default function ShippingPage() {
         <section>
           <div className="rule pb-5">
             <h2 className="font-display text-lg font-black">روش‌های ارسال</h2>
-            <span className="rule-label">methods</span>
           </div>
 
           <div className="overflow-x-auto rounded-md border border-line bg-surface">
@@ -72,7 +70,6 @@ export default function ShippingPage() {
           <section>
             <div className="rule pb-5">
               <h2 className="font-display text-lg font-black">پرداخت</h2>
-              <span className="rule-label">payment</span>
             </div>
             <ul className="list-disc space-y-2 pr-6 leading-8 text-muted marker:text-brass">
               <li>پرداخت آنلاین با کارت‌های عضو شتاب از طریق درگاه بانکی</li>
@@ -85,7 +82,6 @@ export default function ShippingPage() {
           <section>
             <div className="rule pb-5">
               <h2 className="font-display text-lg font-black">قیمت تا کی معتبر است</h2>
-              <span className="rule-label">validity</span>
             </div>
             <p className="pb-4 leading-9 text-muted">
               چون بخشی از قیمت‌ها به نرخ ارز وابسته است، هر قیمت روی سایت تاریخ اعتبار دارد و کنار

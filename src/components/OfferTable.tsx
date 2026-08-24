@@ -128,8 +128,8 @@ export function OfferTable({
                             key={b}
                             className={
                               b === "recommended"
-                                ? "font-mono text-[0.62rem] uppercase tracking-[0.12em] text-brass-dark"
-                                : "font-mono text-[0.62rem] uppercase tracking-[0.12em] text-faint"
+                                ? "text-xs text-brass-dark"
+                                : "text-xs text-faint"
                             }
                           >
                             {BADGE_LABEL[b]}

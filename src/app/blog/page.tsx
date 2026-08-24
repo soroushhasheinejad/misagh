@@ -39,10 +39,7 @@ export default async function BlogPage({
     <div>
       <section className="border-b border-brass/25 bg-carbon py-14 text-white">
         <div className="mx-auto max-w-[1120px] px-5">
-          <div className="font-mono text-[0.68rem] uppercase tracking-[0.24em] text-brass">
-            technical journal
-          </div>
-          <h1 className="max-w-xl pt-4 font-display text-3xl font-black leading-[1.5]">
+                    <h1 className="max-w-xl pt-4 font-display text-3xl font-black leading-[1.5]">
             هر چیزی که قبل از خرید قطعه باید بدانید
           </h1>
           <p className="max-w-lg pt-3 leading-8 text-white/60">
@@ -93,7 +90,7 @@ export default async function BlogPage({
             href={`/blog/${lead.slug}`}
             className="panel panel-brass group block p-8 transition-colors hover:border-brass"
           >
-            <div className="flex flex-wrap items-center gap-3 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-faint">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-faint">
               <span className="text-brass-dark">{lead.tag}</span>
               <span>{faDate(lead.publishedAt)}</span>
               <span className="tnum">{lead.readMinutes} دقیقه مطالعه</span>
@@ -117,7 +114,7 @@ export default async function BlogPage({
                 href={`/blog/${post.slug}`}
                 className="panel group flex flex-col p-6 transition-colors hover:border-brass"
               >
-                <div className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-brass-dark">
+                <div className="text-xs text-brass-dark">
                   {post.tag}
                 </div>
                 <h2 className="pt-3 font-display text-base font-bold leading-8 group-hover:text-brass-dark">

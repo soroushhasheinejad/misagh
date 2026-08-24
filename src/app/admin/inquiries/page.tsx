@@ -30,7 +30,6 @@ export default async function AdminInquiriesPage() {
     <div>
       <div className="rule pb-6">
         <h1 className="font-display text-xl font-black">استعلام‌ها</h1>
-        <span className="rule-label">inquiries</span>
       </div>
 
       <p className="pb-5 text-sm text-muted">

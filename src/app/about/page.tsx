@@ -16,15 +16,14 @@ export default async function AboutPage() {
   ]);
 
   const numbers = [
-    { value: parts, label: "قطعه در کاتالوگ", hint: "parts" },
-    { value: generations, label: "نسل خودرو تحت پوشش", hint: "vehicles" },
-    { value: categories, label: "دسته‌بندی فنی", hint: "categories" },
+    { value: parts, label: "قطعه در کاتالوگ" },
+    { value: generations, label: "نسل خودرو تحت پوشش" },
+    { value: categories, label: "دسته‌بندی فنی" },
   ];
 
   return (
     <div>
       <PageHeader
-        eyebrow="about"
         title="ما فقط کیا و هیوندا کار می‌کنیم"
         lede="تخصصی بودن یعنی وقتی شماره فنی می‌دهید، طرف مقابل بداند از چه حرف می‌زنید."
       />
@@ -65,9 +64,6 @@ export default async function AboutPage() {
             <div className="panel divide-y divide-line">
               {numbers.map((n) => (
                 <div key={n.label} className="p-5">
-                  <div className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-faint">
-                    {n.hint}
-                  </div>
                   <div className="tnum pt-1 font-display text-2xl font-black">
                     {n.value.toLocaleString("fa-IR")}
                   </div>

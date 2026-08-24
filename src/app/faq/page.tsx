@@ -133,7 +133,6 @@ export default function FaqPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="faq"
         title="سوال‌هایی که زیاد می‌پرسند"
         lede="اگر جواب سوالتان اینجا نبود، بپرسید — همان چیزی است که باید به این صفحه اضافه شود."
       />
@@ -144,7 +143,6 @@ export default function FaqPage() {
             <section key={group.title}>
               <div className="rule pb-5">
                 <h2 className="font-display text-lg font-black">{group.title}</h2>
-                <span className="rule-label">{group.hint}</span>
               </div>
 
               <div className="flex flex-col gap-2">

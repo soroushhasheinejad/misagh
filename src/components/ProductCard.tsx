@@ -27,7 +27,7 @@ export function ProductCard({
   return (
     <article className="panel group flex flex-col p-5 transition-colors hover:border-brass">
       {part.category ? (
-        <div className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-faint">
+        <div className="text-xs text-faint">
           {part.category.nameFa}
         </div>
       ) : null}

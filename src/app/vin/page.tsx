@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { decodeVin } from "@/lib/normalize";
 import { prisma } from "@/lib/prisma";
+import { faYear, faYearRange } from "@/lib/format";
 import { VinSearchBox } from "@/components/VinSearchBox";
 
 export const metadata: Metadata = {
@@ -50,8 +51,7 @@ export default async function VinPage({
       {/* ---------------------------- ورودی ---------------------------- */}
       <section className="border-b border-brass/25 bg-carbon py-12 text-white">
         <div className="mx-auto max-w-[1120px] px-5">
-          <div className="font-mono text-[0.68rem] uppercase tracking-[0.24em] text-brass">vin</div>
-          <h1 className="pt-4 font-display text-3xl font-black">تشخیص خودرو با شماره شاسی</h1>
+                    <h1 className="pt-4 font-display text-3xl font-black">تشخیص خودرو با شماره شاسی</h1>
           <p className="max-w-lg pt-3 leading-8 text-white/60">
             وقتی از نسل و سال دقیق خودرو مطمئن نیستید، شماره شاسی جواب می‌دهد. روی کارت خودرو،
             بیمه‌نامه، یا زیر شیشه جلو نوشته شده است.
@@ -70,7 +70,6 @@ export default async function VinPage({
             <div>
               <div className="rule pb-5">
                 <h2 className="font-display text-lg font-black">شماره شاسی چه چیزی را می‌گوید</h2>
-                <span className="rule-label">structure</span>
               </div>
 
               <div className="overflow-x-auto rounded-md border border-line bg-surface">
@@ -175,7 +174,7 @@ export default async function VinPage({
                 { label: "کارخانه", value: info.plant ?? "نامشخص", mono: false },
               ].map((cell) => (
                 <div key={cell.label} className="bg-surface p-5">
-                  <div className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-faint">
+                  <div className="text-xs text-faint">
                     {cell.label}
                   </div>
                   <div
@@ -224,9 +223,6 @@ export default async function VinPage({
                   <h2 className="font-display text-lg font-black">
                     خودروی شما کدام است؟
                   </h2>
-                  <span className="rule-label">
-                    {candidates.length.toLocaleString("fa-IR")} گزینه
-                  </span>
                 </div>
                 <p className="pb-5 text-sm text-muted">
                   این‌ها {info.makeName}‌هایی هستند که در {info.modelYear} تولید می‌شدند. یکی را
@@ -246,11 +242,10 @@ export default async function VinPage({
                           {info.makeName} {model.nameFa} {generation.nameFa}
                         </div>
                         <div className="tnum pt-1 text-xs text-faint">
-                          {generation.yearStart}
-                          {generation.yearEnd ? ` – ${generation.yearEnd}` : " به بعد"}
+                          {faYearRange(generation.yearStart, generation.yearEnd)}
                         </div>
                       </div>
-                      <span className="tnum font-mono text-[0.7rem] text-brass-dark">
+                      <span className="tnum text-xs text-brass-dark">
                         {generation._count.fitments.toLocaleString("fa-IR")}
                       </span>
                     </Link>

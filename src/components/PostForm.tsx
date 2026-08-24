@@ -119,7 +119,6 @@ export function PostForm({
       <section className="panel p-6">
         <div className="rule pb-4">
           <h2 className="font-display text-sm font-bold">متن مقاله</h2>
-          <span className="rule-label">markdown</span>
         </div>
         <p className="pb-3 text-xs leading-6 text-muted">
           <span className="mono">## تیتر</span> و <span className="mono">### زیرتیتر</span> ·{" "}

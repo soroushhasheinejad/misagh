@@ -174,24 +174,41 @@ h4,
     font-variant-numeric: tabular-nums;
   }
 
-  /* ---- خط راهنمای نقشه فنی: هایرلاین با برچسب ---- */
+  /* ---- خط راهنما: هایرلاین با نشان لوزی برنجی در انتها ---- */
   .rule {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.9rem;
   }
   .rule::after {
     content: "";
     flex: 1;
     height: 1px;
-    background: var(--color-line);
+    background: linear-gradient(
+      to left,
+      transparent,
+      var(--color-line) 12%,
+      var(--color-line)
+    );
   }
-  .rule-label {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-faint);
+  .rule::before {
+    content: "";
+    order: 9;
+    width: 7px;
+    height: 7px;
+    flex: 0 0 auto;
+    background: var(--color-brass);
+    transform: rotate(45deg);
+  }
+
+  /* روی زمینه تیره */
+  .rule-dark::after {
+    background: linear-gradient(
+      to left,
+      transparent,
+      rgba(255, 255, 255, 0.16) 12%,
+      rgba(255, 255, 255, 0.16)
+    );
   }
 
   /* ---- سطوح ---- */

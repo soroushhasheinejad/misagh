@@ -35,7 +35,6 @@ const LABELS: Record<SettingKey, string> = {
   "store.name": "نام فروشگاه",
   "store.phone": "تلفن فروشگاه",
   "store.displayUnit": "واحد نمایش قیمت",
-  "store.compareEnabled": "مقایسه قطعات",
 };
 
 const GROUP_TITLES: Record<string, string> = {
@@ -86,7 +85,7 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <div className="rule pb-3"><h1 className="font-display text-xl font-black">تنظیمات فروشگاه</h1><span className="rule-label">settings</span></div>
+      <div className="rule pb-3"><h1 className="font-display text-xl font-black">تنظیمات فروشگاه</h1></div>
       <p className="pt-1 text-sm text-muted">
         هر گزینه اینجا روی کل سایت اثر می‌گذارد؛ در سطح هر قطعه و هر پیشنهاد هم می‌شود جداگانه override کرد.
       </p>
@@ -95,7 +94,7 @@ export default async function SettingsPage() {
         <div className="flex flex-col gap-5">
           {groups.map((group) => (
             <section key={group} className="panel p-5">
-              <div className="rule pb-4"><h2 className="font-display text-base font-bold">{GROUP_TITLES[group] ?? group}</h2><span className="rule-label">{group}</span></div>
+              <div className="rule pb-4"><h2 className="font-display text-base font-bold">{GROUP_TITLES[group] ?? group}</h2></div>
               <div className="grid gap-4 sm:grid-cols-2">
                 {keys
                   .filter((k) => k.startsWith(`${group}.`))

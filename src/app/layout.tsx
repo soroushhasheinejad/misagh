@@ -23,7 +23,6 @@ const NAV = [
 const FOOTER = [
   {
     title: "خرید",
-    hint: "shop",
     links: [
       { href: "/catalog", label: "کاتالوگ قطعات" },
       { href: "/vehicles", label: "خودروهای تحت پوشش" },
@@ -33,7 +32,6 @@ const FOOTER = [
   },
   {
     title: "راهنما",
-    hint: "help",
     links: [
       { href: "/blog", label: "بلاگ فنی" },
       { href: "/faq", label: "سوالات متداول" },
@@ -43,7 +41,6 @@ const FOOTER = [
   },
   {
     title: "فروشگاه",
-    hint: "company",
     links: [
       { href: "/about", label: "درباره ما" },
       { href: "/contact", label: "تماس با ما" },
@@ -58,10 +55,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-screen flex-col">
         <header className="border-b border-brass/30 bg-carbon">
           <div className="mx-auto flex max-w-[1120px] items-center gap-8 px-5 py-4">
-            <Link href="/" className="group flex items-baseline gap-2">
-              <span className="font-display text-[1.35rem] font-black text-white">میثاق</span>
-              <span className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-brass">
-                yadak
+            <Link href="/" className="flex shrink-0 items-baseline gap-1.5">
+              <span className="font-display text-[1.4rem] font-black tracking-tight text-white">
+                میثاق
+              </span>
+              <span className="font-display text-[1.4rem] font-black tracking-tight text-brass">
+                یدک
               </span>
             </Link>
 
@@ -96,8 +95,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             {FOOTER.map((col) => (
               <div key={col.title}>
-                <div className="font-mono text-[0.66rem] uppercase tracking-[0.18em] text-brass">
-                  {col.hint}
+                <div className="flex items-center gap-2">
+                  <span className="size-[6px] rotate-45 bg-brass" />
+                  <span className="font-display text-sm font-bold text-white">{col.title}</span>
                 </div>
                 <ul className="pt-3 text-sm">
                   {col.links.map((link) => (
@@ -113,9 +113,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
 
           <div className="border-t border-white/10">
-            <div className="mx-auto flex max-w-[1120px] flex-wrap items-center justify-between gap-3 px-5 py-4 font-mono text-[0.68rem] tracking-[0.12em] text-white/35">
-              <span>MISAGH YADAK — KIA &amp; HYUNDAI PARTS</span>
-              <span>{new Date().getFullYear()}</span>
+            <div className="mx-auto flex max-w-[1120px] flex-wrap items-center justify-between gap-3 px-5 py-4 text-[0.72rem] text-white/35">
+              <span>میثاق یدک — قطعات یدکی کیا و هیوندا</span>
+              <span className="tnum">{new Date().toLocaleDateString("fa-IR", { year: "numeric" })}</span>
             </div>
           </div>
         </footer>

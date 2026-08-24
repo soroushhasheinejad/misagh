@@ -24,16 +24,14 @@ const WHEELS = [
   { cx: 639, cy: 330 },
 ];
 
-const MONO = { font: "500 11px var(--font-mono)", letterSpacing: "0.16em" } as const;
-
 export function CarBlueprint({ className = "" }: { className?: string }) {
   return (
     <svg
-      viewBox="60 150 780 302"
+      viewBox="72 152 758 264"
       className={className}
       fill="none"
       role="img"
-      aria-label="کروکی نمای جانبی هیوندای سوناتا"
+      aria-label="کروکی نمای جانبی خودرو"
     >
       <defs>
         <linearGradient id="bp-ground" x1="0" x2="1">
@@ -66,7 +64,7 @@ export function CarBlueprint({ className = "" }: { className?: string }) {
         pathLength={1}
         d={BODY}
         stroke="currentColor"
-        strokeWidth="2.5"
+        strokeWidth="2.6"
         strokeLinejoin="round"
       />
 
@@ -78,14 +76,14 @@ export function CarBlueprint({ className = "" }: { className?: string }) {
       </g>
 
       {/* قاب کرومی شیشه با شکست ستون عقب، ستون‌ها، و خط طراحی «فلویدیک» */}
-      <g className="bp-draw bp-d3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">
+      <g className="bp-draw bp-d3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round">
         {/* قاب کرومی: از پایه شیشه جلو تا ستون عقب و شکست رو به بالا */}
         {/* ستون‌ها */}
         <path pathLength={1} d="M452 182 L451 308" />
         <path pathLength={1} d="M530 179 L529 308" />
         <path pathLength={1} d="M347 232 L345 308" />
         {/* خط طراحی امضای YF: از قوس چرخ جلو بالا می‌رود و تا چراغ عقب می‌رسد */}
-        <path pathLength={1} d="M306 272 C430 268 550 268 690 262" strokeWidth="1.4" />
+        <path pathLength={1} d="M306 272 C430 268 550 268 690 262" strokeWidth="1" />
         {/* کرام پایین درب */}
         <path pathLength={1} d="M300 312 C420 310 500 310 568 308" strokeWidth="0.9" opacity="0.75" />
         {/* دستگیره‌ها */}
@@ -94,7 +92,7 @@ export function CarBlueprint({ className = "" }: { className?: string }) {
       </g>
 
       {/* چراغ جلوی کشیده تا داخل گلگیر، جلوپنجره شش‌ضلعی، چراغ عقب، آینه */}
-      <g className="bp-draw bp-d3" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
+      <g className="bp-draw bp-d3" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round">
         <path pathLength={1} d="M108 258 C130 252 152 248 176 246 L184 258 C160 262 132 268 114 272 Z" />
         <path pathLength={1} d="M100 280 L104 296 L134 292 L132 277 Z" strokeWidth="1.2" />
         <path pathLength={1} d="M726 238 C740 240 750 243 756 246 L757 262 C746 260 734 258 724 256 Z" />
@@ -131,50 +129,9 @@ export function CarBlueprint({ className = "" }: { className?: string }) {
 
       {/* اندازه‌گذاری فاصله دو محور */}
       <g className="bp-fade bp-d5" stroke="currentColor" strokeWidth="1" opacity="0.4">
-        <line x1="233" y1="400" x2="639" y2="400" strokeDasharray="5 6" />
-        <line x1="233" y1="394" x2="233" y2="406" />
-        <line x1="639" y1="394" x2="639" y2="406" />
-      </g>
-      <text
-        className="bp-fade bp-d5"
-        direction="ltr"
-        x="436"
-        y="420"
-        textAnchor="middle"
-        fill="currentColor"
-        opacity="0.45"
-        style={MONO}
-      >
-        wheelbase
-      </text>
-
-      {/* شناسه نقشه */}
-      <text
-        className="bp-fade bp-d5"
-        direction="ltr"
-        x="764"
-        y="438"
-        textAnchor="end"
-        fill="currentColor"
-        opacity="0.4"
-        style={MONO}
-      >
-        hyundai sonata yf · side profile
-      </text>
-
-      {/* برچسب دو گروه قطعه */}
-      <g className="bp-fade bp-d6" stroke="currentColor">
-        <circle cx="233" cy="330" r="3.2" fill="currentColor" stroke="none" />
-        <path d="M233 330 L233 362 L180 362" strokeWidth="1" opacity="0.4" />
-        <text x="174" y="366" direction="ltr" textAnchor="end" fill="currentColor" stroke="none" style={MONO}>
-          brakes
-        </text>
-
-        <circle cx="210" cy="240" r="3.2" fill="currentColor" stroke="none" />
-        <path d="M210 240 L210 196 L162 196" strokeWidth="1" opacity="0.4" />
-        <text x="156" y="200" direction="ltr" textAnchor="end" fill="currentColor" stroke="none" style={MONO}>
-          engine
-        </text>
+        <line x1="233" y1="398" x2="639" y2="398" strokeDasharray="4 7" />
+        <line x1="233" y1="392" x2="233" y2="404" />
+        <line x1="639" y1="392" x2="639" y2="404" />
       </g>
     </svg>
   );

@@ -17,7 +17,6 @@ export default async function ContactPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="contact"
         title="با کارشناس قطعه حرف بزنید"
         lede="برای سازگاری قطعه، استعلام قیمت یا پیگیری سفارش، از هر کدام از این راه‌ها در دسترسیم."
       />
@@ -25,10 +24,7 @@ export default async function ContactPage() {
       <div className="mx-auto max-w-[1120px] px-5 py-12">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="panel p-6">
-            <div className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-brass-dark">
-              phone
-            </div>
-            <h2 className="pt-3 font-display text-base font-bold">تلفن فروشگاه</h2>
+                        <h2 className="pt-3 font-display text-base font-bold">تلفن فروشگاه</h2>
             {phone ? (
               <a href={`tel:${phone}`} className="mono pt-2 block text-lg font-bold">
                 {phone}
@@ -42,10 +38,7 @@ export default async function ContactPage() {
           </div>
 
           <div className="panel p-6">
-            <div className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-brass-dark">
-              messaging
-            </div>
-            <h2 className="pt-3 font-display text-base font-bold">واتساپ و تلگرام</h2>
+                        <h2 className="pt-3 font-display text-base font-bold">واتساپ و تلگرام</h2>
             <p className="pt-2 text-sm leading-7 text-muted">
               عکس قطعه یا شماره شاسی را بفرستید؛ سریع‌ترین راه برای تشخیص قطعه درست.
             </p>
@@ -79,10 +72,7 @@ export default async function ContactPage() {
           </div>
 
           <div className="panel panel-brass p-6">
-            <div className="font-mono text-[0.64rem] uppercase tracking-[0.16em] text-brass-dark">
-              inquiry
-            </div>
-            <h2 className="pt-3 font-display text-base font-bold">فرم استعلام</h2>
+                        <h2 className="pt-3 font-display text-base font-bold">فرم استعلام</h2>
             <p className="pt-2 text-sm leading-7 text-muted">
               اگر عجله ندارید، فرم را پر کنید. درخواست ثبت می‌شود و پیگیری‌اش گم نمی‌شود.
             </p>
@@ -95,7 +85,6 @@ export default async function ContactPage() {
         <section className="pt-12">
           <div className="rule pb-5">
             <h2 className="font-display text-lg font-black">قبل از تماس، این را آماده داشته باشید</h2>
-            <span className="rule-label">checklist</span>
           </div>
           <ul className="max-w-[68ch] list-disc space-y-2 pr-6 leading-8 text-muted marker:text-brass">
             <li>برند، مدل و سال خودرو — ترجیحاً از روی کارت خودرو</li>

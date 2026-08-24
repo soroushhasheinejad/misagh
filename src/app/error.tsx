@@ -16,7 +16,7 @@ export default function ErrorPage({
 
   return (
     <div className="mx-auto flex max-w-[1120px] flex-col items-start px-5 py-24">
-      <div className="font-mono text-[0.68rem] uppercase tracking-[0.24em] text-alert">error</div>
+      <span className="block size-[7px] rotate-45 bg-alert" />
       <h1 className="pt-4 font-display text-2xl font-black">مشکلی در بارگذاری این صفحه پیش آمد</h1>
       <p className="max-w-lg pt-3 leading-8 text-muted">
         خطا ثبت شد و بررسی می‌شود. یک بار دیگر امتحان کنید؛ اگر باز هم تکرار شد، از راه‌های تماس

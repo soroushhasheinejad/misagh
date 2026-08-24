@@ -50,7 +50,6 @@ export const DEFAULT_SETTINGS = {
   "store.name": "میثاق یدک",
   "store.phone": "",
   "store.displayUnit": "toman", // toman | rial
-  "store.compareEnabled": true,
 };
 
 export type SettingKey = keyof typeof DEFAULT_SETTINGS;

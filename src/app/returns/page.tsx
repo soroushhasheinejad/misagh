@@ -11,7 +11,6 @@ export default function ReturnsPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="warranty"
         title="ضمانت اصالت و شرایط مرجوعی"
         lede="قطعه‌ای که با برچسب جنیون فروخته شود و جنیون نباشد، بدون بحث بازگردانده می‌شود."
       />

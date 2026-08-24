@@ -60,10 +60,7 @@ export default async function SearchPage({
       <div>
         <section className="border-b border-brass/25 bg-carbon py-14 text-white">
           <div className="mx-auto max-w-[1120px] px-5">
-            <div className="font-mono text-[0.68rem] uppercase tracking-[0.24em] text-brass">
-              part number
-            </div>
-            <h1 className="pt-4 font-display text-3xl font-black">جستجوی شماره فنی</h1>
+                        <h1 className="pt-4 font-display text-3xl font-black">جستجوی شماره فنی</h1>
             <p className="max-w-lg pt-3 leading-8 text-white/60">
               کد روی جعبه یا خود قطعه را وارد کنید. کدهای معادل و کدهای از رده خارج هم پیدا
               می‌شوند.
@@ -86,7 +83,6 @@ export default async function SearchPage({
             <div>
               <div className="rule pb-5">
                 <h2 className="font-display text-lg font-black">شماره فنی را کجا پیدا کنم؟</h2>
-                <span className="rule-label">where</span>
               </div>
               <ul className="max-w-[68ch] list-disc space-y-2 pr-6 leading-8 text-muted marker:text-brass">
                 <li>روی برچسب یا حکاکی خود قطعه، معمولاً در سمتی که دیده نمی‌شود</li>
@@ -97,7 +93,6 @@ export default async function SearchPage({
 
               <div className="rule pb-5 pt-10">
                 <h2 className="font-display text-lg font-black">چند نمونه برای امتحان</h2>
-                <span className="rule-label">examples</span>
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
                 {EXAMPLES.map((ex) => (
@@ -132,9 +127,6 @@ export default async function SearchPage({
             <aside>
               {popular.length > 0 ? (
                 <>
-                  <div className="rule pb-4">
-                    <span className="rule-label">popular</span>
-                  </div>
                   <div className="font-display text-sm font-bold">پرجستجوترین کدها</div>
                   <div className="flex flex-col gap-2 pt-3">
                     {popular.map((p) => (
@@ -251,7 +243,6 @@ export default async function SearchPage({
           <section className="pt-10">
             <div className="rule pb-2">
               <h2 className="font-display text-base font-bold">قطعات هم‌گروه</h2>
-              <span className="rule-label">same group</span>
             </div>
             <p className="pb-5 text-sm text-muted">
               پنج رقم اول این کد یعنی همین نوع قطعه. این‌ها را برای خودروهای دیگر داریم — شاید کد
@@ -301,11 +292,10 @@ export default async function SearchPage({
               <section key={match.part.id}>
                 <div className="rule pb-3">
                   <span
-                    className={`font-mono text-[0.66rem] uppercase tracking-[0.16em] ${meta.tone}`}
+                    className={`text-xs ${meta.tone}`}
                   >
                     {meta.label}
                   </span>
-                  <span className="rule-label">{meta.note}</span>
                 </div>
 
                 <div className="flex flex-wrap items-start justify-between gap-4 pb-4">

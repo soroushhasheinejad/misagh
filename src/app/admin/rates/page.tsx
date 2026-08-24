@@ -16,7 +16,7 @@ export default async function RatesPage() {
 
   return (
     <div>
-      <div className="rule pb-4"><h1 className="font-display text-xl font-black">نرخ ارز</h1><span className="rule-label">rates</span></div>
+      <div className="rule pb-4"><h1 className="font-display text-xl font-black">نرخ ارز</h1></div>
       <p className="pt-1 text-sm text-muted">
         نرخ‌ها به ریال ثبت می‌شوند. با تغییر نرخ، قیمت همه قطعاتی که «وابسته به ارز» هستند و قفل
         نشده‌اند بلافاصله به‌روز می‌شود.
@@ -59,7 +59,7 @@ export default async function RatesPage() {
 
       {history.length > 0 ? (
         <section className="mt-8">
-          <div className="rule pb-4"><h2 className="font-display text-base font-bold">تاریخچه تغییر نرخ</h2><span className="rule-label">history</span></div>
+          <div className="rule pb-4"><h2 className="font-display text-base font-bold">تاریخچه تغییر نرخ</h2></div>
           <div className="panel overflow-x-auto">
             <table className="w-full min-w-[420px] text-sm">
               <thead>
