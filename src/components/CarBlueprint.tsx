@@ -17,7 +17,7 @@ const BODY =
   "C230 237 290 234 332 231 C342 229 348 225 354 219 L452 176 " +
   "C464 171 476 169 490 169 L556 171 C590 175 620 190 648 208 L700 224 " +
   "C716 228 730 231 742 234 C758 238 764 248 764 262 L762 323 " +
-  "L695 323 A56 56 0 0 0 583 323 L289 323 A56 56 0 0 0 177 323 Z";
+  "L703 323 A64 64 0 0 0 575 323 L297 323 A64 64 0 0 0 169 323 Z";
 
 const WHEELS = [
   { cx: 233, cy: 330 },
@@ -29,7 +29,7 @@ const MONO = { font: "500 11px var(--font-mono)", letterSpacing: "0.16em" } as c
 export function CarBlueprint({ className = "" }: { className?: string }) {
   return (
     <svg
-      viewBox="60 150 780 288"
+      viewBox="60 150 780 302"
       className={className}
       fill="none"
       role="img"
@@ -74,36 +74,40 @@ export function CarBlueprint({ className = "" }: { className?: string }) {
       <g className="bp-draw bp-d2" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
         <path pathLength={1} d="M350 226 L446 182 L446 226 Z" fill="url(#bp-glass)" />
         <path pathLength={1} d="M456 181 L456 226 L524 225 L524 178 Z" fill="url(#bp-glass)" />
-        <path pathLength={1} d="M534 178 L616 218 L534 224 Z" fill="url(#bp-glass)" />
+        <path pathLength={1} d="M536 178 L592 210 L536 223 Z" fill="url(#bp-glass)" />
       </g>
 
-      {/* خط کمری، ستون‌ها، خط طراحی بدنه */}
+      {/* قاب کرومی شیشه با شکست ستون عقب، ستون‌ها، و خط طراحی «فلویدیک» */}
       <g className="bp-draw bp-d3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">
-        <path pathLength={1} d="M344 230 L706 222" strokeWidth="1.5" />
-        <path pathLength={1} d="M452 182 L450 318" />
-        <path pathLength={1} d="M530 179 L528 318" />
-        <path pathLength={1} d="M346 234 L344 318" />
-        <path pathLength={1} d="M296 280 C440 275 570 277 748 268" />
-        <path pathLength={1} d="M300 315 L568 315" />
-        <path pathLength={1} d="M470 244 h30" strokeWidth="3" />
-        <path pathLength={1} d="M548 242 h30" strokeWidth="3" />
+        {/* قاب کرومی: از پایه شیشه جلو تا ستون عقب و شکست رو به بالا */}
+        {/* ستون‌ها */}
+        <path pathLength={1} d="M452 182 L451 308" />
+        <path pathLength={1} d="M530 179 L529 308" />
+        <path pathLength={1} d="M347 232 L345 308" />
+        {/* خط طراحی امضای YF: از قوس چرخ جلو بالا می‌رود و تا چراغ عقب می‌رسد */}
+        <path pathLength={1} d="M306 272 C430 268 550 268 690 262" strokeWidth="1.4" />
+        {/* کرام پایین درب */}
+        <path pathLength={1} d="M300 312 C420 310 500 310 568 308" strokeWidth="0.9" opacity="0.75" />
+        {/* دستگیره‌ها */}
+        <path pathLength={1} d="M472 250 h28" strokeWidth="2.6" />
+        <path pathLength={1} d="M550 247 h28" strokeWidth="2.6" />
       </g>
 
-      {/* چراغ‌ها، آینه، هواکش سپر */}
+      {/* چراغ جلوی کشیده تا داخل گلگیر، جلوپنجره شش‌ضلعی، چراغ عقب، آینه */}
       <g className="bp-draw bp-d3" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
-        <path pathLength={1} d="M112 257 L156 250 L161 265 L117 272 Z" />
-        <path pathLength={1} d="M104 292 L136 287" strokeWidth="1.2" />
-        <path pathLength={1} d="M726 240 L754 246 L755 261 L724 256 Z" />
-        <path pathLength={1} d="M346 227 L330 221 L328 229 L344 234 Z" />
+        <path pathLength={1} d="M108 258 C130 252 152 248 176 246 L184 258 C160 262 132 268 114 272 Z" />
+        <path pathLength={1} d="M100 280 L104 296 L134 292 L132 277 Z" strokeWidth="1.2" />
+        <path pathLength={1} d="M726 238 C740 240 750 243 756 246 L757 262 C746 260 734 258 724 256 Z" />
+        <path pathLength={1} d="M346 227 L328 220 L326 229 L344 234 Z" />
       </g>
 
       {/* چرخ‌ها */}
       {WHEELS.map((wheel) => (
         <g key={wheel.cx} className="bp-draw bp-d4" stroke="currentColor">
           <circle pathLength={1} cx={wheel.cx} cy={wheel.cy} r="50" strokeWidth="2.4" />
-          <circle pathLength={1} cx={wheel.cx} cy={wheel.cy} r="32" strokeWidth="1.3" />
+          <circle pathLength={1} cx={wheel.cx} cy={wheel.cy} r="34" strokeWidth="1.2" />
           <circle pathLength={1} cx={wheel.cx} cy={wheel.cy} r="7" strokeWidth="1.3" />
-          {[18, 90, 162, 234, 306].map((angle) => {
+          {[0, 36, 72, 108, 144, 180, 216, 252, 288, 324].map((angle) => {
             const rad = (angle * Math.PI) / 180;
             return (
               <line
@@ -113,7 +117,7 @@ export function CarBlueprint({ className = "" }: { className?: string }) {
                 y1={wheel.cy + Math.sin(rad) * 9}
                 x2={wheel.cx + Math.cos(rad) * 30}
                 y2={wheel.cy + Math.sin(rad) * 30}
-                strokeWidth="1.1"
+                strokeWidth="0.9"
               />
             );
           })}
@@ -148,13 +152,14 @@ export function CarBlueprint({ className = "" }: { className?: string }) {
       <text
         className="bp-fade bp-d5"
         direction="ltr"
-        x="104"
-        y="420"
+        x="764"
+        y="438"
+        textAnchor="end"
         fill="currentColor"
         opacity="0.4"
         style={MONO}
       >
-        hyundai sonata · side profile
+        hyundai sonata yf · side profile
       </text>
 
       {/* برچسب دو گروه قطعه */}
