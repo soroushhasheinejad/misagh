@@ -80,11 +80,9 @@ export default async function CartPage({
                   ) : null}
                 </div>
                 <div className="pt-2 text-xs text-faint">
-                  {line.stockQty > 0
-                    ? line.leadTimeDays > 0
-                      ? `${faNumber(line.leadTimeDays)} روز کاری تا ارسال`
-                      : "آماده ارسال"
-                    : "ناموجود — پس از تماس هماهنگ می‌شود"}
+                  {line.leadTimeDays > 0
+                    ? `${faNumber(line.leadTimeDays)} روز کاری تا ارسال`
+                    : "آماده ارسال"}
                 </div>
               </div>
 

@@ -18,9 +18,12 @@ type Brand = { id: string; nameFa: string };
 export function ProductFilters({
   categories,
   brands,
+  showStockFilter = true,
 }: {
   categories: Category[];
   brands: Brand[];
+  /** با روشن بودن «موجودی فرضی» همه قطعات موجودند و این فیلتر معنا ندارد */
+  showStockFilter?: boolean;
 }) {
   const params = useSearchParams();
   const router = useRouter();
@@ -113,17 +116,19 @@ export function ProductFilters({
       ) : null}
 
       <div>
-        <label className="flex items-center gap-2 py-1 text-sm">
-          <input
-            type="checkbox"
-            name="inStock"
-            value="1"
-            defaultChecked={current.inStock}
-            onChange={submit}
-            className="size-4 accent-[var(--color-brass)]"
-          />
-          <span>فقط موجود در انبار</span>
-        </label>
+        {showStockFilter ? (
+          <label className="flex items-center gap-2 py-1 text-sm">
+            <input
+              type="checkbox"
+              name="inStock"
+              value="1"
+              defaultChecked={current.inStock}
+              onChange={submit}
+              className="size-4 accent-[var(--color-brass)]"
+            />
+            <span>فقط موجود در انبار</span>
+          </label>
+        ) : null}
         <label className="flex items-center gap-2 py-1 text-sm">
           <input
             type="checkbox"

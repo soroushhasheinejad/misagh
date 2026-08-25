@@ -6,6 +6,7 @@ import { getSettings } from "@/lib/settings";
 import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { faYearRange, faNumber } from "@/lib/format";
 import { addToCart } from "@/app/cart/actions";
+import { TelegramInquiry } from "@/components/TelegramInquiry";
 
 const POSITION: Record<string, string> = {
   UNIVERSAL: "—",
@@ -74,13 +75,21 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
     offers[0];
 
   const price = selling?.price;
-  const inStock = (selling?.stockQty ?? 0) > 0;
-  const buyable = price?.kind === "price" && inStock;
+  const available = selling?.available ?? false;
+  const buyable = price?.kind === "price" && available;
 
   // فقط مشخصاتی که مقدار دارند
   const specRows = specs
     ? Object.entries(specs).filter(([, v]) => v !== null && v !== "" && v !== undefined)
     : [];
+
+  const telegram = String(settings["inquiry.telegramUsername"] ?? "").trim();
+
+  // خودروی اول برای متن پیام تلگرام
+  const fit = part.fitments[0];
+  const firstVehicle = fit
+    ? [fit.make?.nameFa, fit.model?.nameFa, fit.generation?.nameFa].filter(Boolean).join(" ")
+    : null;
 
   const inquiryHref = `/inquiry?part=${encodeURIComponent(part.nameFa)}${
     primary ? `&pn=${encodeURIComponent(primary.number)}` : ""
@@ -303,8 +312,8 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
               <div className="mt-5 flex flex-col gap-2 border-t border-line pt-4 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted">موجودی</span>
-                  <span className={inStock ? "font-medium text-ok" : "font-medium text-alert"}>
-                    {inStock ? `${faNumber(selling!.stockQty)} عدد در انبار` : "ناموجود"}
+                  <span className={available ? "font-medium text-ok" : "font-medium text-alert"}>
+                    {selling?.stockLabel ?? "ناموجود"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -327,7 +336,7 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
                       name="qty"
                       type="number"
                       min={1}
-                      max={selling!.stockQty}
+                      max={selling!.stockQty > 0 ? selling!.stockQty : undefined}
                       defaultValue={1}
                       className="field tnum w-24 py-1.5 text-center"
                     />
@@ -341,6 +350,17 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
                   {price?.kind === "price" ? "درخواست تامین" : "استعلام قیمت"}
                 </Link>
               )}
+
+              {telegram ? (
+                <div className="mt-3">
+                  <TelegramInquiry
+                    username={telegram}
+                    partName={part.nameFa}
+                    partNumber={primary?.number}
+                    vehicle={firstVehicle}
+                  />
+                </div>
+              ) : null}
 
               <Link
                 href={inquiryHref}

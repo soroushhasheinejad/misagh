@@ -21,7 +21,7 @@ export function ProductCard({
   unit: "toman" | "rial";
 }) {
   const best = offers.find((o) => o.price.kind === "price");
-  const inStock = offers.some((o) => o.stockQty > 0);
+  const available = offers.some((o) => o.available);
   const number = part.numbers?.[0]?.number;
 
   return (
@@ -60,8 +60,8 @@ export function ProductCard({
             )}
 
             <div className="flex flex-wrap items-center gap-2 pt-1.5">
-              <span className={inStock ? "text-[0.68rem] text-ok" : "text-[0.68rem] text-faint"}>
-                {inStock ? "موجود در انبار" : "ناموجود"}
+              <span className={available ? "text-[0.68rem] text-ok" : "text-[0.68rem] text-faint"}>
+                {available ? "موجود" : "ناموجود"}
               </span>
             </div>
           </div>

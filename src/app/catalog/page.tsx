@@ -144,6 +144,7 @@ export default async function CatalogPage({
                   children: c.children.map((ch) => ({ id: ch.id, nameFa: ch.nameFa })),
                 }))}
                 brands={brands.map((b) => ({ id: b.id, nameFa: b.nameFa }))}
+                showStockFilter={settings["inventory.assumeInStock"] !== true}
               />
             </Suspense>
           </aside>

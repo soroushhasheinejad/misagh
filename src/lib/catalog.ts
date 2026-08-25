@@ -90,6 +90,10 @@ export function getCategoryTree() {
 
 export type PricedOffer = {
   id: string;
+  /** قابل خرید است؟ با سوییچ «موجودی فرضی»، قطعه بدون شمارش هم قابل خرید می‌شود */
+  available: boolean;
+  /** متن وضعیت موجودی برای نمایش */
+  stockLabel: string;
   sku: string | null;
   brandName: string | null;
   qualityTier: string | null;
@@ -114,24 +118,43 @@ export async function priceOffers(
   const rates = opts.rates ?? (await getExchangeRates());
   const partConfig = toPriceConfig(part);
 
-  const priced = offers.map((offer) => ({
-    id: offer.id,
-    sku: offer.sku,
-    brandName: offer.brand?.nameFa ?? null,
-    qualityTier: offer.brand?.qualityTier ?? null,
-    supplierName: settings["offers.showSupplierName"] ? (offer.supplier?.name ?? null) : null,
-    stockQty: offer.stockQty,
-    leadTimeDays: offer.leadTimeDays,
-    isDefault: offer.isDefault,
-    price: computePrice({
-      offer: toPriceConfig(offer),
-      part: partConfig,
-      settings,
-      rates,
-      isDealer: opts.isDealer,
+  const assumeInStock = settings["inventory.assumeInStock"] === true;
+  const showExact = settings["inventory.showExactCount"] === true;
+  const fallbackLead = Number(settings["inventory.defaultLeadDays"] ?? 0);
+
+  const priced = offers.map((offer) => {
+    const counted = offer.stockQty > 0;
+    // قطعه‌ای که شمارش انبار ندارد، با سوییچ «موجودی فرضی» قابل خرید می‌شود
+    const available = counted || (assumeInStock && offer.status !== "DISABLED");
+
+    return {
+      id: offer.id,
+      available,
+      stockLabel:
+        counted && showExact
+          ? `${offer.stockQty.toLocaleString("fa-IR")} عدد در انبار`
+          : available
+            ? "موجود"
+            : "ناموجود",
+      sku: offer.sku,
+      brandName: offer.brand?.nameFa ?? null,
+      qualityTier: offer.brand?.qualityTier ?? null,
+      supplierName: settings["offers.showSupplierName"] ? (offer.supplier?.name ?? null) : null,
       stockQty: offer.stockQty,
-    }),
-  }));
+      // بدون شمارش انبار، زمان تحویل پیش‌فرض تنظیمات ملاک است
+      leadTimeDays: counted ? offer.leadTimeDays : Math.max(offer.leadTimeDays, fallbackLead),
+      isDefault: offer.isDefault,
+      price: computePrice({
+        offer: toPriceConfig(offer),
+        part: partConfig,
+        settings,
+        rates,
+        isDealer: opts.isDealer,
+        // موتور قیمت هم باید همین موجودی مؤثر را ببیند
+        stockQty: available ? Math.max(offer.stockQty, 1) : 0,
+      }),
+    };
+  });
 
   const badgeMap = settings["offers.showBadges"] ? assignBadges(priced) : new Map();
   const withBadges = priced.map((o) => ({ ...o, badges: badgeMap.get(o.id) ?? [] }));

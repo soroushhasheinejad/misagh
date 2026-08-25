@@ -13,6 +13,9 @@ const LABELS: Record<SettingKey, string> = {
   "pricing.vatPercent": "مالیات بر ارزش افزوده (٪)",
   "pricing.autoRecalcOnRateChange": "بازمحاسبه خودکار با تغییر نرخ ارز",
   "pricing.hideWhenOutOfStock": "پنهان کردن قیمت قطعات ناموجود",
+  "inventory.assumeInStock": "قطعات بدون شمارش انبار، موجود در نظر گرفته شوند",
+  "inventory.defaultLeadDays": "زمان تحویل قطعات بدون شمارش (روز)",
+  "inventory.showExactCount": "نمایش تعداد دقیق وقتی شمارش داریم",
   "offers.multiOfferEnabled": "نمایش چند پیشنهاد برای هر قطعه",
   "offers.showSupplierName": "نمایش نام تامین‌کننده به مشتری",
   "offers.showLeadTime": "نمایش زمان تحویل",
@@ -39,6 +42,7 @@ const LABELS: Record<SettingKey, string> = {
 
 const GROUP_TITLES: Record<string, string> = {
   pricing: "قیمت‌گذاری",
+  inventory: "موجودی",
   offers: "پیشنهادهای چندگانه",
   dealer: "قیمت همکار",
   inquiry: "استعلام و پیام‌رسان",

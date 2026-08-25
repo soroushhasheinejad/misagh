@@ -106,7 +106,7 @@ export default async function HomePage() {
     ? await priceOffers(showcase, showcase.offers, { settings })
     : [];
   const showcasePrice = showcaseOffers.find((o) => o.price.kind === "price");
-  const showcaseInStock = showcaseOffers.some((o) => o.stockQty > 0);
+  const showcaseInStock = showcaseOffers.some((o) => o.available);
   const showcaseFit = showcase?.fitments[0]?.generation;
 
   const categoryTotals = categories
@@ -261,7 +261,7 @@ export default async function HomePage() {
                           </div>
                         )}
                         <div className={showcaseInStock ? "pt-1 text-xs text-ok" : "pt-1 text-xs text-faint"}>
-                          {showcaseInStock ? "موجود در انبار" : "ناموجود"}
+                          {showcaseInStock ? "موجود" : "ناموجود"}
                         </div>
                       </div>
                       <Link

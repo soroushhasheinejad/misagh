@@ -327,6 +327,7 @@ export default async function SearchPage({
                   partName={match.part.nameFa}
                   partNumber={match.matchedNumber}
                   unit={settings["store.displayUnit"] as "toman" | "rial"}
+                  telegram={String(settings["inquiry.telegramUsername"] ?? "").trim() || undefined}
                 />
               </section>
             );

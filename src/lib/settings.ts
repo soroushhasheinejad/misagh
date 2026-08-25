@@ -19,6 +19,13 @@ export const DEFAULT_SETTINGS = {
   "pricing.autoRecalcOnRateChange": true, // با تغییر نرخ ارز، قیمت‌ها بازمحاسبه شوند
   "pricing.hideWhenOutOfStock": false, // قیمت قطعه ناموجود پنهان شود و جایش استعلام بیاید
 
+  // ---- موجودی ----
+  // انبار همه قطعات شمارش نشده است؛ با این سوییچ، قطعه‌ای که شمارش ندارد
+  // «موجود» در نظر گرفته می‌شود و قابل خرید است.
+  "inventory.assumeInStock": true,
+  "inventory.defaultLeadDays": 3, // زمان تحویل قطعه‌ای که موجودی شمارش‌شده ندارد
+  "inventory.showExactCount": true, // اگر تعداد واقعی داریم، نمایش داده شود
+
   // ---- چند پیشنهاد برای یک قطعه (مثل fitinpart) ----
   "offers.multiOfferEnabled": true, // خاموش شود: فقط پیشنهاد پیش‌فرض دیده می‌شود
   "offers.showSupplierName": false, // نام تامین‌کننده برای مشتری دیده شود؟
