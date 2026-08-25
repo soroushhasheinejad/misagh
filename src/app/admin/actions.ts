@@ -254,3 +254,26 @@ export async function updateInquiryStatus(formData: FormData) {
 
   revalidatePath("/admin/inquiries");
 }
+
+// ------------------------------ سفارش‌ها ------------------------------------
+
+/** تغییر وضعیت سفارش و ثبت کد رهگیری */
+export async function updateOrder(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  const status = String(formData.get("status") ?? "");
+  if (!id || !status) return;
+
+  const trackingCode = String(formData.get("trackingCode") ?? "").trim();
+  const paymentStatus = String(formData.get("paymentStatus") ?? "");
+
+  await prisma.order.update({
+    where: { id },
+    data: {
+      status: status as never,
+      ...(paymentStatus ? { paymentStatus: paymentStatus as never } : {}),
+      trackingCode: trackingCode || null,
+    },
+  });
+
+  revalidatePath("/admin/orders");
+}

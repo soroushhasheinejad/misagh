@@ -63,9 +63,6 @@ export function ProductCard({
               <span className={inStock ? "text-[0.68rem] text-ok" : "text-[0.68rem] text-faint"}>
                 {inStock ? "موجود در انبار" : "ناموجود"}
               </span>
-              {offers.length > 1 ? (
-                <span className="tnum text-[0.68rem] text-faint">{offers.length} پیشنهاد</span>
-              ) : null}
             </div>
           </div>
 

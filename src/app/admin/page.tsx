@@ -10,9 +10,9 @@ const MODE_LABEL: Record<string, string> = {
 };
 
 export default async function AdminHome() {
-  const [parts, offers, generations, inquiries, zeroResults, settings, usd] = await Promise.all([
+  const [parts, openOrders, generations, inquiries, zeroResults, settings, usd] = await Promise.all([
     prisma.part.count(),
-    prisma.offer.count(),
+    prisma.order.count({ where: { status: { in: ["PENDING", "PAID", "PREPARING"] } } }),
     prisma.vehicleGeneration.count(),
     prisma.inquiry.count({ where: { status: "NEW" } }),
     prisma.searchLog.findMany({ where: { resultCount: 0 }, orderBy: { createdAt: "desc" }, take: 8 }),
@@ -22,7 +22,7 @@ export default async function AdminHome() {
 
   const cards = [
     { label: "قطعات", value: parts, href: "/admin/parts" },
-    { label: "پیشنهاد فروش", value: offers, href: "/admin/parts" },
+    { label: "سفارش‌های باز", value: openOrders, href: "/admin/orders" },
     { label: "نسل خودرو", value: generations, href: "/admin" },
     { label: "استعلام جدید", value: inquiries, href: "/admin" },
   ];
@@ -54,8 +54,7 @@ export default async function AdminHome() {
               ["حالت پیش‌فرض", MODE_LABEL[String(settings["pricing.defaultMode"])] ?? "—"],
               ["حاشیه سود پیش‌فرض", `${settings["pricing.defaultMarginPercent"]}٪`],
               ["نرخ دلار", usd ? `${Number(usd.rateIrr).toLocaleString("fa-IR")} ریال` : "ثبت نشده"],
-              ["چند پیشنهادی", settings["offers.multiOfferEnabled"] ? "روشن" : "خاموش"],
-              ["استعلام قیمت", settings["inquiry.enabled"] ? "روشن" : "خاموش"],
+                            ["استعلام قیمت", settings["inquiry.enabled"] ? "روشن" : "خاموش"],
             ].map(([label, value]) => (
               <div key={label} className="flex justify-between border-b border-line-2 py-2 last:border-b-0">
                 <dt className="text-muted">{label}</dt>
