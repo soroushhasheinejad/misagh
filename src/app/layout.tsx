@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getCartCount } from "@/lib/cart";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -49,7 +50,8 @@ const FOOTER = [
   },
 ];
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cartCount = await getCartCount();
   return (
     <html lang="fa" dir="rtl">
       <body className="flex min-h-screen flex-col">
@@ -71,6 +73,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </Link>
               ))}
             </nav>
+
+            <Link
+              href="/cart"
+              className="mr-auto flex shrink-0 items-center gap-2 rounded border border-white/20 px-3 py-1.5 text-sm text-white/85 transition-colors hover:border-brass hover:text-white"
+            >
+              سبد خرید
+              {cartCount > 0 ? (
+                <span className="tnum rounded bg-brass px-1.5 text-xs font-bold text-white">
+                  {cartCount.toLocaleString("fa-IR")}
+                </span>
+              ) : null}
+            </Link>
           </div>
           {/* روی موبایل و تبلت، مسیرها زیر لوگو می‌آیند */}
           <nav className="flex gap-5 overflow-x-auto border-t border-white/10 px-5 py-2.5 text-sm text-white/70 lg:hidden">

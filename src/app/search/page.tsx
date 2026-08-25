@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { searchByOem, suggestSameGroup, getPopularSearches } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
-import { OfferTable } from "@/components/OfferTable";
+import { BuyBar } from "@/components/BuyBar";
 import { OemSearchBox } from "@/components/OemSearchBox";
 import { formatPartNumber, normalizePartNumber } from "@/lib/normalize";
 import { formatMoney, moneyLabel } from "@/lib/pricing";
@@ -322,11 +322,11 @@ export default async function SearchPage({
                   </div>
                 </div>
 
-                <OfferTable
+                <BuyBar
                   offers={match.offers}
-                  settings={settings}
                   partName={match.part.nameFa}
                   partNumber={match.matchedNumber}
+                  unit={settings["store.displayUnit"] as "toman" | "rial"}
                 />
               </section>
             );
