@@ -149,37 +149,32 @@ export default async function HomePage() {
 
         <div className="relative mx-auto max-w-[1120px] px-5">
           <div className="max-w-3xl">
-              <div className="rise rise-1 flex items-center gap-2.5">
-                <span className="size-[7px] rotate-45 bg-brass" />
-                <span className="text-sm text-brass">قطعات یدکی کیا و هیوندا</span>
-              </div>
+            <h1 className="rise rise-1 max-w-2xl font-display text-[2rem] font-black leading-[1.5] sm:text-[2.75rem]">
+              قطعه اصل را به مطمئن‌ترین شکل پیدا کن
+            </h1>
 
-              <h1 className="rise rise-1 max-w-2xl pt-6 font-display text-[2rem] font-black leading-[1.5] sm:text-[2.75rem]">
-                قطعه اصل را به مطمئن‌ترین شکل پیدا کن
-              </h1>
+            <p className="rise rise-2 max-w-lg pt-6 text-[1.05rem] leading-9 text-white/65">
+              خودرویت را انتخاب کن یا شماره فنی قطعه را وارد کن؛ سازگاری، موجودی و زمان تحویل را
+              پیش از پرداخت می‌بینی.
+            </p>
 
-              <p className="rise rise-2 max-w-lg pt-6 text-[1.05rem] leading-9 text-white/65">
-                خودرویت را انتخاب کن یا شماره فنی قطعه را وارد کن؛ سازگاری، موجودی و زمان
-                تحویل را پیش از پرداخت می‌بینی.
-              </p>
-
-              {/* ریل آمار */}
-              <div className="rise rise-2 flex flex-wrap items-center gap-x-5 gap-y-3 pt-8 text-sm text-white/55">
-                <span className="tnum">
-                  <b className="font-display text-base font-black text-white">
-                    {faNumber(partCount)}
-                  </b>{" "}
-                  قطعه در کاتالوگ
-                </span>
-                <span className="size-[5px] rotate-45 bg-brass/70" />
-                <span className="tnum">
-                  <b className="font-display text-base font-black text-white">
-                    {faNumber(generationCount)}
-                  </b>{" "}
-                  نسل خودرو
-                </span>
-                <span className="size-[5px] rotate-45 bg-brass/70" />
-                <span>کد معادل و جایگزین</span>
+            {/* ریل آمار */}
+            <div className="rise rise-2 flex flex-wrap items-center gap-x-5 gap-y-3 pt-8 text-sm text-white/55">
+              <span className="tnum">
+                <b className="font-display text-base font-black text-white">
+                  {faNumber(partCount)}
+                </b>{" "}
+                قطعه در کاتالوگ
+              </span>
+              <span className="size-[5px] rotate-45 bg-brass/70" />
+              <span className="tnum">
+                <b className="font-display text-base font-black text-white">
+                  {faNumber(generationCount)}
+                </b>{" "}
+                نسل خودرو
+              </span>
+              <span className="size-[5px] rotate-45 bg-brass/70" />
+              <span>کد معادل و جایگزین</span>
             </div>
           </div>
         </div>
