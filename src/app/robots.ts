@@ -1,14 +1,17 @@
 import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/site-url";
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const base = await getSiteUrl();
 
-export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin", "/api"],
+      // بخش‌هایی که نباید ایندکس شوند: پنل، ورود، سبد و پیگیری سفارش
+      disallow: ["/admin", "/login", "/api", "/cart", "/order"],
     },
-    sitemap: `${BASE}/sitemap.xml`,
+    sitemap: `${base}/sitemap.xml`,
+    host: base,
   };
 }
