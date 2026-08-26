@@ -6,15 +6,32 @@
 #   docker compose --profile future up -d
 
 services:
+  # مهاجرت دیتابیس؛ یک بار اجرا می‌شود و تمام می‌شود، بعد اپ بالا می‌آید
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+    container_name: misagh-migrate
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-misagh}:${POSTGRES_PASSWORD:-misagh_dev_password}@db:5432/${POSTGRES_DB:-misagh}?schema=public
+
   app:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runner
     container_name: misagh-app
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-misagh}:${POSTGRES_PASSWORD:-misagh_dev_password}@db:5432/${POSTGRES_DB:-misagh}?schema=public
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}

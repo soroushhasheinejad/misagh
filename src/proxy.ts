@@ -7,8 +7,10 @@ import { SESSION_COOKIE, verifySession } from "@/lib/auth";
  * روی همه مسیرهای /admin اجرا می‌شود — هم صفحه‌ها و هم اکشن‌های سرور، چون
  * اکشن‌ها هم به همان آدرس صفحه POST می‌شوند. بازدیدکننده بدون نشست معتبر
  * اصلاً به رندر صفحه نمی‌رسد.
+ *
+ * قرارداد middleware در نسخه ۱۶ نکست منسوخ شده و جایش proxy آمده است.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   if (await verifySession(token)) return NextResponse.next();
 

@@ -15,13 +15,27 @@ WORKDIR /app
 # ------------------------------- پکیج‌ها ------------------------------------
 FROM base AS deps
 COPY package.json package-lock.json ./
-# روی اینترنت کند، نصب چند دقیقه طول می‌کشد؛ بدون این تنظیمات بیلد با تایم‌اوت می‌شکند.
-# کش npm هم mount می‌شود تا بیلدهای بعدی سریع باشند.
+
+# روی شبکه‌های ناپایدار، npm وسط دانلود ECONNRESET می‌گیرد. سه محافظ گذاشته شده:
+#   ۱. کش npm که mount می‌شود، پس هر تلاش از جایی که مانده ادامه می‌دهد
+#   ۲. تایم‌اوت و تعداد تلاش بالا، و کم کردن اتصال هم‌زمان
+#   ۳. تکرار خود دستور تا پنج بار
+# اگر پشت شبکه محدود هستید، می‌توانید آینه رجیستری بدهید:
+#   docker compose build --build-arg NPM_REGISTRY=https://registry.npmmirror.com
+ARG NPM_REGISTRY=https://registry.npmjs.org/
 RUN --mount=type=cache,target=/root/.npm \
+    npm config set registry "$NPM_REGISTRY" && \
     npm config set fetch-timeout 600000 && \
     npm config set fetch-retries 5 && \
     npm config set fetch-retry-maxtimeout 120000 && \
-    npm ci --no-audit --no-fund
+    npm config set maxsockets 3 && \
+    for attempt in 1 2 3 4 5; do \
+      echo "→ نصب پکیج‌ها، تلاش $attempt"; \
+      npm ci --no-audit --no-fund --prefer-offline && break; \
+      echo "  تلاش $attempt ناموفق بود"; \
+      sleep 5; \
+    done; \
+    test -d node_modules/next || (echo "✗ نصب پکیج‌ها بعد از پنج تلاش ناموفق ماند" && exit 1)
 
 # -------------------------------- بیلد -------------------------------------
 FROM base AS builder
@@ -37,6 +51,13 @@ ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
+# ------------------------- مهاجرت دیتابیس ----------------------------------
+# CLI پریزما وابستگی‌های زیادی دارد که در خروجی standalone نیستند، پس مهاجرت
+# در همان مرحله builder اجرا می‌شود که node_modules کامل دارد. کامپوز این را
+# به‌عنوان سرویس یک‌بارمصرف قبل از اپ اجرا می‌کند.
+FROM builder AS migrator
+CMD ["npx", "prisma", "migrate", "deploy"]
+
 # -------------------------------- اجرا -------------------------------------
 FROM base AS runner
 ENV NODE_ENV=production
@@ -47,23 +68,12 @@ ENV HOSTNAME=0.0.0.0
 RUN addgroup --system --gid 1001 nodejs \
  && adduser --system --uid 1001 nextjs
 
-# خروجی standalone و دارایی‌های عمومی
+# خروجی standalone خودش node_modules لازم را همراه دارد
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# برای اجرای مهاجرت هنگام بالا آمدن کانتینر
-COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.bin ./node_modules/.bin
-
-COPY --chown=nextjs:nodejs docker/entrypoint.sh ./entrypoint.sh
-RUN chmod +x ./entrypoint.sh
-
 USER nextjs
 EXPOSE 3000
 
-ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "server.js"]
