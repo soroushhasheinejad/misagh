@@ -1,40 +1,75 @@
+# اجرای کامل پروژه با یک دستور:
+#   docker compose up -d --build
+#
+# سرویس‌های میلی‌سرچ و ردیس زیر پروفایل future هستند و به‌صورت پیش‌فرض بالا
+# نمی‌آیند، چون کد فعلاً به آن‌ها وصل نیست:
+#   docker compose --profile future up -d
+
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: misagh-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-misagh}:${POSTGRES_PASSWORD:-misagh_dev_password}@db:5432/${POSTGRES_DB:-misagh}?schema=public
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?رمز پنل مدیریت را در .env تعیین کنید}
+      AUTH_SECRET: ${AUTH_SECRET:?کلید امضای نشست را در .env تعیین کنید}
+      NODE_ENV: production
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
   db:
     image: postgres:16-alpine
     container_name: misagh-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: misagh
-      POSTGRES_PASSWORD: misagh_dev_password
-      POSTGRES_DB: misagh
+      POSTGRES_USER: ${POSTGRES_USER:-misagh}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-misagh_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-misagh}
     ports:
-      - "5433:5432"
+      # فقط روی لوکال‌هاست باز می‌شود تا دیتابیس از بیرون سرور در دسترس نباشد
+      - "127.0.0.1:${DB_PORT:-5433}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U misagh -d misagh"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-misagh} -d ${POSTGRES_DB:-misagh}"]
       interval: 5s
       timeout: 5s
       retries: 10
 
+  # ---- سرویس‌های فازهای بعد؛ با --profile future بالا می‌آیند ----
   search:
     image: getmeili/meilisearch:v1.11
     container_name: misagh-search
+    profiles: ["future"]
     restart: unless-stopped
     environment:
-      MEILI_MASTER_KEY: misagh_dev_master_key
-      MEILI_ENV: development
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-misagh_dev_master_key}
+      MEILI_ENV: production
     ports:
-      - "7700:7700"
+      - "127.0.0.1:7700:7700"
     volumes:
       - search_data:/meili_data
 
   cache:
     image: redis:7-alpine
     container_name: misagh-cache
+    profiles: ["future"]
     restart: unless-stopped
     ports:
-      - "6380:6379"
+      - "127.0.0.1:6380:6379"
     volumes:
       - cache_data:/data
 
