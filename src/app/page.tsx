@@ -155,12 +155,12 @@ export default async function HomePage() {
               </div>
 
               <h1 className="rise rise-1 max-w-2xl pt-6 font-display text-[2rem] font-black leading-[1.5] sm:text-[2.75rem]">
-                قطعه اصل ماشینت رو به مطمئن‌ترین شکل پیدا کن
+                قطعه اصل را به مطمئن‌ترین شکل پیدا کن
               </h1>
 
               <p className="rise rise-2 max-w-lg pt-6 text-[1.05rem] leading-9 text-white/65">
-                ماشینت رو انتخاب کن یا شماره فنی قطعه رو بزن؛ سازگاری، موجودی و زمان تحویل رو
-                قبل از پرداخت می‌بینی.
+                خودرویت را انتخاب کن یا شماره فنی قطعه را وارد کن؛ سازگاری، موجودی و زمان
+                تحویل را پیش از پرداخت می‌بینی.
               </p>
 
               {/* ریل آمار */}
