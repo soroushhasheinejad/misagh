@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
 import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { SearchPanel } from "@/components/SearchPanel";
-import { HeroStage } from "@/components/HeroStage";
 import { faYearRange, faNumber } from "@/lib/format";
 
 /** تیتر بخش با نشان برنجی و لینک اختیاری */
@@ -38,7 +37,7 @@ function SectionHead({
 }
 
 export default async function HomePage() {
-  const [makes, categories, settings, latest, posts, partCount, generationCount, showcase] =
+  const [makes, categories, settings, latest, posts, partCount, generationCount] =
     await Promise.all([
       getMakes(),
       prisma.partCategory.findMany({
@@ -74,26 +73,6 @@ export default async function HomePage() {
       }),
       prisma.part.count({ where: { isActive: true } }),
       prisma.vehicleGeneration.count(),
-      // یک قطعه واقعی برای کارت نمونه سربرگ
-      prisma.part.findFirst({
-        where: {
-          isActive: true,
-          offers: { some: { basePriceIrr: { not: null }, stockQty: { gt: 0 } } },
-          fitments: { some: { generationId: { not: null } } },
-        },
-        include: {
-          numbers: { where: { isPrimary: true }, take: 1 },
-          fitments: {
-            where: { generationId: { not: null } },
-            include: { generation: { include: { model: { include: { make: true } } } } },
-            take: 2,
-          },
-          offers: {
-            where: { status: { not: "DISABLED" } },
-            include: { brand: true, supplier: true },
-          },
-        },
-      }),
     ]);
 
   const unit = settings["store.displayUnit"] as "toman" | "rial";
@@ -102,12 +81,6 @@ export default async function HomePage() {
     latest.map(async (p) => ({ part: p, offers: await priceOffers(p, p.offers, { settings }) })),
   );
 
-  const showcaseOffers = showcase
-    ? await priceOffers(showcase, showcase.offers, { settings })
-    : [];
-  const showcasePrice = showcaseOffers.find((o) => o.price.kind === "price");
-  const showcaseInStock = showcaseOffers.some((o) => o.available);
-  const showcaseFit = showcase?.fitments[0]?.generation;
 
   const categoryTotals = categories
     .filter((c) => c.slug !== "uncategorized")
@@ -168,30 +141,26 @@ export default async function HomePage() {
             maskImage: "radial-gradient(110% 80% at 70% 40%, black 15%, transparent 72%)",
           }}
         />
-        {/* هاله برنجی پشت کارت نمونه */}
+        {/* هاله برنجی */}
         <div
-          className="pointer-events-none absolute -left-40 top-10 hidden size-[520px] rounded-full opacity-[0.09] blur-3xl lg:block"
+          className="pointer-events-none absolute -left-32 top-0 hidden size-[460px] rounded-full opacity-[0.07] blur-3xl lg:block"
           style={{ background: "radial-gradient(closest-side, #b4832b, transparent)" }}
         />
 
         <div className="relative mx-auto max-w-[1120px] px-5">
-          <div className="grid items-center gap-14 lg:grid-cols-[1fr_minmax(0,360px)]">
-            {/* ستون متن */}
-            <div>
+          <div className="max-w-3xl">
               <div className="rise rise-1 flex items-center gap-2.5">
                 <span className="size-[7px] rotate-45 bg-brass" />
                 <span className="text-sm text-brass">قطعات یدکی کیا و هیوندا</span>
               </div>
 
-              <h1 className="rise rise-1 max-w-xl pt-6 font-display text-[2.1rem] font-black leading-[1.45] sm:text-[2.9rem]">
-                قطعه درست،
-                <br />
-                از همان بار اول
+              <h1 className="rise rise-1 max-w-2xl pt-6 font-display text-[2rem] font-black leading-[1.5] sm:text-[2.75rem]">
+                قطعه اصل ماشینت رو به مطمئن‌ترین شکل پیدا کن
               </h1>
 
               <p className="rise rise-2 max-w-lg pt-6 text-[1.05rem] leading-9 text-white/65">
-                خودرو یا شماره فنی را بدهید؛ سازگاری، موجودی و زمان تحویل را پیش از پرداخت
-                می‌بینید.
+                ماشینت رو انتخاب کن یا شماره فنی قطعه رو بزن؛ سازگاری، موجودی و زمان تحویل رو
+                قبل از پرداخت می‌بینی.
               </p>
 
               {/* ریل آمار */}
@@ -211,70 +180,7 @@ export default async function HomePage() {
                 </span>
                 <span className="size-[5px] rotate-45 bg-brass/70" />
                 <span>کد معادل و جایگزین</span>
-              </div>
             </div>
-
-            {/* کارت نمونه — چیزی که سایت واقعاً تحویل می‌دهد */}
-            {showcase ? (
-              <div className="rise rise-3 hidden lg:block">
-                <HeroStage>
-                  <article className="panel panel-brass bg-surface p-6 text-ink shadow-[0_30px_60px_-25px_rgba(0,0,0,0.75)]">
-                    <div className="flex items-center gap-2 text-xs text-brass-dark">
-                      <span className="size-[6px] rotate-45 bg-brass" />
-                      نمونه نتیجه جستجو
-                    </div>
-
-                    <h2 className="pt-4 font-display text-base font-bold leading-7">
-                      {showcase.nameFa}
-                    </h2>
-
-                    {showcase.numbers[0] ? (
-                      <div className="pt-4">
-                        <span className="plate plate-lg">{showcase.numbers[0].number}</span>
-                      </div>
-                    ) : null}
-
-                    {showcaseFit ? (
-                      <div className="mt-5 border-t border-line pt-4">
-                        <div className="text-xs text-muted">سازگار با</div>
-                        <div className="pt-1 font-display text-sm font-bold">
-                          {showcaseFit.model.make.nameFa} {showcaseFit.model.nameFa}
-                        </div>
-                        <div className="tnum pt-0.5 text-xs text-faint">
-                          {faYearRange(showcaseFit.yearStart, showcaseFit.yearEnd)}
-                        </div>
-                      </div>
-                    ) : null}
-
-                    <div className="mt-5 flex items-end justify-between gap-3 border-t border-line pt-4">
-                      <div>
-                        {showcasePrice && showcasePrice.price.kind === "price" ? (
-                          <div className="tnum font-display text-xl font-black">
-                            {formatMoney(showcasePrice.price.amountIrr, unit)}
-                            <span className="pr-1 text-xs font-medium text-muted">
-                              {moneyLabel(unit)}
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="font-display text-sm font-bold text-alert">
-                            استعلام قیمت
-                          </div>
-                        )}
-                        <div className={showcaseInStock ? "pt-1 text-xs text-ok" : "pt-1 text-xs text-faint"}>
-                          {showcaseInStock ? "موجود" : "ناموجود"}
-                        </div>
-                      </div>
-                      <Link
-                        href={`/part/${showcase.slug}`}
-                        className="btn btn-ghost px-4 py-2 text-xs"
-                      >
-                        دیدن قطعه
-                      </Link>
-                    </div>
-                  </article>
-                </HeroStage>
-              </div>
-            ) : null}
           </div>
         </div>
       </section>
