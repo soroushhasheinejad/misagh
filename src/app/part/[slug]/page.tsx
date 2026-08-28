@@ -7,6 +7,7 @@ import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { faYearRange, faNumber } from "@/lib/format";
 import { addToCart } from "@/app/cart/actions";
 import { TelegramInquiry } from "@/components/TelegramInquiry";
+import { Breadcrumbs, breadcrumbSchema, productSchema, JsonLd } from "@/components/Seo";
 
 const POSITION: Record<string, string> = {
   UNIVERSAL: "—",
@@ -43,24 +44,31 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const data = await getPartBySlug(slug);
+  const decoded = decodeURIComponent(slug);
+  const data = await getPartBySlug(decoded);
+
   if (!data) return { title: "قطعه پیدا نشد" };
 
   const number = data.part.numbers.find((n) => n.isPrimary) ?? data.part.numbers[0];
+  const title = data.part.titleFa ?? data.part.nameFa;
   return {
-    title: `${data.part.nameFa}${number ? ` — ${number.number}` : ""}`,
+    title,
+    alternates: { canonical: `/part/${encodeURIComponent(data.part.slug)}` },
     description:
       data.part.description ??
-      `${data.part.nameFa} با شماره فنی ${number?.number ?? ""}؛ سازگاری، موجودی و قیمت.`,
+      `${title}${number ? ` با شماره فنی ${number.number}` : ""} — سازگاری با خودرو، کدهای معادل و استعلام قیمت روز.`,
   };
 }
 
 export default async function PartPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const data = await getPartBySlug(slug);
+  const decoded = decodeURIComponent(slug);
+  const data = await getPartBySlug(decoded);
+
   if (!data) notFound();
 
   const { part, offers } = data;
+  const seoTitle = part.titleFa ?? part.nameFa;
   const settings = await getSettings();
   const unit = settings["store.displayUnit"] as "toman" | "rial";
 
@@ -95,8 +103,28 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
     primary ? `&pn=${encodeURIComponent(primary.number)}` : ""
   }`;
 
+  const crumbs = [
+    { name: "خانه", url: "/" },
+    { name: "محصولات", url: "/catalog" },
+    { name: part.category.nameFa, url: `/catalog?categoryId=${part.category.id}` },
+    { name: seoTitle, url: `/part/${encodeURIComponent(part.slug)}` },
+  ];
+
   return (
     <div>
+      <JsonLd data={breadcrumbSchema(crumbs)} />
+      <JsonLd
+        data={productSchema({
+          name: seoTitle,
+          description: part.description,
+          sku: selling?.sku,
+          mpn: primary?.number,
+          brand: selling?.brandName,
+          url: `/part/${encodeURIComponent(part.slug)}`,
+          inStock: available,
+        })}
+      />
+
       {/* ---------------- سربرگ قطعه ---------------- */}
       <div className="border-b border-brass/25 bg-carbon text-white">
         <div className="mx-auto max-w-[1120px] px-5 py-9">
@@ -118,7 +146,7 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
           </nav>
 
           <h1 className="max-w-3xl pt-5 font-display text-2xl font-black leading-[1.6]">
-            {part.nameFa}
+            {seoTitle}
           </h1>
 
           <div className="flex flex-wrap items-center gap-3 pt-5">
@@ -178,9 +206,19 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
                         <tr key={f.id}>
                           <td>
                             <div className="font-medium">
-                              {[f.make?.nameFa, f.model?.nameFa, f.generation?.nameFa, f.trim?.nameFa]
-                                .filter(Boolean)
-                                .join(" ")}
+                              {f.generation ? (
+                                <Link
+                                  href={`/car/${f.generation.model.make.slug}/${f.generation.model.slug}`}
+                                  className="link-brass"
+                                >
+                                  {f.generation.model.make.nameFa} {f.generation.model.nameFa}{" "}
+                                  {f.generation.nameFa}
+                                </Link>
+                              ) : (
+                                [f.make?.nameFa, f.model?.nameFa, f.trim?.nameFa]
+                                  .filter(Boolean)
+                                  .join(" ")
+                              )}
                             </div>
                             {f.note ? (
                               <div className="pt-1 text-xs text-faint">{f.note}</div>
@@ -222,7 +260,12 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
                     {part.numbers.map((n) => (
                       <tr key={n.id}>
                         <td>
-                          <span className="plate text-xs">{n.number}</span>
+                          <Link
+                            href={`/oem/${encodeURIComponent(n.normalized)}`}
+                            className="plate inline-block text-xs transition-colors hover:border-brass"
+                          >
+                            {n.number}
+                          </Link>
                         </td>
                         <td className="text-muted">{NUMBER_TYPE[n.type] ?? n.type}</td>
                         <td className="text-muted">{n.brand?.nameFa ?? "—"}</td>

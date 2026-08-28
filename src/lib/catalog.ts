@@ -361,8 +361,10 @@ export async function searchByVehicle(params: {
 }
 
 export async function getPartBySlug(slug: string) {
-  const part = await prisma.part.findUnique({
-    where: { slug },
+  // آدرس قدیمی هم همان قطعه را برمی‌گرداند؛ تگ canonical صفحه، نسخه تازه را
+  // به گوگل معرفی می‌کند تا دو آدرس تکراری شمرده نشوند.
+  const part = await prisma.part.findFirst({
+    where: { OR: [{ slug }, { legacySlug: slug }] },
     include: {
       category: { include: { parent: true } },
       brand: true,
@@ -374,7 +376,12 @@ export async function getPartBySlug(slug: string) {
         orderBy: { sortOrder: "asc" },
       },
       fitments: {
-        include: { make: true, model: true, generation: true, trim: true },
+        include: {
+          make: true,
+          model: true,
+          trim: true,
+          generation: { include: { model: { include: { make: true } } } },
+        },
       },
     },
   });
@@ -382,6 +389,14 @@ export async function getPartBySlug(slug: string) {
 
   const offers = await priceOffers(part, part.offers);
   return { part, offers };
+}
+
+/** آدرس قدیمی قطعه — برای ریدایرکت ۳۰۱ بعد از فارسی‌سازی اسلاگ‌ها */
+export async function getPartByLegacySlug(legacySlug: string) {
+  return prisma.part.findUnique({
+    where: { legacySlug },
+    select: { slug: true },
+  });
 }
 
 // --------------------------- صفحه محصولات -----------------------------------
@@ -627,4 +642,104 @@ export async function getPopularSearches(take = 8) {
     take,
   });
   return rows.map((r) => ({ query: r.normalized, count: r._count }));
+}
+
+// ------------------------- صفحه‌های سئو: خودرو و دسته -----------------------
+
+/** مدل خودرو بر اساس اسلاگ برند و مدل، همراه نسل‌ها و شمار قطعات */
+export async function getModelBySlug(makeSlug: string, modelSlug: string) {
+  return prisma.vehicleModel.findFirst({
+    where: { slug: modelSlug, isActive: true, make: { slug: makeSlug } },
+    include: {
+      make: true,
+      generations: {
+        where: { isActive: true },
+        orderBy: { yearStart: "desc" },
+        include: { _count: { select: { fitments: true } } },
+      },
+    },
+  });
+}
+
+/** همه مدل‌ها برای ساخت آدرس‌های ثابت و نقشه سایت */
+export function getAllModels() {
+  return prisma.vehicleModel.findMany({
+    where: { isActive: true },
+    include: { make: true },
+    orderBy: { nameFa: "asc" },
+  });
+}
+
+/** دسته‌هایی که برای یک مدل خودرو واقعاً قطعه دارند */
+export async function getCategoriesForModel(modelId: string) {
+  const rows = await prisma.part.groupBy({
+    by: ["categoryId"],
+    where: {
+      isActive: true,
+      fitments: { some: { generation: { modelId } } },
+    },
+    _count: true,
+    orderBy: { _count: { categoryId: "desc" } },
+  });
+
+  const categories = await prisma.partCategory.findMany({
+    where: { id: { in: rows.map((r) => r.categoryId) }, isActive: true },
+  });
+  const byId = new Map(categories.map((c) => [c.id, c]));
+
+  return rows
+    .map((r) => ({ category: byId.get(r.categoryId), count: r._count }))
+    .filter((r): r is { category: NonNullable<typeof categories[0]>; count: number } =>
+      Boolean(r.category) && r.category!.slug !== "uncategorized",
+    );
+}
+
+/** قطعات یک مدل خودرو، اختیاری محدود به یک دسته */
+export async function getPartsForModel(
+  modelId: string,
+  opts: { categoryId?: string; page?: number } = {},
+) {
+  const page = Math.max(1, opts.page ?? 1);
+  const where: Prisma.PartWhereInput = {
+    isActive: true,
+    ...(opts.categoryId ? { categoryId: opts.categoryId } : {}),
+    fitments: { some: { generation: { modelId } } },
+  };
+
+  const [total, parts] = await Promise.all([
+    prisma.part.count({ where }),
+    prisma.part.findMany({
+      where,
+      orderBy: { nameFa: "asc" },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+      include: PART_INCLUDE,
+    }),
+  ]);
+
+  const settings = await getSettings();
+  const rates = await getExchangeRates();
+  const items = await Promise.all(
+    parts.map(async (p) => ({
+      part: p,
+      offers: await priceOffers(p, p.offers, { settings, rates }),
+    })),
+  );
+
+  return { items, total, page, pageCount: Math.max(1, Math.ceil(total / PAGE_SIZE)) };
+}
+
+/** قطعه بر اساس شماره فنی نرمال‌شده — برای صفحه اختصاصی هر کد */
+export async function getPartByNumber(normalized: string) {
+  const number = await prisma.partNumber.findFirst({
+    where: { normalized },
+    include: {
+      part: { include: PART_INCLUDE },
+      brand: true,
+    },
+  });
+  if (!number) return null;
+
+  const offers = await priceOffers(number.part, number.part.offers);
+  return { number, part: number.part, offers };
 }

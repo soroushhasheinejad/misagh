@@ -163,7 +163,11 @@ model PartBrand {
 model Part {
   id          String  @id @default(cuid())
   slug        String  @unique
+  /// آدرس قبلی؛ برای ریدایرکت ۳۰۱ بعد از فارسی‌سازی اسلاگ‌ها
+  legacySlug  String? @unique
   nameFa      String
+  /// عنوان کامل سئو: نام قطعه + برند و مدل خودرو، مثل «لنت جلو هیوندای اکسنت»
+  titleFa     String?
   nameEn      String?
   categoryId  String
   brandId     String?
