@@ -8,6 +8,9 @@ import { faYearRange, faNumber } from "@/lib/format";
 import { addToCart } from "@/app/cart/actions";
 import { TelegramInquiry } from "@/components/TelegramInquiry";
 import { Breadcrumbs, breadcrumbSchema, productSchema, JsonLd } from "@/components/Seo";
+import { resolveSeo } from "@/lib/seo-content";
+import { buildPartVars } from "@/lib/seo-vars";
+import { Markdown } from "@/lib/markdown";
 
 const POSITION: Record<string, string> = {
   UNIVERSAL: "—",
@@ -51,12 +54,18 @@ export async function generateMetadata({
 
   const number = data.part.numbers.find((n) => n.isPrimary) ?? data.part.numbers[0];
   const title = data.part.titleFa ?? data.part.nameFa;
+
+  // عنوان و توضیح متا از پنل سئو می‌آید؛ اگر آنجا چیزی نبود، از داده قطعه ساخته می‌شود
+  const seo = await resolveSeo("PART", data.part.id, buildPartVars(data.part));
+
   return {
-    title,
+    title: seo.metaTitle ?? title,
     alternates: { canonical: `/part/${encodeURIComponent(data.part.slug)}` },
     description:
+      seo.metaDescription ??
       data.part.description ??
       `${title}${number ? ` با شماره فنی ${number.number}` : ""} — سازگاری با خودرو، کدهای معادل و استعلام قیمت روز.`,
+    ...(seo.noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }
 
@@ -68,7 +77,8 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
   if (!data) notFound();
 
   const { part, offers } = data;
-  const seoTitle = part.titleFa ?? part.nameFa;
+  const seo = await resolveSeo("PART", part.id, buildPartVars(part));
+  const seoTitle = seo.h1 ?? part.titleFa ?? part.nameFa;
   const settings = await getSettings();
   const unit = settings["store.displayUnit"] as "toman" | "rial";
 
@@ -167,13 +177,15 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
         <div className="grid gap-10 lg:grid-cols-[1fr_340px]">
           {/* ---------------- ستون اطلاعات ---------------- */}
           <div className="order-2 flex flex-col gap-10 lg:order-1">
-            {part.description ? (
+            {seo.intro ?? part.description ? (
               <section>
                 <div className="flex items-center gap-2.5 pb-4">
                   <span className="size-[7px] rotate-45 bg-brass" />
                   <h2 className="font-display text-base font-bold">درباره این قطعه</h2>
                 </div>
-                <p className="max-w-[68ch] leading-9 text-muted">{part.description}</p>
+                <p className="max-w-[68ch] leading-9 text-muted">
+                  {seo.intro ?? part.description}
+                </p>
               </section>
             ) : null}
 
@@ -420,6 +432,13 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
             </div>
           </aside>
         </div>
+
+        {/* متن بلند سئو — از پنل «سئوی محتوایی» می‌آید */}
+        {seo.body ? (
+          <section className="max-w-[68ch] border-t border-line pt-10">
+            <Markdown source={seo.body} />
+          </section>
+        ) : null}
       </div>
     </div>
   );

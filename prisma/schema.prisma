@@ -638,6 +638,60 @@ model Payment {
 // ============================ گزارش و لاگ ===================================
 
 /// جستجوهای بی‌نتیجه — گزارش «چه چیزی را باید بخرید»
+// ============================== سئوی محتوایی =================================
+
+/// نوع صفحه‌ای که محتوای سئو به آن وصل است
+enum SeoEntity {
+  PART /// صفحه یک قطعه
+  CAR_MODEL /// صفحه یک مدل خودرو
+  CAR_CATEGORY /// ترکیب دسته و خودرو
+  CATEGORY /// صفحه یک دسته
+  PAGE /// صفحه ثابت، با مسیر
+}
+
+/// محتوای سئوی هر صفحه — عنوان، توضیح متا و متن‌های بالا و پایین صفحه.
+/// اگر رکوردی نباشد، متن از قالب ساخته می‌شود.
+model SeoContent {
+  id              String    @id @default(cuid())
+  entityType      SeoEntity
+  /// شناسه یکتای صفحه: partId | modelId | "modelId:categoryId" | categoryId | مسیر
+  entityKey       String
+  metaTitle       String?
+  metaDescription String?
+  h1              String?
+  /// متن کوتاه بالای صفحه
+  intro           String?
+  /// متن بلند پایین صفحه، مارک‌داون
+  body            String?
+  /// از ایندکس گوگل خارج شود
+  noindex         Boolean   @default(false)
+  /// آخرین بار با قالب ساخته شده یا دستی ویرایش شده؟
+  isGenerated     Boolean   @default(false)
+  updatedAt       DateTime  @updatedAt
+  createdAt       DateTime  @default(now())
+
+  @@unique([entityType, entityKey])
+  @@index([entityType])
+  @@index([isGenerated])
+}
+
+/// قالب متن خودکار برای هر نوع صفحه. جای‌گذارها با {{نام}} نوشته می‌شوند.
+model ContentTemplate {
+  id        String    @id @default(cuid())
+  key       String    @unique
+  nameFa    String
+  /// توضیح اینکه این قالب کجا استفاده می‌شود
+  hintFa    String?
+  entityType SeoEntity
+  /// کدام بخش صفحه: metaTitle | metaDescription | intro | body
+  slot      String
+  template  String
+  isActive  Boolean   @default(true)
+  updatedAt DateTime  @updatedAt
+
+  @@index([entityType, slot])
+}
+
 // ============================== بلاگ ========================================
 
 /// مقاله آموزشی — موتور سئوی سایت و پاسخ به سوال‌های تکراری مشتری

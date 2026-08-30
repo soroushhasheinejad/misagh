@@ -20,6 +20,7 @@ const NAV = [
   { href: "/admin/settings", label: "تنظیمات فروشگاه" },
   { href: "/admin/rates", label: "نرخ ارز" },
   { href: "/admin/parts", label: "قطعات و قیمت" },
+  { href: "/admin/seo", label: "سئوی محتوایی" },
   { href: "/admin/orders", label: "سفارش‌ها" },
   { href: "/admin/inquiries", label: "استعلام‌ها" },
   { href: "/admin/posts", label: "بلاگ" },

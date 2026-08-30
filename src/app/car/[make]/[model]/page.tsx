@@ -11,6 +11,9 @@ import { getSettings } from "@/lib/settings";
 import { ProductCard } from "@/components/ProductCard";
 import { faYearRange, faNumber } from "@/lib/format";
 import { Breadcrumbs, breadcrumbSchema, JsonLd } from "@/components/Seo";
+import { resolveSeo } from "@/lib/seo-content";
+import { buildModelVars } from "@/lib/seo-vars";
+import { Markdown } from "@/lib/markdown";
 
 type Params = { make: string; model: string };
 
@@ -34,10 +37,15 @@ export async function generateMetadata({
   if (!found) return { title: "خودرو پیدا نشد" };
 
   const title = `لوازم یدکی ${found.nameFa}`;
+  const seo = await resolveSeo("CAR_MODEL", found.id, await buildModelVars(found.id));
+
   return {
-    title,
-    description: `${title} ${found.make.nameFa} — قطعات اصلی و های‌کپی با شماره فنی، سازگاری بررسی‌شده و استعلام قیمت روز.`,
+    title: seo.metaTitle ?? title,
+    description:
+      seo.metaDescription ??
+      `${title} ${found.make.nameFa} — قطعات اصلی و های‌کپی با شماره فنی، سازگاری بررسی‌شده و استعلام قیمت روز.`,
     alternates: { canonical: `/car/${make}/${model}` },
+    ...(seo.noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }
 
@@ -61,8 +69,9 @@ export default async function CarModelPage({
     getSettings(),
   ]);
 
+  const seo = await resolveSeo("CAR_MODEL", found.id, await buildModelVars(found.id));
   const unit = settings["store.displayUnit"] as "toman" | "rial";
-  const title = `لوازم یدکی ${found.nameFa}`;
+  const title = seo.h1 ?? `لوازم یدکی ${found.nameFa}`;
   const years = found.generations.map((g) => faYearRange(g.yearStart, g.yearEnd));
 
   const crumbs = [
@@ -81,9 +90,11 @@ export default async function CarModelPage({
           <Breadcrumbs items={crumbs.slice(0, -1)} />
           <h1 className="pt-4 font-display text-2xl font-black">{title}</h1>
           <p className="max-w-2xl pt-3 leading-8 text-white/60">
-            {results.total > 0
-              ? `${faNumber(results.total)} قطعه برای ${found.make.nameFa} ${found.nameFa} در کاتالوگ ما ثبت شده است؛ همه با شماره فنی سازنده و سازگاری بررسی‌شده.`
-              : `برای ${found.make.nameFa} ${found.nameFa} هنوز قطعه‌ای ثبت نشده است. درخواستتان را بفرستید تا تامین کنیم.`}
+            {seo.intro
+              ? seo.intro
+              : results.total > 0
+                ? `${faNumber(results.total)} قطعه برای ${found.make.nameFa} ${found.nameFa} در کاتالوگ ما ثبت شده است؛ همه با شماره فنی سازنده و سازگاری بررسی‌شده.`
+                : `برای ${found.make.nameFa} ${found.nameFa} هنوز قطعه‌ای ثبت نشده است. درخواستتان را بفرستید تا تامین کنیم.`}
           </p>
         </div>
       </section>
@@ -187,7 +198,12 @@ export default async function CarModelPage({
           </section>
         ) : null}
 
-        {/* متن راهنما — محتوای یکتای این صفحه */}
+        {/* متن راهنما — اگر در پنل سئو نوشته شده باشد، همان می‌آید */}
+        {seo.body ? (
+          <section className="max-w-[68ch] pt-12">
+            <Markdown source={seo.body} />
+          </section>
+        ) : (
         <section className="max-w-[68ch] pt-12">
           <div className="flex items-center gap-2.5 pb-4">
             <span className="size-[7px] rotate-45 bg-brass" />
@@ -219,6 +235,7 @@ export default async function CarModelPage({
             بدهید تا همان روز قیمت و موجودی را اعلام کنیم.
           </p>
         </section>
+        )}
       </div>
     </div>
   );

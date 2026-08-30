@@ -7,6 +7,9 @@ import { getSettings } from "@/lib/settings";
 import { ProductCard } from "@/components/ProductCard";
 import { faNumber, faYearRange } from "@/lib/format";
 import { Breadcrumbs, breadcrumbSchema, JsonLd } from "@/components/Seo";
+import { resolveSeo } from "@/lib/seo-content";
+import { buildCarCategoryVars } from "@/lib/seo-vars";
+import { Markdown } from "@/lib/markdown";
 
 type Params = { make: string; model: string; category: string };
 
@@ -29,10 +32,19 @@ export async function generateMetadata({
   if (!found || !cat) return { title: "صفحه پیدا نشد" };
 
   const title = `${cat.nameFa} ${found.make.nameFa} ${found.nameFa}`;
+  const seo = await resolveSeo(
+    "CAR_CATEGORY",
+    `${found.id}:${cat.id}`,
+    await buildCarCategoryVars(found.id, cat.id),
+  );
+
   return {
-    title,
-    description: `خرید ${title} با شماره فنی سازنده؛ سازگاری بررسی‌شده، کدهای معادل و استعلام قیمت روز.`,
+    title: seo.metaTitle ?? title,
+    description:
+      seo.metaDescription ??
+      `خرید ${title} با شماره فنی سازنده؛ سازگاری بررسی‌شده، کدهای معادل و استعلام قیمت روز.`,
     alternates: { canonical: `/car/${make}/${model}/${category}` },
+    ...(seo.noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }
 
@@ -61,8 +73,13 @@ export default async function CarCategoryPage({
 
   if (results.total === 0) notFound();
 
+  const seo = await resolveSeo(
+    "CAR_CATEGORY",
+    `${found.id}:${cat.id}`,
+    await buildCarCategoryVars(found.id, cat.id),
+  );
   const unit = settings["store.displayUnit"] as "toman" | "rial";
-  const title = `${cat.nameFa} ${found.make.nameFa} ${found.nameFa}`;
+  const title = seo.h1 ?? `${cat.nameFa} ${found.make.nameFa} ${found.nameFa}`;
   const years = found.generations.map((g) => faYearRange(g.yearStart, g.yearEnd));
 
   const crumbs = [
@@ -81,8 +98,8 @@ export default async function CarCategoryPage({
           <Breadcrumbs items={crumbs.slice(0, -1)} />
           <h1 className="pt-4 font-display text-2xl font-black">{title}</h1>
           <p className="max-w-2xl pt-3 leading-8 text-white/60">
-            {faNumber(results.total)} قطعه در دسته {cat.nameFa} برای {found.make.nameFa}{" "}
-            {found.nameFa}، هر کدام با شماره فنی سازنده.
+            {seo.intro ??
+              `${faNumber(results.total)} قطعه در دسته ${cat.nameFa} برای ${found.make.nameFa} ${found.nameFa}، هر کدام با شماره فنی سازنده.`}
           </p>
         </div>
       </section>
@@ -149,6 +166,11 @@ export default async function CarCategoryPage({
           </section>
         ) : null}
 
+        {seo.body ? (
+          <section className="max-w-[68ch] pt-12">
+            <Markdown source={seo.body} />
+          </section>
+        ) : (
         <section className="max-w-[68ch] pt-12">
           <div className="flex items-center gap-2.5 pb-4">
             <span className="size-[7px] rotate-45 bg-brass" />
@@ -172,6 +194,7 @@ export default async function CarCategoryPage({
             .
           </p>
         </section>
+        )}
       </div>
     </div>
   );

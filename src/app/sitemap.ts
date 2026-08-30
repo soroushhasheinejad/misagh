@@ -36,13 +36,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
     prisma.part.findMany({
       where: { isActive: true },
-      select: { slug: true, updatedAt: true },
+      select: { id: true, slug: true, updatedAt: true },
       orderBy: { updatedAt: "desc" },
       take: 20_000,
     }),
     prisma.vehicleModel.findMany({
       where: { isActive: true },
-      select: { slug: true, updatedAt: true, make: { select: { slug: true } } },
+      select: { id: true, slug: true, updatedAt: true, make: { select: { slug: true } } },
     }),
     prisma.partNumber.findMany({
       where: { part: { isActive: true } },
@@ -66,6 +66,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     take: 20_000,
   });
 
+  // صفحه‌هایی که در پنل سئو «خارج از ایندکس» علامت خورده‌اند نباید در نقشه سایت بیایند
+  const hidden = await prisma.seoContent.findMany({
+    where: { noindex: true },
+    select: { entityType: true, entityKey: true },
+  });
+  const hiddenParts = new Set(
+    hidden.filter((h) => h.entityType === "PART").map((h) => h.entityKey),
+  );
+  const hiddenModels = new Set(
+    hidden.filter((h) => h.entityType === "CAR_MODEL").map((h) => h.entityKey),
+  );
+
   const pairs = new Set<string>();
   for (const row of modelCategoryPairs) {
     const gen = row.fitments[0]?.generation;
@@ -78,17 +90,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...STATIC_PATHS.map((path) => ({ url: url(path), lastModified: new Date() })),
 
-    ...models.map((m) => ({
-      url: url(`/car/${m.make.slug}/${m.slug}`),
-      lastModified: m.updatedAt,
-    })),
+    ...models
+      .filter((m) => !hiddenModels.has(m.id))
+      .map((m) => ({
+        url: url(`/car/${m.make.slug}/${m.slug}`),
+        lastModified: m.updatedAt,
+      })),
 
     ...[...pairs].map((path) => ({ url: url(path), lastModified: new Date() })),
 
-    ...parts.map((p) => ({
-      url: url(`/part/${encodeURIComponent(p.slug)}`),
-      lastModified: p.updatedAt,
-    })),
+    ...parts
+      .filter((p) => !hiddenParts.has(p.id))
+      .map((p) => ({
+        url: url(`/part/${encodeURIComponent(p.slug)}`),
+        lastModified: p.updatedAt,
+      })),
 
     ...numbers.map((n) => ({
       url: url(`/oem/${encodeURIComponent(n.normalized)}`),
