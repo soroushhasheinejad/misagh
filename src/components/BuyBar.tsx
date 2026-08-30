@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { PricedOffer } from "@/lib/catalog";
 import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { faNumber } from "@/lib/format";
-import { addToCart } from "@/app/cart/actions";
 import { TelegramInquiry } from "@/components/TelegramInquiry";
+import { CallInquiry } from "@/components/CallInquiry";
 
 /**
  * نوار قیمت و خرید یک قطعه.
@@ -16,12 +16,14 @@ export function BuyBar({
   partNumber,
   unit,
   telegram,
+  phones,
 }: {
   offers: PricedOffer[];
   partName: string;
   partNumber?: string | null;
   unit: "toman" | "rial";
   telegram?: string;
+  phones?: string[];
 }) {
   const selling =
     offers.find((o) => o.isDefault && o.price.kind === "price") ??
@@ -31,7 +33,6 @@ export function BuyBar({
 
   const price = selling?.price;
   const available = selling?.available ?? false;
-  const buyable = price?.kind === "price" && available;
 
   const inquiryHref = `/inquiry?part=${encodeURIComponent(partName)}${
     partNumber ? `&pn=${encodeURIComponent(partNumber)}` : ""
@@ -70,19 +71,13 @@ export function BuyBar({
           />
         ) : null}
 
-        {buyable ? (
-        <form action={addToCart}>
-          <input type="hidden" name="offerId" value={selling!.id} />
-          <input type="hidden" name="qty" value={1} />
-          <button type="submit" className="btn btn-brass px-6">
-            افزودن به سبد
-          </button>
-        </form>
-      ) : (
+        {phones && phones.length > 0 ? (
+          <CallInquiry phones={phones} variant="inline" />
+        ) : null}
+
         <Link href={inquiryHref} className="btn btn-brass px-6">
-          {price?.kind === "price" ? "درخواست تامین" : "استعلام قیمت"}
+          استعلام قیمت
         </Link>
-        )}
       </div>
     </div>
   );

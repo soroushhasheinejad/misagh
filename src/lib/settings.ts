@@ -13,7 +13,6 @@ export const DEFAULT_SETTINGS = {
   "pricing.defaultMarginPercent": 25,
   "pricing.defaultRounding": "NEAREST_10K", // روی ریال اعمال می‌شود
   "pricing.validityHours": 24, // اعتبار قیمت اعلام‌شده
-  "pricing.cartLockMinutes": 30, // قفل قیمت سبد هنگام تسویه
   "pricing.showPriceValidity": true,
   "pricing.vatPercent": 0,
   "pricing.autoRecalcOnRateChange": true, // با تغییر نرخ ارز، قیمت‌ها بازمحاسبه شوند
@@ -55,7 +54,10 @@ export const DEFAULT_SETTINGS = {
 
   // ---- عمومی ----
   "store.name": "میثاق یدک",
-  "store.phone": "",
+  // شماره‌های تماس برای استعلام تلفنی؛ روی هر صفحه قطعه دیده می‌شوند
+  "store.phone": "02133915969",
+  "store.phone2": "02133905689",
+  "store.callHours": "شنبه تا چهارشنبه ۹ تا ۱۸، پنجشنبه ۹ تا ۱۳",
   "store.displayUnit": "toman", // toman | rial
 };
 

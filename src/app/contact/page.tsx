@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getSettings } from "@/lib/settings";
 import { PageHeader } from "@/components/PageHeader";
+import { faDigits } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "تماس با ما",
@@ -10,7 +11,10 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const settings = await getSettings();
-  const phone = String(settings["store.phone"] ?? "");
+  const phones = [settings["store.phone"], settings["store.phone2"]]
+    .map((v) => String(v ?? "").trim().replace(/\s/g, ""))
+    .filter(Boolean);
+  const hours = String(settings["store.callHours"] ?? "");
   const whatsapp = String(settings["inquiry.whatsappNumber"] ?? "");
   const telegram = String(settings["inquiry.telegramUsername"] ?? "");
 
@@ -25,16 +29,25 @@ export default async function ContactPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="panel p-6">
                         <h2 className="pt-3 font-display text-base font-bold">تلفن فروشگاه</h2>
-            {phone ? (
-              <a href={`tel:${phone}`} className="mono pt-2 block text-lg font-bold">
-                {phone}
-              </a>
+            {phones.length > 0 ? (
+              <div className="flex flex-col gap-1 pt-2">
+                {phones.map((number) => (
+                  <a
+                    key={number}
+                    href={`tel:${number}`}
+                    className="tnum block font-display text-lg font-bold link-brass"
+                    dir="ltr"
+                  >
+                    {faDigits(number)}
+                  </a>
+                ))}
+              </div>
             ) : (
               <p className="pt-2 text-sm text-muted">
                 شماره تلفن هنوز در پنل مدیریت ثبت نشده است.
               </p>
             )}
-            <p className="pt-2 text-xs text-faint">شنبه تا چهارشنبه ۹ تا ۱۸، پنجشنبه ۹ تا ۱۳</p>
+            {hours ? <p className="pt-2 text-xs text-faint">{hours}</p> : null}
           </div>
 
           <div className="panel p-6">

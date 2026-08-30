@@ -89,6 +89,9 @@ export default async function OemPage({ params }: { params: Promise<Params> }) {
             partNumber={display}
             unit={settings["store.displayUnit"] as "toman" | "rial"}
             telegram={String(settings["inquiry.telegramUsername"] ?? "").trim() || undefined}
+            phones={[settings["store.phone"], settings["store.phone2"]]
+              .map((v) => String(v ?? "").trim())
+              .filter(Boolean)}
           />
         </div>
 

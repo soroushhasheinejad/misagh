@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
+import { CallInquiry } from "@/components/CallInquiry";
 
 async function submitInquiry(formData: FormData) {
   "use server";
@@ -56,6 +57,21 @@ export default async function InquiryPage({
             قطعه‌ای که دنبالش هستید در سایت نیست یا قیمتش اعلام نشده؟ مشخصات را بنویسید؛ کارشناس ما
             قیمت و موجودی را استعلام می‌کند.
           </p>
+
+          {/* اگر عجله دارند، تماس مستقیم سریع‌تر از فرم است */}
+          <div className="panel mt-6 p-5">
+            <CallInquiry
+              phones={[settings["store.phone"], settings["store.phone2"]]
+                .map((v) => String(v ?? "").trim())
+                .filter(Boolean)}
+              hours={String(settings["store.callHours"] ?? "") || undefined}
+              variant="inline"
+            />
+            <p className="pt-3 text-xs leading-6 text-faint">
+              برای جواب فوری تماس بگیرید؛ فرم پایین وقتی به‌درد می‌خورد که عجله ندارید و
+              می‌خواهید درخواستتان ثبت و پیگیری شود.
+            </p>
+          </div>
 
           <form action={submitInquiry} className="panel panel-brass mt-6 flex flex-col gap-5 p-6">
             <div className="grid gap-5 sm:grid-cols-2">

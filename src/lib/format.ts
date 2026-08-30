@@ -15,3 +15,8 @@ export function faYearRange(start: number, end?: number | null): string {
 export function faNumber(value: number): string {
   return value.toLocaleString("fa-IR");
 }
+
+/** ارقام لاتین به فارسی — برای شماره تلفن که نباید جداکننده هزارگان بگیرد */
+export function faDigits(value: string): string {
+  return value.replace(/[0-9]/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
+}

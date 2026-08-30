@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getCartCount } from "@/lib/cart";
+import { getSettings } from "@/lib/settings";
+import { faDigits } from "@/lib/format";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -51,7 +52,12 @@ const FOOTER = [
 ];
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cartCount = await getCartCount();
+  const settings = await getSettings();
+  // شماره اول فروشگاه در سربرگ می‌نشیند؛ کوتاه‌ترین مسیر به استعلام قیمت
+  const phone = String(settings["store.phone"] ?? "").replace(/\s/g, "");
+  const footerPhones = [settings["store.phone"], settings["store.phone2"]]
+    .map((v) => String(v ?? "").trim().replace(/\s/g, ""))
+    .filter(Boolean);
   return (
     <html lang="fa" dir="rtl">
       <body className="flex min-h-screen flex-col">
@@ -74,17 +80,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               ))}
             </nav>
 
-            <Link
-              href="/cart"
-              className="mr-auto flex shrink-0 items-center gap-2 rounded border border-white/20 px-3 py-1.5 text-sm text-white/85 transition-colors hover:border-brass hover:text-white"
-            >
-              سبد خرید
-              {cartCount > 0 ? (
-                <span className="tnum rounded bg-brass px-1.5 text-xs font-bold text-white">
-                  {cartCount.toLocaleString("fa-IR")}
+            {phone ? (
+              <a
+                href={`tel:${phone}`}
+                className="mr-auto flex shrink-0 items-center gap-2 rounded border border-brass/50 px-3 py-1.5 text-sm text-white/85 transition-colors hover:border-brass hover:text-white"
+              >
+                <span className="hidden text-xs text-white/50 sm:inline">استعلام قیمت</span>
+                <span className="tnum font-display font-bold" dir="ltr">
+                  {faDigits(phone)}
                 </span>
-              ) : null}
-            </Link>
+              </a>
+            ) : null}
           </div>
           {/* روی موبایل و تبلت، مسیرها زیر لوگو می‌آیند */}
           <nav className="flex gap-5 overflow-x-auto border-t border-white/10 px-5 py-2.5 text-sm text-white/70 lg:hidden">
@@ -105,6 +111,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <p className="pt-3 text-sm leading-7">
                 قطعات یدکی کیا و هیوندا، با شماره فنی مشخص، سازگاری بررسی‌شده و موجودی واقعی.
               </p>
+              {footerPhones.length > 0 ? (
+                <div className="flex flex-col gap-1 pt-4">
+                  <span className="text-xs text-white/40">استعلام قیمت</span>
+                  {footerPhones.map((number) => (
+                    <a
+                      key={number}
+                      href={`tel:${number}`}
+                      className="tnum font-display text-base font-bold text-white hover:text-brass"
+                      dir="ltr"
+                    >
+                      {faDigits(number)}
+                    </a>
+                  ))}
+                </div>
+              ) : null}
             </div>
 
             {FOOTER.map((col) => (

@@ -8,7 +8,6 @@ const LABELS: Record<SettingKey, string> = {
   "pricing.defaultMarginPercent": "حاشیه سود پیش‌فرض (٪)",
   "pricing.defaultRounding": "قاعده رند کردن قیمت",
   "pricing.validityHours": "اعتبار قیمت (ساعت)",
-  "pricing.cartLockMinutes": "قفل قیمت سبد (دقیقه)",
   "pricing.showPriceValidity": "نمایش «قیمت تا … معتبر است»",
   "pricing.vatPercent": "مالیات بر ارزش افزوده (٪)",
   "pricing.autoRecalcOnRateChange": "بازمحاسبه خودکار با تغییر نرخ ارز",
@@ -37,6 +36,8 @@ const LABELS: Record<SettingKey, string> = {
   "search.logZeroResults": "ثبت جستجوهای بی‌نتیجه",
   "store.name": "نام فروشگاه",
   "store.phone": "تلفن فروشگاه",
+  "store.phone2": "تلفن دوم",
+  "store.callHours": "ساعت پاسخ‌گویی",
   "store.displayUnit": "واحد نمایش قیمت",
 };
 

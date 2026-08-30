@@ -8,8 +8,8 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
     rules: {
       userAgent: "*",
       allow: "/",
-      // بخش‌هایی که نباید ایندکس شوند: پنل، ورود، سبد و پیگیری سفارش
-      disallow: ["/admin", "/login", "/api", "/cart", "/order"],
+      // بخش‌هایی که نباید ایندکس شوند: پنل، ورود و پیگیری سفارش
+      disallow: ["/admin", "/login", "/api", "/order"],
     },
     sitemap: `${base}/sitemap.xml`,
     host: base,

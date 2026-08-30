@@ -5,8 +5,8 @@ import { getPartBySlug } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
 import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { faYearRange, faNumber } from "@/lib/format";
-import { addToCart } from "@/app/cart/actions";
 import { TelegramInquiry } from "@/components/TelegramInquiry";
+import { CallInquiry } from "@/components/CallInquiry";
 import { Breadcrumbs, breadcrumbSchema, productSchema, JsonLd } from "@/components/Seo";
 import { resolveSeo } from "@/lib/seo-content";
 import { buildPartVars } from "@/lib/seo-vars";
@@ -94,7 +94,6 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
 
   const price = selling?.price;
   const available = selling?.available ?? false;
-  const buyable = price?.kind === "price" && available;
 
   // فقط مشخصاتی که مقدار دارند
   const specRows = specs
@@ -102,6 +101,9 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
     : [];
 
   const telegram = String(settings["inquiry.telegramUsername"] ?? "").trim();
+  const phones = [settings["store.phone"], settings["store.phone2"]]
+    .map((v) => String(v ?? "").trim())
+    .filter(Boolean);
 
   // خودروی اول برای متن پیام تلگرام
   const fit = part.fitments[0];
@@ -381,30 +383,19 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
                 </div>
               </div>
 
-              {/* دکمه خرید */}
-              {buyable ? (
-                <form action={addToCart} className="mt-6 flex flex-col gap-3">
-                  <input type="hidden" name="offerId" value={selling!.id} />
-                  <label className="flex items-center justify-between gap-3 text-sm">
-                    <span className="text-muted">تعداد</span>
-                    <input
-                      name="qty"
-                      type="number"
-                      min={1}
-                      max={selling!.stockQty > 0 ? selling!.stockQty : undefined}
-                      defaultValue={1}
-                      className="field tnum w-24 py-1.5 text-center"
-                    />
-                  </label>
-                  <button type="submit" className="btn btn-brass w-full py-3 text-base">
-                    افزودن به سبد خرید
-                  </button>
-                </form>
-              ) : (
-                <Link href={inquiryHref} className="btn btn-brass mt-6 w-full py-3">
-                  {price?.kind === "price" ? "درخواست تامین" : "استعلام قیمت"}
-                </Link>
-              )}
+              {/* تماس مستقیم — سریع‌ترین راه گرفتن قیمت روز */}
+              {phones.length > 0 ? (
+                <div className="mt-6">
+                  <CallInquiry
+                    phones={phones}
+                    hours={String(settings["store.callHours"] ?? "") || undefined}
+                  />
+                </div>
+              ) : null}
+
+              <Link href={inquiryHref} className="btn btn-brass mt-4 w-full py-3">
+                ثبت درخواست استعلام
+              </Link>
 
               {telegram ? (
                 <div className="mt-3">
