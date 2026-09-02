@@ -70,6 +70,9 @@ export function SeoEditor({
   onSave,
   onReset,
   hasRecord,
+  targetKeyword,
+  faq,
+  ogImage,
 }: {
   entityType: string;
   entityKey: string;
@@ -83,6 +86,10 @@ export function SeoEditor({
   onSave: (formData: FormData) => void;
   onReset: (formData: FormData) => void;
   hasRecord: boolean;
+  targetKeyword?: string | null;
+  /** هر خط: پرسش || پاسخ */
+  faq?: string;
+  ogImage?: string | null;
 }) {
   const [values, setValues] = useState<Record<string, string>>(() => {
     const start: Record<string, string> = {};
@@ -175,6 +182,59 @@ export function SeoEditor({
             </div>
           );
         })}
+
+        {/* کلیدواژه هدف — مبنای امتیازدهی و گزارش «کلیدواژه غایب در عنوان» */}
+        <div className="grid gap-5 sm:grid-cols-2">
+          <label className="block text-sm">
+            <span className="font-display text-sm font-bold">کلیدواژه هدف</span>
+            <input
+              name="targetKeyword"
+              defaultValue={targetKeyword ?? ""}
+              placeholder="لنت ترمز جلو توسان"
+              className="field mt-2"
+            />
+            <span className="block pt-1.5 text-xs leading-6 text-faint">
+              دقیقاً همان عبارتی که می‌خواهید با آن پیدا شوید. اگر در عنوان نباشد، در
+              گزارش‌ها هشدار می‌گیرید.
+            </span>
+          </label>
+
+          <label className="block text-sm">
+            <span className="font-display text-sm font-bold">تصویر اشتراک‌گذاری</span>
+            <input
+              name="ogImage"
+              defaultValue={ogImage ?? ""}
+              dir="ltr"
+              placeholder="/uploads/…"
+              className="field mt-2"
+            />
+            <span className="block pt-1.5 text-xs leading-6 text-faint">
+              خالی بگذارید تا تصویر پیش‌فرض سایت استفاده شود.
+            </span>
+          </label>
+        </div>
+
+        {/* پرسش و پاسخ — به اسکیمای FAQPage تبدیل می‌شود */}
+        <div>
+          <div className="flex flex-wrap items-baseline justify-between gap-2 pb-2">
+            <label htmlFor="faq" className="font-display text-sm font-bold">
+              پرسش‌های متداول این صفحه
+            </label>
+            <span className="text-xs text-faint">هر خط: پرسش || پاسخ</span>
+          </div>
+          <textarea
+            id="faq"
+            name="faq"
+            rows={6}
+            defaultValue={faq ?? ""}
+            placeholder="این قطعه روی توسان ۲۰۱۸ می‌خورد؟ || بله، برای نسل TL از سال ۲۰۱۵ تا ۲۰۲۰ سازگار است."
+            className="field w-full leading-8"
+          />
+          <p className="pt-1.5 text-xs leading-6 text-faint">
+            این پرسش‌ها هم روی صفحه دیده می‌شوند و هم به گوگل به‌صورت داده ساختاریافته
+            معرفی می‌شوند، پس نتیجه شما در صفحه جستجو فضای بیشتری می‌گیرد.
+          </p>
+        </div>
 
         <label className="flex items-center gap-3 text-sm">
           <input type="checkbox" name="noindex" defaultChecked={noindex} className="size-4" />

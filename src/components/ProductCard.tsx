@@ -8,6 +8,7 @@ type PartLike = {
   nameFa: string;
   category?: { nameFa: string } | null;
   numbers?: Array<{ number: string }>;
+  images?: Array<{ url: string; alt?: string | null }>;
 };
 
 /** کارت محصول — شماره فنی به‌شکل پلاک، قیمت با منشور، وضعیت با رنگ */
@@ -24,8 +25,23 @@ export function ProductCard({
   const available = offers.some((o) => o.available);
   const number = part.numbers?.[0]?.number;
 
+  const image = part.images?.[0];
+
   return (
     <article className="panel group flex flex-col p-5 transition-colors hover:border-brass">
+      {image ? (
+        <Link href={`/part/${part.slug}`} className="-m-5 mb-4 block overflow-hidden">
+          {/* تصویر آپلودی خودمان است؛ نیازی به بهینه‌سازی مسیر خارجی نیست */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={image.url}
+            alt={image.alt ?? part.nameFa}
+            loading="lazy"
+            className="aspect-[4/3] w-full object-cover transition-transform group-hover:scale-[1.03]"
+          />
+        </Link>
+      ) : null}
+
       {part.category ? (
         <div className="text-xs text-faint">
           {part.category.nameFa}

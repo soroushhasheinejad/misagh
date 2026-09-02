@@ -37,12 +37,19 @@ export default async function SeoEditPage({
     body: record?.body ?? "",
   };
 
+  // پرسش و پاسخ در دیتابیس آرایه است و در فرم متن چندخطی
+  const faqRows = Array.isArray(record?.faq)
+    ? (record.faq as Array<{ q?: string; a?: string }>)
+        .map((item) => `${item.q ?? ""} || ${item.a ?? ""}`)
+        .join("\n")
+    : "";
+
   const { score, issues } = scoreSeo({
     metaTitle: record?.metaTitle,
     metaDescription: record?.metaDescription,
     intro: record?.intro,
     body: record?.body,
-    keyword: target.keyword,
+    keyword: record?.targetKeyword ?? target.keyword,
     internalLinks: 3,
   });
   const tone = scoreTone(score);
@@ -107,6 +114,9 @@ export default async function SeoEditPage({
         onSave={saveSeoContent}
         onReset={resetSeoContent}
         hasRecord={Boolean(record)}
+        targetKeyword={record?.targetKeyword}
+        faq={faqRows}
+        ogImage={record?.ogImage}
       />
     </div>
   );

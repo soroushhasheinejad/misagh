@@ -665,6 +665,12 @@ model SeoContent {
   body            String?
   /// از ایندکس گوگل خارج شود
   noindex         Boolean   @default(false)
+  /// کلیدواژه هدف این صفحه؛ مبنای امتیازدهی و گزارش هم‌پوشانی
+  targetKeyword   String?
+  /// پرسش و پاسخ‌های همین صفحه: [{ q, a }] — به اسکیمای FAQPage تبدیل می‌شود
+  faq             Json?
+  /// تصویر اشتراک‌گذاری در شبکه‌های اجتماعی
+  ogImage         String?
   /// آخرین بار با قالب ساخته شده یا دستی ویرایش شده؟
   isGenerated     Boolean   @default(false)
   updatedAt       DateTime  @updatedAt
@@ -690,6 +696,24 @@ model ContentTemplate {
   updatedAt DateTime  @updatedAt
 
   @@index([entityType, slot])
+}
+
+/// ریدایرکت ۳۰۱ — آدرس قدیمی به جدید، قابل مدیریت از پنل
+model Redirect {
+  id          String    @id @default(cuid())
+  /// مسیر مبدأ، با اسلش شروع می‌شود
+  source      String    @unique
+  destination String
+  /// ۳۰۸ دائمی یا ۳۰۷ موقت
+  permanent   Boolean   @default(true)
+  hits        Int       @default(0)
+  lastHitAt   DateTime?
+  note        String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([isActive])
 }
 
 // ============================== بلاگ ========================================

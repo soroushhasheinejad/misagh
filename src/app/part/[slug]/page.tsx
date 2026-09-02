@@ -7,7 +7,7 @@ import { formatMoney, moneyLabel } from "@/lib/pricing";
 import { faYearRange, faNumber } from "@/lib/format";
 import { TelegramInquiry } from "@/components/TelegramInquiry";
 import { CallInquiry } from "@/components/CallInquiry";
-import { Breadcrumbs, breadcrumbSchema, productSchema, JsonLd } from "@/components/Seo";
+import { Breadcrumbs, breadcrumbSchema, productSchema, faqSchema, JsonLd } from "@/components/Seo";
 import { resolveSeo } from "@/lib/seo-content";
 import { buildPartVars } from "@/lib/seo-vars";
 import { Markdown } from "@/lib/markdown";
@@ -65,6 +65,7 @@ export async function generateMetadata({
       seo.metaDescription ??
       data.part.description ??
       `${title}${number ? ` با شماره فنی ${number.number}` : ""} — سازگاری با خودرو، کدهای معادل و استعلام قیمت روز.`,
+    ...(seo.ogImage ? { openGraph: { images: [seo.ogImage] } } : {}),
     ...(seo.noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }
@@ -124,18 +125,28 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
 
   return (
     <div>
-      <JsonLd data={breadcrumbSchema(crumbs)} />
-      <JsonLd
-        data={productSchema({
-          name: seoTitle,
-          description: part.description,
-          sku: selling?.sku,
-          mpn: primary?.number,
-          brand: selling?.brandName,
-          url: `/part/${encodeURIComponent(part.slug)}`,
-          inStock: available,
-        })}
-      />
+      {settings["seo.breadcrumbSchemaEnabled"] ? (
+        <JsonLd data={breadcrumbSchema(crumbs)} />
+      ) : null}
+
+      {settings["seo.productSchemaEnabled"] ? (
+        <JsonLd
+          data={productSchema({
+            name: seoTitle,
+            description: seo.metaDescription ?? part.description,
+            sku: selling?.sku,
+            mpn: primary?.number,
+            brand: selling?.brandName,
+            url: `/part/${encodeURIComponent(part.slug)}`,
+            inStock: available,
+            image: part.images[0]?.url,
+          })}
+        />
+      ) : null}
+
+      {seo.faq.length > 0 && settings["seo.faqSchemaEnabled"] ? (
+        <JsonLd data={faqSchema(seo.faq)} />
+      ) : null}
 
       {/* ---------------- سربرگ قطعه ---------------- */}
       <div className="border-b border-brass/25 bg-carbon text-white">
@@ -179,6 +190,24 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
         <div className="grid gap-10 lg:grid-cols-[1fr_340px]">
           {/* ---------------- ستون اطلاعات ---------------- */}
           <div className="order-2 flex flex-col gap-10 lg:order-1">
+            {part.images.length > 0 ? (
+              <section>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {part.images.map((img) => (
+                    /* تصویر آپلودی خودمان است */
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      key={img.id}
+                      src={img.url}
+                      alt={img.alt ?? seoTitle}
+                      loading="lazy"
+                      className="aspect-square w-full rounded-md border border-line object-cover"
+                    />
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
             {seo.intro ?? part.description ? (
               <section>
                 <div className="flex items-center gap-2.5 pb-4">
@@ -423,6 +452,26 @@ export default async function PartPage({ params }: { params: Promise<{ slug: str
             </div>
           </aside>
         </div>
+
+        {/* پرسش‌های متداول این قطعه — هم برای کاربر، هم اسکیمای FAQPage */}
+        {seo.faq.length > 0 ? (
+          <section className="max-w-[68ch] border-t border-line pt-10">
+            <div className="flex items-center gap-2.5 pb-5">
+              <span className="size-[7px] rotate-45 bg-brass" />
+              <h2 className="font-display text-base font-bold">پرسش‌های متداول</h2>
+            </div>
+            <div className="flex flex-col gap-4">
+              {seo.faq.map((item) => (
+                <details key={item.q} className="panel p-5">
+                  <summary className="cursor-pointer font-display text-sm font-bold">
+                    {item.q}
+                  </summary>
+                  <p className="pt-3 leading-8 text-muted">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {/* متن بلند سئو — از پنل «سئوی محتوایی» می‌آید */}
         {seo.body ? (

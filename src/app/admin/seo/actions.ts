@@ -14,8 +14,28 @@ import {
   partVarsInclude,
 } from "@/lib/seo-vars";
 import { listCarCategoryPairs } from "@/lib/seo-inventory";
+import { invalidateRedirectCache, normalizePath } from "@/lib/redirects";
+import { logAudit } from "@/lib/audit";
 
 const SLOTS: Slot[] = ["metaTitle", "metaDescription", "h1", "intro", "body"];
+
+/**
+ * پرسش و پاسخ‌ها در یک textarea نوشته می‌شوند: هر خط یک ردیف، پرسش و پاسخ با
+ * «||» جدا. ساده‌ترین شکلی که بدون جاوااسکریپت اضافی کار می‌کند.
+ */
+function parseFaq(form: FormData) {
+  const raw = String(form.get("faq") ?? "").trim();
+  if (!raw) return undefined;
+
+  const items = raw
+    .split("\n")
+    .map((line) => line.split("||"))
+    .filter((parts) => parts.length >= 2)
+    .map(([q, ...rest]) => ({ q: q.trim(), a: rest.join("||").trim() }))
+    .filter((item) => item.q && item.a);
+
+  return items.length > 0 ? (items as never) : undefined;
+}
 
 function str(form: FormData, key: string): string | null {
   const raw = form.get(key);
@@ -36,6 +56,9 @@ export async function saveSeoContent(formData: FormData) {
     h1: str(formData, "h1"),
     intro: str(formData, "intro"),
     body: str(formData, "body"),
+    targetKeyword: str(formData, "targetKeyword"),
+    faq: parseFaq(formData),
+    ogImage: str(formData, "ogImage"),
     noindex: formData.get("noindex") === "on",
     // ویرایش دستی یعنی دیگر با تولید گروهی بازنویسی نشود
     isGenerated: false,
@@ -203,4 +226,59 @@ export async function clearGenerated(formData: FormData) {
   await prisma.seoContent.deleteMany({ where: { entityType, isGenerated: true } });
   revalidatePath("/admin/seo");
   revalidatePath("/admin/seo/generate");
+}
+
+
+// ------------------------------ ریدایرکت ------------------------------
+
+/** ثبت یا ویرایش یک ریدایرکت */
+export async function saveRedirect(formData: FormData) {
+  const id = str(formData, "id");
+  const source = normalizePath(String(formData.get("source") ?? ""));
+  const destination = String(formData.get("destination") ?? "").trim();
+  if (!source || !destination || source === destination) return;
+
+  const data = {
+    source,
+    destination,
+    permanent: formData.get("permanent") !== "false",
+    note: str(formData, "note"),
+    isActive: formData.get("isActive") === "on",
+  };
+
+  if (id) {
+    await prisma.redirect.update({ where: { id }, data });
+    await logAudit({ action: "update", entity: "redirect", entityId: id, after: data });
+  } else {
+    const created = await prisma.redirect.upsert({
+      where: { source },
+      create: data,
+      update: data,
+    });
+    await logAudit({ action: "create", entity: "redirect", entityId: created.id, after: data });
+  }
+
+  invalidateRedirectCache();
+  revalidatePath("/admin/seo/redirects");
+}
+
+export async function deleteRedirect(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  await prisma.redirect.delete({ where: { id } }).catch(() => null);
+  await logAudit({ action: "delete", entity: "redirect", entityId: id });
+  invalidateRedirectCache();
+  revalidatePath("/admin/seo/redirects");
+}
+
+/**
+ * بستن حلقه: صفحه‌ای که ۴۰۴ می‌دهد ولی هنوز بازدید دارد، بهتر است به جای
+ * نزدیکش ریدایرکت شود تا آن بازدید هدر نرود.
+ */
+export async function toggleRedirect(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  const row = await prisma.redirect.findUnique({ where: { id } });
+  if (!row) return;
+  await prisma.redirect.update({ where: { id }, data: { isActive: !row.isActive } });
+  invalidateRedirectCache();
+  revalidatePath("/admin/seo/redirects");
 }

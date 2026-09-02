@@ -66,12 +66,17 @@ export function renderTemplate(template: string, vars: SeoVars): string {
     .trim();
 }
 
+export type FaqItem = { q: string; a: string };
+
 export type ResolvedSeo = {
   metaTitle: string | null;
   metaDescription: string | null;
   h1: string | null;
   intro: string | null;
   body: string | null;
+  faq: FaqItem[];
+  ogImage: string | null;
+  targetKeyword: string | null;
   noindex: boolean;
   /** کدام جایگاه‌ها دستی نوشته شده‌اند */
   manual: Set<Slot>;
@@ -83,9 +88,24 @@ const EMPTY: ResolvedSeo = {
   h1: null,
   intro: null,
   body: null,
+  faq: [],
+  ogImage: null,
+  targetKeyword: null,
   noindex: false,
   manual: new Set(),
 };
+
+/** پرسش و پاسخ در دیتابیس JSON است؛ اینجا به شکل امن خوانده می‌شود */
+export function readFaq(value: unknown): FaqItem[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((item): item is FaqItem => {
+      if (typeof item !== "object" || item === null) return false;
+      const row = item as Record<string, unknown>;
+      return typeof row.q === "string" && typeof row.a === "string";
+    })
+    .filter((item) => item.q.trim() && item.a.trim());
+}
 
 /** قالب‌های فعال یک نوع صفحه، بر اساس جایگاه */
 export async function getTemplates(entityType: SeoEntity) {
@@ -138,6 +158,9 @@ export async function resolveSeo(
     h1: pick("h1"),
     intro: pick("intro"),
     body: pick("body"),
+    faq: readFaq(record?.faq),
+    ogImage: record?.ogImage ?? null,
+    targetKeyword: record?.targetKeyword ?? null,
     noindex: record?.noindex ?? false,
     manual,
   };

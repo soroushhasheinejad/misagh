@@ -40,6 +40,9 @@ services:
       NODE_ENV: production
     ports:
       - "${APP_PORT:-3000}:3000"
+    volumes:
+      # تصویرهای آپلودشده باید از بیلد بعدی جان سالم به در ببرند
+      - uploads:/app/public/uploads
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
@@ -91,6 +94,7 @@ services:
       - cache_data:/data
 
 volumes:
+  uploads:
   db_data:
   search_data:
   cache_data:

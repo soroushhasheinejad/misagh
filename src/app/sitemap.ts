@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { getSiteUrl } from "@/lib/site-url";
+import { getSettings } from "@/lib/settings";
 
 /**
  * نقشه سایت.
@@ -28,6 +29,8 @@ const STATIC_PATHS = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = await getSiteUrl();
+  // هر خانواده صفحه از پنل سئو قابل خاموش کردن است
+  const settings = await getSettings();
 
   const [posts, parts, models, numbers] = await Promise.all([
     prisma.post.findMany({
@@ -90,28 +93,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...STATIC_PATHS.map((path) => ({ url: url(path), lastModified: new Date() })),
 
-    ...models
+    ...(settings["seo.sitemapCars"] ? models : [])
       .filter((m) => !hiddenModels.has(m.id))
       .map((m) => ({
         url: url(`/car/${m.make.slug}/${m.slug}`),
         lastModified: m.updatedAt,
       })),
 
-    ...[...pairs].map((path) => ({ url: url(path), lastModified: new Date() })),
+    ...(settings["seo.sitemapCars"] ? [...pairs] : []).map((path) => ({ url: url(path), lastModified: new Date() })),
 
-    ...parts
+    ...(settings["seo.sitemapParts"] ? parts : [])
       .filter((p) => !hiddenParts.has(p.id))
       .map((p) => ({
         url: url(`/part/${encodeURIComponent(p.slug)}`),
         lastModified: p.updatedAt,
       })),
 
-    ...numbers.map((n) => ({
+    ...(settings["seo.sitemapOem"] ? numbers : []).map((n) => ({
       url: url(`/oem/${encodeURIComponent(n.normalized)}`),
       lastModified: new Date(),
     })),
 
-    ...posts.map((post) => ({
+    ...(settings["seo.sitemapPosts"] ? posts : []).map((post) => ({
       url: url(`/blog/${post.slug}`),
       lastModified: post.updatedAt,
     })),

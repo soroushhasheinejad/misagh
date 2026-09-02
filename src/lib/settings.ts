@@ -52,6 +52,27 @@ export const DEFAULT_SETTINGS = {
   "search.crossReferenceEnabled": true,
   "search.logZeroResults": true,
 
+  // ---- سئو ----
+  "seo.siteName": "میثاق یدک",
+  "seo.titleDefault": "میثاق یدک — قطعات کیا و هیوندا",
+  "seo.titleTemplate": "%s | میثاق یدک",
+  "seo.defaultDescription":
+    "قطعات یدکی کیا و هیوندا. جستجو بر اساس خودرو، شماره فنی و شماره شاسی، با موجودی و زمان تحویل مشخص.",
+  "seo.defaultOgImage": "",
+  "seo.googleVerification": "", // کد تایید سرچ کنسول
+  "seo.productSchemaEnabled": true,
+  "seo.faqSchemaEnabled": true,
+  "seo.breadcrumbSchemaEnabled": true,
+  "seo.organizationSchemaEnabled": true,
+  // نقشه سایت: هر خانواده صفحه جداگانه قابل خاموش کردن است
+  "seo.sitemapParts": true,
+  "seo.sitemapOem": true,
+  "seo.sitemapCars": true,
+  "seo.sitemapPosts": true,
+  // صفحه‌های خیلی کم‌محتوا بودجه خزش را می‌خورند؛ می‌شود خودکار noindex شوند
+  "seo.autoNoindexThin": false,
+  "seo.thinWordThreshold": 80,
+
   // ---- عمومی ----
   "store.name": "میثاق یدک",
   // شماره‌های تماس برای استعلام تلفنی؛ روی هر صفحه قطعه دیده می‌شوند

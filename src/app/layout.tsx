@@ -4,14 +4,30 @@ import { getSettings } from "@/lib/settings";
 import { faDigits } from "@/lib/format";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: {
-    default: "میثاق یدک — قطعات کیا و هیوندا",
-    template: "%s | میثاق یدک",
-  },
-  description:
-    "قطعات یدکی کیا و هیوندا. جستجو بر اساس خودرو، شماره فنی و شماره شاسی، با موجودی و زمان تحویل مشخص.",
-};
+/**
+ * عنوان، توضیح و کد تایید سرچ کنسول از تنظیمات خوانده می‌شوند تا بدون تغییر
+ * کد قابل ویرایش باشند. الگوی عنوان همان %s استاندارد نکست است.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  const verification = String(settings["seo.googleVerification"] ?? "").trim();
+  const ogImage = String(settings["seo.defaultOgImage"] ?? "").trim();
+
+  return {
+    title: {
+      default: String(settings["seo.titleDefault"]),
+      template: String(settings["seo.titleTemplate"]),
+    },
+    description: String(settings["seo.defaultDescription"]),
+    openGraph: {
+      siteName: String(settings["seo.siteName"]),
+      type: "website",
+      locale: "fa_IR",
+      ...(ogImage ? { images: [ogImage] } : {}),
+    },
+    ...(verification ? { verification: { google: verification } } : {}),
+  };
+}
 
 const NAV = [
   { href: "/catalog", label: "کاتالوگ" },
@@ -58,9 +74,28 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const footerPhones = [settings["store.phone"], settings["store.phone2"]]
     .map((v) => String(v ?? "").trim().replace(/\s/g, ""))
     .filter(Boolean);
+
+  // اسکیمای کسب‌وکار یک بار در ریشه می‌آید و برای همه صفحه‌ها اعتبار دارد
+  const organization = settings["seo.organizationSchemaEnabled"]
+    ? {
+        "@context": "https://schema.org",
+        "@type": "AutoPartsStore",
+        name: String(settings["seo.siteName"]),
+        description: String(settings["seo.defaultDescription"]),
+        ...(footerPhones.length > 0 ? { telephone: footerPhones } : {}),
+        areaServed: "IR",
+      }
+    : null;
   return (
     <html lang="fa" dir="rtl">
       <body className="flex min-h-screen flex-col">
+        {organization ? (
+          <script
+            type="application/ld+json"
+            // داده از تنظیمات خود ما ساخته می‌شود، نه ورودی بازدیدکننده
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }}
+          />
+        ) : null}
         <header className="border-b border-brass/30 bg-carbon">
           <div className="mx-auto flex max-w-[1120px] items-center gap-8 px-5 py-4">
             <Link href="/" className="flex shrink-0 items-baseline gap-1.5">

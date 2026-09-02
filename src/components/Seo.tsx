@@ -55,12 +55,14 @@ export function productSchema(input: {
   brand?: string | null;
   url: string;
   inStock: boolean;
+  image?: string | null;
 }) {
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name: input.name,
     ...(input.description ? { description: input.description } : {}),
+    ...(input.image ? { image: input.image } : {}),
     ...(input.sku ? { sku: input.sku } : {}),
     ...(input.mpn ? { mpn: input.mpn } : {}),
     ...(input.brand ? { brand: { "@type": "Brand", name: input.brand } } : {}),

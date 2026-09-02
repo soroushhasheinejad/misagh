@@ -15,15 +15,45 @@ async function logout() {
   redirect("/");
 }
 
-const NAV = [
-  { href: "/admin", label: "خلاصه" },
-  { href: "/admin/settings", label: "تنظیمات فروشگاه" },
-  { href: "/admin/rates", label: "نرخ ارز" },
-  { href: "/admin/parts", label: "قطعات و قیمت" },
-  { href: "/admin/seo", label: "سئوی محتوایی" },
-  { href: "/admin/orders", label: "سفارش‌ها" },
-  { href: "/admin/inquiries", label: "استعلام‌ها" },
-  { href: "/admin/posts", label: "بلاگ" },
+const NAV: Array<{ title: string; links: Array<{ href: string; label: string }> }> = [
+  {
+    title: "کاتالوگ",
+    links: [
+      { href: "/admin", label: "خلاصه" },
+      { href: "/admin/parts", label: "قطعات و قیمت" },
+      { href: "/admin/catalog/vehicles", label: "خودروها" },
+      { href: "/admin/catalog/taxonomy", label: "دسته و برند" },
+      { href: "/admin/catalog/vin-rules", label: "شماره شاسی" },
+    ],
+  },
+  {
+    title: "سئو",
+    links: [
+      { href: "/admin/seo", label: "خلاصه سئو" },
+      { href: "/admin/seo/pages", label: "صفحه‌ها" },
+      { href: "/admin/seo/templates", label: "قالب‌ها" },
+      { href: "/admin/seo/generate", label: "تولید گروهی" },
+      { href: "/admin/seo/reports", label: "گزارش‌ها" },
+      { href: "/admin/seo/redirects", label: "ریدایرکت‌ها" },
+      { href: "/admin/seo/settings", label: "تنظیمات سئو" },
+      { href: "/admin/posts", label: "بلاگ" },
+    ],
+  },
+  {
+    title: "فروش",
+    links: [
+      { href: "/admin/orders", label: "سفارش‌ها" },
+      { href: "/admin/inquiries", label: "استعلام‌ها" },
+      { href: "/admin/rates", label: "نرخ ارز" },
+    ],
+  },
+  {
+    title: "سیستم",
+    links: [
+      { href: "/admin/settings", label: "تنظیمات فروشگاه" },
+      { href: "/admin/audit", label: "تاریخچه تغییرات" },
+    ],
+  },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -31,17 +61,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="mx-auto max-w-[1120px] px-5 py-10">
       <div className="grid gap-10 lg:grid-cols-[200px_1fr]">
         <aside>
-          <nav className="flex flex-col">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="group border-b border-line-2 py-2.5 last:border-b-0"
-              >
-                <span className="font-display text-sm font-bold text-ink group-hover:text-brass-dark">
-                  {item.label}
-                </span>
-              </Link>
+          <nav className="flex flex-col gap-6">
+            {NAV.map((group) => (
+              <div key={group.title}>
+                <div className="flex items-center gap-2 pb-2">
+                  <span className="size-[6px] rotate-45 bg-brass" />
+                  <span className="font-display text-xs font-bold text-faint">{group.title}</span>
+                </div>
+                {group.links.map((item) => (
+                  <Link key={item.href} href={item.href} className="group block py-1.5">
+                    <span className="text-sm text-ink group-hover:text-brass-dark">
+                      {item.label}
+                    </span>
+                  </Link>
+                ))}
+              </div>
             ))}
           </nav>
 

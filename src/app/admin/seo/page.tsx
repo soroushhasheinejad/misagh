@@ -144,6 +144,21 @@ export default async function SeoDashboard() {
               desc: "عنوان، توضیح متا و متن بلند هر نوع صفحه؛ با جای‌گذارهای فارسی",
             },
             {
+              href: "/admin/seo/reports",
+              title: "گزارش‌ها",
+              desc: "عنوان تکراری، محتوای نازک، قطعه بدون سازگاری و بدون شماره فنی",
+            },
+            {
+              href: "/admin/seo/redirects",
+              title: "ریدایرکت‌ها",
+              desc: "آدرس قدیمی به جدید، تا رتبه گوگل با تغییر آدرس از دست نرود",
+            },
+            {
+              href: "/admin/seo/settings",
+              title: "تنظیمات سئو",
+              desc: "الگوی عنوان، اسکیماها، نقشه سایت و کد تایید سرچ کنسول",
+            },
+            {
               href: "/admin/posts",
               title: `مقاله‌ها (${faNumber(postCount)} منتشرشده)`,
               desc: "محتوای آموزشی که به صفحه‌های محصول لینک می‌دهد",

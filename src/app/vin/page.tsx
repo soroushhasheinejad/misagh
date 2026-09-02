@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { decodeVin } from "@/lib/normalize";
+import { decodeVinWithRules } from "@/lib/vin";
 import { prisma } from "@/lib/prisma";
 import { faYear, faYearRange } from "@/lib/format";
 import { VinSearchBox } from "@/components/VinSearchBox";
@@ -17,7 +17,8 @@ export default async function VinPage({
   searchParams: Promise<{ vin?: string }>;
 }) {
   const { vin } = await searchParams;
-  const info = vin ? decodeVin(vin) : null;
+  // قاعده‌های جدول VinRule روی نگاشت داخلی اولویت دارند و از پنل مدیریت می‌شوند
+  const info = vin ? await decodeVinWithRules(vin) : null;
 
   // خودروهای محتملِ همان برند و سال، مرتب بر اساس تعداد قطعه‌ای که داریم
   const make =
@@ -251,6 +252,14 @@ export default async function VinPage({
                     </Link>
                   ))}
                 </div>
+
+                {info.modelHint ? (
+                  <p className="pt-5 text-sm leading-8 text-muted">
+                    بر اساس قاعده ثبت‌شده برای این شماره، خودرو احتمالاً{" "}
+                    <span className="font-bold text-ink">{info.modelHint}</span> است.
+                    {info.ruleNote ? ` ${info.ruleNote}` : ""}
+                  </p>
+                ) : null}
 
                 <p className="pt-5 text-xs text-faint">
                   تیپ و موتور دقیق با جدول دکد کامل سازنده مشخص می‌شود؛ اینجا تا سطح مدل و سال
